@@ -44,89 +44,38 @@ class AreasGastosController extends Controller
         ]);
     }
 
-    public function crear()
-    {
-        requireAdmin();
-
-        header('Content-Type: application/json');
-
-        $id_departamento = $_POST['departamento'];
-        $nombre = trim($_POST['nombre']);
-
-        if ($nombre === '') {
-            echo json_encode([
-                'resultado' => false,
-                'mensaje' => 'El nombre del departamento no puede estar vacío.'
-            ]);
-            return;
-        }
-
-        $departamentosDAO = $this->dao("Departamentos");
-
-        if (!$departamentosDAO->comprobarId($id_departamento)) {
-            echo json_encode([
-                'resultado' => false,
-                'message' => 'El departamento no existe.'
-            ]);
-            return;
-        }
-
-        $areasGastosDAO = $this->dao("AreasGastos");
-
-        if ($areasGastosDAO->comprobrarNombre($nombre)) {
-            echo json_encode([
-                'resultado' => false,
-                'mensaje' => 'El nombre del departamento ya existe.'
-            ]);
-            return;
-        }
-
-        $nuevoId = $areasGastosDAO->crear($nombre, $id_departamento);
-
-        if ($nuevoId) {
-            echo json_encode([
-                'resultado' => true,
-                'message' => 'Área de gasto creada correctamente.',
-                'id' => $nuevoId
-            ]);
-        } else {
-            echo json_encode([
-                'resultado' => false,
-                'message' => 'Error al crear el área de gasto.'
-            ]);
-        }
-
-    }
-
-
-    public function vereditar($idParam = -1)
+    public function vereditar()
     {
         requireAdmin();
         $alert = null;
+
+        $id = $_GET['id'];
+
+        $areasGastoDAO = $this->dao("AreasGastos");
+        $departamentosDAO = $this->dao("Departamentos");
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // The request is using the POST method
-            $alert = $this->guardar();
+            $alert = $this->guardar($areasGastoDAO,$departamentosDAO);
+            $id = $areasGastoDAO->last_insert == null ? $id : $areasGastoDAO->last_insert;
+            // FIXME Si se recarga la página después de un crear se vuelve a enviar una petición de crear página
+            //       Si se usa un location header para recargar la página arreglamos esto pero perdemos el mensaje de alerta
+            //       Se podrií considerar guardar el mensaje de alerta en una variable de sesión pero no se como de correcto es eso
         }
+        
+        $departamentos = $departamentosDAO->listar();
 
-        $id = ($idParam <> -1 ? $idParam : $_GET['id']);
-
-
-        $departamentosModelo = $this->dao("Departamentos");
-        $departamentos = $departamentosModelo->listar();
-
-        $areasGastoModelo = $this->dao("AreasGastos");
-        $areaGasto = $areasGastoModelo->obtener($id);
-
-        /*$alert = [
-            'tipo' => 'danger',
-            'mensaje' => "Esto es una alerta"
-        ];*/
+        if ($id <> 0) {
+            
+            $areaGasto = $areasGastoDAO->obtener($id);
+        } else {
+            require_once __DIR__ . "/../models/vo/AreaGastos.php";
+            $areaGasto = new AreaGastos(0, '', 0, '');
+        }
 
         $this->view("areasgastos/formulario", ['areaGasto' => $areaGasto, 'departamentos' => $departamentos, 'alert' => $alert]);
 
     }
 
-    public function guardar()
+    public function guardar($areaGastosDAO,$departamentoDAO)
     {
 
         $id = $_POST['id'];
@@ -134,83 +83,42 @@ class AreasGastosController extends Controller
         $nombre = trim($_POST['nombre']);
 
         if ($nombre === '') {
-            /* echo json_encode([
-                 'resultado' => false,
-                 'mensaje' => 'El nombre del departamento no puede estar vacío.'
-             ]);
-             */
             return [
                 'tipo' => 'warning',
-                'mensaje' => "El nombre del departamento no puede estar vacío."
+                'mensaje' => "El nombre del area de gasto no puede estar vacío."
             ];
         }
 
-        $areaGastosDAO = $this->dao("AreasGastos");
-
-        if ($areaGastosDAO->comprobrarNombre($nombre, $id)) {
-            /*
-            echo json_encode([
-                'resultado' => false,
-                'mensaje' => 'El nombre del departamento ya existe.'
-            ]);
-            */
+        if (!$departamentoDAO->comprobarId($id_departamento)) {
             return [
-                'tipo' => 'warning',
-                'mensaje' => "El nombre del departamento ya existe."
+                'tipo' => 'danger',
+                'mensaje' => "El departamento no existe."
             ];
         }
 
-        $ok = $areaGastosDAO->editar($id, $nombre, $id_departamento);
-
-
-        return [
-            'tipo' => 'success',
-            'mensaje' => "Editado correctamente"
-        ];
-        /*
-        echo json_encode([
-            'resultado' => $ok,
-            'mensaje' => $ok ? 'Area de gastos editada con éxito.' : 'Error al editar el area de gastos.'
-        ]);
-        */
-        //$this->vereditar($id);
-
-    }
-
-    public function editarAjax()
-    {
-        requireAdmin();
-
-        header('Content-Type: application/json');
-
-        $id = $_POST['id'];
-        $id_departamento = $_POST['departamento'];
-        $nombre = trim($_POST['nombre']);
-
-        if ($nombre === '') {
-            echo json_encode([
-                'resultado' => false,
-                'mensaje' => 'El nombre del departamento no puede estar vacío.'
-            ]);
-            return;
-        }
-
-        $areaGastosDAO = $this->dao("AreasGastos");
-
         if ($areaGastosDAO->comprobrarNombre($nombre, $id)) {
-            echo json_encode([
-                'resultado' => false,
-                'mensaje' => 'El nombre del departamento ya existe.'
-            ]);
-            return;
+            return [
+                'tipo' => 'warning',
+                'mensaje' => "El nombre del area de gasto ya existe."
+            ];
         }
 
-        $ok = $areaGastosDAO->editar($id, $nombre, $id_departamento);
+        if ($id == 0) {
+            $ok = $areaGastosDAO->crear($nombre, $id_departamento);
+        } else {
+            $ok = $areaGastosDAO->editar($id, $nombre, $id_departamento);
+        }
 
-        echo json_encode([
-            'resultado' => $ok,
-            'mensaje' => $ok ? 'Area de gastos editada con éxito.' : 'Error al editar el area de gastos.'
-        ]);
-
+        if($ok){
+            return [
+                'tipo' => 'success',
+                'mensaje' => $id == 0 ? 'Se ha creado el area de gastos correctamente' : 'Se ha editado el area de gastos correctamente'
+            ];
+        }else{
+            return [
+                'tipo' => 'warning',
+                'mensaje' => $id == 0 ? 'No se ha podido crear el departamento' : 'No se ha podido editar el departamento'
+            ];
+        }
     }
 }

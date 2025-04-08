@@ -6,6 +6,8 @@ class AreasGastosDAO
 {
     private $db;
 
+    public $last_insert;
+
     public function __construct()
     {
         $this->db = Database::getInstance();
@@ -77,7 +79,8 @@ class AreasGastosDAO
         ]);
 
         if ($ok) {
-            return $this->db->lastInsertId();
+            $this->last_insert = $this->db->lastInsertId();
+            return true;
         }
 
         return false;

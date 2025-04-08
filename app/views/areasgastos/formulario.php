@@ -48,7 +48,7 @@
                                         <div class="col-sm-4">
                                             <h5>Departamentos:</h5>
                                             <select class="form-control" id="departamentoEdit" name="departamento">
-                                                <option value="" disabled <?= $_GET['id']==0 ? 'selected' : '' ?>>Selecciona un departamento</option>
+                                                <option value="" disabled <?= $areaGasto->id==0 ? 'selected' : '' ?>>Selecciona un departamento</option>
                                                 <?php foreach ($departamentos as $d): ?>
                                                     <option value="<?= $d->id ?>" <?= $d->id==$areaGasto->departamento_id ? 'selected' : '' ?>>
                                                         <?= htmlspecialchars($d->nombre) ?>
