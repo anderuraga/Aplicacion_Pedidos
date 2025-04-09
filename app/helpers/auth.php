@@ -1,16 +1,16 @@
 <?php
-function requireLogin() {
+function requireLogin(): bool {
     session_start();
     if (!isset($_SESSION['usuario'])) {
-        header("Location: /");
-        exit;
+        return false;
     }
+    return true;
 }
 
-function requireAdmin() {
+function requireAdmin(): bool {
     session_start();
     if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['tipo'] != 1) {
-        header("Location: /");
-        exit;
+        return false;
     }
+    return true;
 }

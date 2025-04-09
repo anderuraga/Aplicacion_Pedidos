@@ -6,9 +6,6 @@ class AreasGastosController extends Controller
 {
     public function index()
     {
-        //TODO ls seguirdad en App
-        requireAdmin();
-
         $departamentosModelo = $this->dao("Departamentos");
         $departamentos = $departamentosModelo->listar();
 
@@ -36,7 +33,6 @@ class AreasGastosController extends Controller
 
     public function vereditar()
     {
-        requireAdmin();
         $alert = null;
 
         $id = $_GET['id'];
@@ -110,5 +106,10 @@ class AreasGastosController extends Controller
                 'mensaje' => $id == 0 ? 'No se ha podido crear el departamento' : 'No se ha podido editar el departamento'
             ];
         }
+    }
+
+    #[\Override]
+    public function tiene_permiso(): bool {
+        return requireAdmin();
     }
 }

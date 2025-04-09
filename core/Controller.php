@@ -15,4 +15,8 @@ class Controller {
         require_once __DIR__ ."/../app/models/daos/$dao.php";
         return new $dao;
     }
+
+    public function tiene_permiso():bool{
+        return true;
+    }
 }

@@ -32,7 +32,6 @@
                         <div class="statbox widget box box-shadow">
                             <div class="widget-content widget-content-area p-3">
                                 <h1>Area de Gastos: <?= $areaGasto->id == 0 ? 'Nueva' : 'Editar' ?></h1>
-                                <?php //TODO funcionamiento de nueva area de gasto ?>
                                 <form id="editarDepartamento" class="mt-0"
                                     action="AreasGastos/vereditar?id=<?= $areaGasto->id ?>" method="post">
                                     <input type="hidden" id="idedit" name="id" value="<?= $areaGasto->id ?>">

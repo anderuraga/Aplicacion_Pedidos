@@ -9,9 +9,6 @@ class App {
         // Parseamos la URL (ej: /usuario/perfil/1 → ['usuario', 'perfil', '1'])
        $url = $this->parseUrl();
 
-
-        //TODO seguirdad mejor una funcion aqui, en vez de en cada funcion de cada controlador
-
         // Si hay un controlador correspondiente al primer segmento de la URL
         if (isset($url[0]) && file_exists(__DIR__ ."/../app/controllers/" . $url[0] . "Controller.php")) {
             $this->controller = $url[0] . "Controller"; // Cambiamos el controlador
@@ -32,6 +29,13 @@ class App {
 
         // Los elementos restantes del array se consideran parámetros
         $this->params = $url ? array_values($url) : [];
+
+        // Comprueba si el usuario logeado puede acceder al controller
+        if(!$this->controller->tiene_permiso()){
+            //TODO Seguridad: Implementar que pasa cuando hay permisos para acceder a la página.
+            echo "No tienes permiso para esta página";
+            die();
+        }
 
         // Llamamos al método del controlador con los parámetros (si hay)
         call_user_func_array([$this->controller, $this->method], $this->params);
