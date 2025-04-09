@@ -31,29 +31,6 @@ class TransaccionesDAO
         return $result;
     }
 
-    public function resumenPorArea($id_area)
-    {
-        $stmt = $this->db->prepare("
-            SELECT
-                SUM(CASE WHEN cantidad > 0 THEN cantidad ELSE 0 END) AS ingresos,
-                SUM(CASE WHEN cantidad < 0 THEN ABS(cantidad) ELSE 0 END) AS gastos
-            FROM transacciones
-            WHERE id_area = :id_area
-        ");
-        $stmt->execute(['id_area' => $id_area]);
-        $res = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        $ingresos = (float) ($res['ingresos'] ?? 0);
-        $gastos = (float) ($res['gastos'] ?? 0);
-        $diferencia = $ingresos - $gastos;
-
-        return [
-            'ingresos' => $ingresos,
-            'gastos' => $gastos,
-            'diferencia' => $diferencia
-        ];
-    }
-
     public function ingresos()
     {
         $stmt = $this->db->prepare("

@@ -57,9 +57,9 @@
                                                     <td><?= htmlspecialchars($a->id) ?></td>
                                                     <td><?= htmlspecialchars($a->nombre) ?></td>
                                                     <td><?= htmlspecialchars($a->departamento_nombre) ?></td>
-                                                    <td><?= $a->ingresos ?></td>
-                                                    <td><?= $a->gastos ?></td>
-                                                    <td><?= $a->diferencia ?></td>
+                                                    <td><?= $a->ingresos_formato() ?>€</td>
+                                                    <td><?= $a->gastos_formato() ?>€</td>
+                                                    <td><?= $a->diferencia_formato() ?>€</td>
                                                     <td>
                                                         <div class="btn-group" role="group" aria-label="Basic example">
                                                             <a href="AreasGastos/vereditar?id=<?= $a->id ?>"

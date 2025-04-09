@@ -15,16 +15,6 @@ class AreasGastosController extends Controller
         $areasGastoModelo = $this->dao("AreasGastos");
         $areasGastos = $areasGastoModelo->listar();
 
-        $transaccionDAO = $this->dao("Transacciones");
-
-        //TODO crear view con los datos
-        foreach ($areasGastos as &$area) {
-            $resumen = $transaccionDAO->resumenPorArea($area->id);
-            $area->ingresos = getCantidadFormateada($resumen['ingresos']) . "€";
-            $area->gastos = getCantidadFormateada($resumen['gastos']) . "€";
-            $area->diferencia = getCantidadFormateada($resumen['diferencia']) . "€";
-        }
-
         $this->view("areasgastos", ['areasGastos' => $areasGastos, 'departamentos' => $departamentos]);
     }
 
@@ -68,7 +58,7 @@ class AreasGastosController extends Controller
             $areaGasto = $areasGastoDAO->obtener($id);
         } else {
             require_once __DIR__ . "/../models/vo/AreaGastos.php";
-            $areaGasto = new AreaGastos(0, '', 0, '');
+            $areaGasto = new AreaGastos(0, '', 0, '',0,0,0);
         }
 
         $this->view("areasgastos/formulario", ['areaGasto' => $areaGasto, 'departamentos' => $departamentos, 'alert' => $alert]);
