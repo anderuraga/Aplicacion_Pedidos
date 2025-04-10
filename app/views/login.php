@@ -1,56 +1,10 @@
-<?php require_once __DIR__ .'/../helpers/url.php'; ?>
-<!DOCTYPE html>
-<html lang="en">
+<?php require_once HOMEDIR.'/../app/helpers/url.php'; ?>
+<?php require HOMEDIR.'/../app/views/partials/header.php' ?>
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
-    <title>Log-In Intranet</title>
-    <link rel="icon" type="image/x-icon" href="src/assets/img/logo/favicon.png" />
-    <link href="src/css/light/loader.css" rel="stylesheet" type="text/css" />
-    <link href="layouts/horizontal-light-menu/css/dark/loader.css" rel="stylesheet" type="text/css" />
-    <script src="layouts/horizontal-light-menu/loader.js"></script>
-    <!-- BEGIN GLOBAL MANDATORY STYLES -->
-    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
-    <link href="src/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-
-    <link href="layouts/horizontal-light-menu/css/light/plugins.css" rel="stylesheet" type="text/css" />
-    <link href="src/assets/css/light/authentication/auth-boxed.css" rel="stylesheet" type="text/css" />
-
-    <!-- END GLOBAL MANDATORY STYLES -->
-    <link href="src/assets/css/light/components/modal.css" rel="stylesheet" type="text/css" />
-    <link href="src/assets/css/dark/components/modal.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="src/plugins/src/sweetalerts2/sweetalerts2.css">
-
-
-    <style>
-        #logodiv {
-            height: 125px;
-        }
-
-        #logodiv img {
-            max-height: 100%;
-            max-width: 100%;
-        }
-
-        #forgotlink {
-            cursor: pointer;
-        }
-    </style>
-</head>
+<?php require HOMEDIR.'/../app/views/partials/alert.php' ?>
 
 <body class="form">
 
-    <!-- BEGIN LOADER -->
-    <div id="load_screen">
-        <div class="loader">
-            <div class="loader-content">
-                <div class="spinner-grow align-self-center"></div>
-            </div>
-        </div>
-    </div>
-    <!--  END LOADER -->
 
     <div class="auth-container d-flex">
 
@@ -211,6 +165,4 @@
         });
     </script>
 
-</body>
-
-</html>
+<?php require HOMEDIR.'/../app/views/partials/footer.php' ?>

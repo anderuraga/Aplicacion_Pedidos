@@ -6,6 +6,51 @@ a {
     text-decoration: none;
 }
 
+/* login */
+#logodiv {
+    height: 125px;
+}
+
+#logodiv img {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+#forgotlink {
+    cursor: pointer;
+}
+
+/* end login */
+
+
+/*
+ menu
+*/
+body.dark .layout-px-spacing,
+.layout-px-spacing {
+    min-height: calc(100vh - 155px) !important;
+}
+
+.nav-item.theme-logo {
+    width: 120px;
+}
+
+.nav-item.theme-logo a {
+    width: 100%;
+}
+
+.nav-item.theme-logo a img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto !important;
+}
+
+#dt-length-0 {
+    width: 65px !important;
+}
+
+/* end menu */
+
 body.dark .layout-px-spacing,
 .layout-px-spacing {
     min-height: calc(100vh - 155px) !important;
