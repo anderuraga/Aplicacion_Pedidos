@@ -12,7 +12,7 @@ class AreasGastosController extends Controller
         $areasGastoModelo = $this->dao("AreasGastos");
         $areasGastos = $areasGastoModelo->listar();
 
-        $this->view("areasgastos/areasgastos", ['areasGastos' => $areasGastos, 'departamentos' => $departamentos]);
+        $this->view("areasgastos/index", ['areasGastos' => $areasGastos, 'departamentos' => $departamentos]);
     }
 
     public function historial()
