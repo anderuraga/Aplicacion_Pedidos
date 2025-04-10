@@ -25,17 +25,17 @@
 
 
 <!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
-<script src="src/plugins/src/global/vendors.min.js"></script>
-<script src="src/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="src/plugins/src/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-<script src="layouts/horizontal-light-menu/app.js"></script>
-<script src="src/assets/js/custom.js"></script>
+<script src="static/plugins/src/global/vendors.min.js"></script>
+<script src="static/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="static/plugins/src/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="static/layouts/horizontal-light-menu/app.js"></script>
+<script src="static/assets/js/custom.js"></script>
 <!-- END GLOBAL MANDATORY SCRIPTS -->
 
 <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
-<script src="src/plugins/src/table/datatable/datatables.min.js"></script>
-<script src="src/plugins/src/sweetalerts2/sweetalerts2.min.js"></script>
-<script src="src/layouts/horizontal-light-menu/loader.js"></script>
+<script src="static/plugins/src/table/datatable/datatables.min.js"></script>
+<script src="static/plugins/src/sweetalerts2/sweetalerts2.min.js"></script>
+<script src="static/layouts/horizontal-light-menu/loader.js"></script>
 
 
 <script>

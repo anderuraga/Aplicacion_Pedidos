@@ -6,7 +6,7 @@
         <ul class="navbar-item theme-brand flex-row text-center">
             <li class="nav-item theme-logo">
                 <a href="index.php">
-                    <img src="src/assets/img/logo/EEM-logo-color.svg" class="navbar-logo" alt="logo">
+                    <img src="static/assets/img/logo/EEM-logo-color.svg" class="navbar-logo" alt="logo">
                 </a>
             </li>
             <li class="nav-item theme-text">

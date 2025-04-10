@@ -1,6 +1,5 @@
 <?php require_once HOMEDIR.'/../app/helpers/url.php'; ?>
 <?php require HOMEDIR.'/../app/views/partials/header.php' ?>
-
 <?php require HOMEDIR.'/../app/views/partials/alert.php' ?>
 
 <body class="form">
@@ -18,7 +17,7 @@
                             <form id="login">
                                 <div class="row">
                                     <div id="logodiv">
-                                        <img class="d-block mx-auto" src="src/assets/img/logo/EEM-logo-color.svg">
+                                        <img class="d-block mx-auto" src="static/assets/img/logo/EEM-logo-color.svg">
                                     </div>
                                     <div class="col-md-12 mb-1 mt-2">
                                         <h2>Iniciar Sesión</h2>
@@ -109,10 +108,10 @@
     <!-- END FORGOT PASSWORD MODAL -->
 
     <!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
-    <script src="src/jquery/jquery-3.7.1.min.js"></script>
-    <script src="src/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="static/jquery/jquery-3.7.1.min.js"></script>
+    <script src="static/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- END GLOBAL MANDATORY SCRIPTS -->
-    <script src="src/plugins/src/sweetalerts2/sweetalerts2.min.js"></script>
+    <script src="static/plugins/src/sweetalerts2/sweetalerts2.min.js"></script>
     <script>
         function switch_passwordfield(boton) {
             let inputfield = $(boton).parent().find("input");

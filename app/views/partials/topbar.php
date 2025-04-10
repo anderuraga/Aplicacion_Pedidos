@@ -4,7 +4,7 @@
             <div class="nav-logo">
                 <div class="nav-item theme-logo">
                     <a href="<?= recurso('index.html') ?>">
-                        <img src="<?= recurso('src/assets/img/logo/EEM-logo-color.svg') ?>" class="navbar-logo" alt="logo">
+                        <img src="<?= recurso('static/assets/img/logo/EEM-logo-color.svg') ?>" class="navbar-logo" alt="logo">
                     </a>
                 </div>
                 <div class="nav-item theme-text">
