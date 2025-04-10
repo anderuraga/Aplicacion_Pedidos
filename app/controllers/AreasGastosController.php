@@ -15,9 +15,11 @@ class AreasGastosController extends Controller
         $this->view("areasgastos/areasgastos", ['areasGastos' => $areasGastos, 'departamentos' => $departamentos]);
     }
 
-    public function historial($id)
+    public function historial()
     {
         requireAdmin();
+
+        $id = $_GET['id'];
 
         $AreasGastosModelo = $this->model("AreaGastos");
         if (!$AreasGastosModelo->comprobarId($id)) {
@@ -26,7 +28,7 @@ class AreasGastosController extends Controller
 
         $area = $AreasGastosModelo->obtener($id);
 
-        $this->view("areagastoshistorial", [
+        $this->view("areagastos/historial", [
             'area' => $area
         ]);
     }

@@ -38,6 +38,10 @@
                                                             <a href="AreasGastos/vereditar?id=<?= $a->id ?>"
                                                                 class="btn btn-primary">Editar</a>
                                                         </div>
+                                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                                            <a href="AreasGastos/historial?id=<?= $a->id ?>"
+                                                                class="btn btn-primary">Historial</a>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             <?php endforeach; ?>
