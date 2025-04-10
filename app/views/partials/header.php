@@ -10,19 +10,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
 
-
     <title>Areas de Gastos</title>
     <link rel="icon" type="image/x-icon" href="src/assets/img/logo/favicon.png" />
-    <!-- ENABLE LOADERS -->
-    <link href="layouts/horizontal-light-menu/css/light/loader.css" rel="stylesheet" type="text/css" />
-    <link href="layouts/horizontal-light-menu/css/dark/loader.css" rel="stylesheet" type="text/css" />
 
+    <!-- ENABLE LOADERS -->
+    <link href="src/layouts/horizontal-light-menu/css/light/loader.css" rel="stylesheet" type="text/css" />
+    <link href="src/layouts/horizontal-light-menu/css/dark/loader.css" rel="stylesheet" type="text/css" />
     <!-- /ENABLE LOADERS -->
+     
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
     <link href="src/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="layouts/horizontal-light-menu/css/light/plugins.css" rel="stylesheet" type="text/css" />
-    <link href="layouts/horizontal-light-menu/css/dark/plugins.css" rel="stylesheet" type="text/css" />
+    <link href="src/layouts/horizontal-light-menu/css/light/plugins.css" rel="stylesheet" type="text/css" />
+    <link href="src/layouts/horizontal-light-menu/css/dark/plugins.css" rel="stylesheet" type="text/css" />
     <!-- END GLOBAL MANDATORY STYLES -->
 
     <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
@@ -38,34 +38,7 @@
 
     <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 
-    <style>
-        body.dark .layout-px-spacing,
-        .layout-px-spacing {
-            min-height: calc(100vh - 155px) !important;
-        }
-
-        .nav-item.theme-logo {
-            width: 120px;
-        }
-
-        .nav-item.theme-logo a {
-            width: 100%;
-        }
-
-        .nav-item.theme-logo a img {
-            max-width: 100%;
-            max-height: 100%;
-            width: auto !important;
-        }
-
-        #dt-length-0 {
-            width: 65px !important;
-        }
-
-        .dt-buttons {
-            margin-left: 10px;
-        }
-    </style>
+    <link href="src/css/custom.css" rel="stylesheet" type="text/css" />
 
 </head>
 

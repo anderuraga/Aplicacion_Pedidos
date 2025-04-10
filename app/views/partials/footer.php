@@ -18,10 +18,12 @@
 
 </div>
 <!--  END CONTENT AREA  -->
+
 </div>
 </div>
 <!-- END MAIN CONTAINER -->
-<?php // TODO Footer a un partial ?>
+
+
 <!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
 <script src="src/plugins/src/global/vendors.min.js"></script>
 <script src="src/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -33,7 +35,7 @@
 <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
 <script src="src/plugins/src/table/datatable/datatables.min.js"></script>
 <script src="src/plugins/src/sweetalerts2/sweetalerts2.min.js"></script>
-<script src="layouts/horizontal-light-menu/loader.js"></script>
+<script src="src/layouts/horizontal-light-menu/loader.js"></script>
 
 
 <script>
