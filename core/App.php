@@ -1,4 +1,7 @@
 <?php
+
+define('HOMEDIR',__DIR__);
+
 class App {
     // Propiedades por defecto: el controlador, el método y los parámetros
     protected $controller = 'LoginController'; // Controlador predeterminado

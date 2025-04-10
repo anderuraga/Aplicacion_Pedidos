@@ -1,12 +1,8 @@
-<?php require_once __DIR__ . '/../helpers/url.php'; ?>
-
-<?php require_once __DIR__ . '/../views/partials/header.php'; ?>
-<?php require __DIR__ . '/../views/partials/navbar.php' ?>
-<?php require __DIR__ . '/../views/partials/container.php' ?>
-
-
-
-                    <?php require __DIR__ . '/../views/partials/alert.php' ?>
+<?php require_once HOMEDIR.'/../app/helpers/url.php'; ?>
+<?php require HOMEDIR.'/../app/views/partials/header.php' ?>
+<?php require HOMEDIR.'/../app/views/partials/navbar.php' ?>
+<?php require HOMEDIR.'/../app/views/partials/container.php' ?>
+<?php require HOMEDIR.'/../app/views/partials/alert.php' ?>
 
 
                         <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
@@ -52,4 +48,4 @@
                         </div>
 
 
-<?php require __DIR__ . '/../views/partials/footer.php' ?>
+<?php require HOMEDIR.'/../app/views/partials/footer.php' ?>

@@ -1,32 +1,8 @@
-<?php require_once __DIR__ . '/../../helpers/url.php'; ?>
-
-<?php require_once __DIR__ . '/../../views/partials/header.php'; ?>
-
-<?php require __DIR__ . '/../../views/partials/navbar.php' ?>
-
-
-<!--  BEGIN MAIN CONTAINER  -->
-<div class="main-container " id="container">
-
-    <div class="overlay"></div>
-    <div class="search-overlay"></div>
-
-
-    <?php
-    $tab = 8;
-    require __DIR__ . '/../../views/partials/topbar.php';
-    ?>
-
-
-    <!--  BEGIN CONTENT AREA  -->
-    <div id="content" class="main-content">
-        <div class="layout-px-spacing">
-
-            <div class="middle-content container-xxl p-0">
-
-                <div class="row layout-top-spacing">
-
-                    <?php require __DIR__ . '/../../views/partials/alert.php' ?>
+<?php require_once HOMEDIR.'/../app/helpers/url.php'; ?>
+<?php require HOMEDIR.'/../app/views/partials/header.php' ?>
+<?php require HOMEDIR.'/../app/views/partials/navbar.php' ?>
+<?php require HOMEDIR.'/../app/views/partials/container.php' ?>
+<?php require HOMEDIR.'/../app/views/partials/alert.php' ?>
 
                     <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
                         <div class="statbox widget box box-shadow">
@@ -64,15 +40,5 @@
                         </div>
                     </div>
 
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-
-
-</body>
-
-</html>
+                    
+<?php require HOMEDIR.'/../app/views/partials/footer.php' ?>
