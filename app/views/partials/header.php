@@ -42,4 +42,4 @@
 
 </head>
 
-<body class="layout-boxed"></body>
+<body class="layout-boxed">

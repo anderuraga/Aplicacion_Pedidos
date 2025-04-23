@@ -20,7 +20,6 @@
 <!--  END CONTENT AREA  -->
 
 </div>
-</div>
 <!-- END MAIN CONTAINER -->
 
 
