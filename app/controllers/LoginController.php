@@ -3,38 +3,41 @@ class LoginController extends Controller
 {
     public function index()
     {
-        $this->view("login");
+        $alert = null;
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if ($usuario = $this->login()) {
+                header('Location: Menu');
+            } else {
+                $alert = [
+                    'tipo' => 'danger',
+                    'mensaje' => "La combinación correo contraseña no es correcta"
+                ];
+            }
+        }
+
+        $this->view("auth/login", ['alert' => $alert]);
     }
 
-    public function autenticar()
+    public function login()
     {
-        header('Content-Type: application/json');
-
-        $usuario = $_POST['correo'] ?? '';
+        $correo = $_POST['correo'] ?? '';
         $clave = $_POST['contrasena'] ?? '';
 
-        $usuarioModel = $this->model("Usuario");
-        $usuarioValido = $usuarioModel->verificar($usuario, $clave);
+        $UsuariosDAO = $this->dao("Usuarios");
+        $usuario = $UsuariosDAO->login($correo, $clave);
 
-        if ($usuarioValido) {
+        if ($usuario) {
             session_start();
             $_SESSION['usuario'] = [
-                'id' => $usuarioValido['id'],
-                'tipo' => $usuarioValido['tipo'],
-                'nombre' => $usuarioValido['nombre'],
-                'id_departamento' => $usuarioValido['id_departamento'],
-                'nombre_departamento' => $usuarioValido['nombre_departamento']
+                'id' => $usuario->id,
+                'tipo' => $usuario->tipo,
+                'nombre' => $usuario->nombre,
+                'correo' => $usuario->correo,
+                'id_departamento' => $usuario->id_departamento
             ];
-
-            echo json_encode([
-                'success' => true,
-                'message' => 'Login exitoso'
-            ]);
+            return true;
         } else {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Credenciales inválidas'
-            ]);
+            return false;
         }
     }
 }
