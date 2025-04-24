@@ -3,95 +3,88 @@ require_once __DIR__ . '/../helpers/auth.php';
 
 class DepartamentosController extends Controller
 {
-
-
-
     public function index()
     {
-        requireAdmin();
-        $this->view("departamentos");
+        $departamentosModelo = $this->dao("Departamentos");
+        $departamentos = $departamentosModelo->listar();
+
+        $this->view("departamentos/index", ['departamentos' => $departamentos]);
     }
 
-    public function listar()
+    public function vereditar()
     {
-        requireAdmin();
+        $alert = null;
 
-        header('Content-Type: application/json');
-        $modeloDepartamento = $this->model("Departamento");
-        $departamentos = $modeloDepartamento->listar();
+        $id = $_GET['id'];
 
+        $departamentosDAO = $this->dao("Departamentos");
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $alert = $this->guardar($departamentosDAO);
+            $id = $departamentosDAO->last_insert == null ? $id : $departamentosDAO->last_insert;
+            // FIXME Si se recarga la página después de un crear se vuelve a enviar una petición de crear página
+            //       Si se usa un location header para recargar la página arreglamos esto pero perdemos el mensaje de alerta
+            //       Se podrií considerar guardar el mensaje de alerta en una variable de sesión pero no se como de correcto es eso
+        }
+        
 
-        echo json_encode([
-            'success' => true,
-            'data' => $departamentos
-        ]);
-    }
-
-
-    public function crear()
-    {
-        requireAdmin();
-
-        $nombre = trim($_POST['nombre']);
-
-        if ($nombre === '') {
-            echo json_encode([
-                'resultado' => false,
-                'mensaje' => 'El nombre del departamento no puede estar vacío.'
-            ]);
-            return;
+        if ($id <> 0) {
+            $departamento = $departamentosDAO->obtener($id);
+        } else {
+            $departamento = new Departamento(0, '');
         }
 
-        $modelo = $this->model("Departamento");
-
-        if ($modelo->comprobrarNombre($nombre)) {
-            echo json_encode([
-                'resultado' => false,
-                'mensaje' => 'El nombre del departamento ya existe.'
-            ]);
-            return;
-        }
-
-        $ok = $modelo->crear($nombre);
-
-        echo json_encode([
-            'resultado' => $ok,
-            'mensaje' => $ok ? 'Departamento creado con éxito.' : 'Error al crear departamento.'
-        ]);
+        $this->view("departamentos/formulario", ['departamento' => $departamento, 'alert' => $alert]);
 
     }
 
-    public function editar()
+    public function guardar($departamentoDAO)
     {
-        requireAdmin();
 
         $id = $_POST['id'];
         $nombre = trim($_POST['nombre']);
 
         if ($nombre === '') {
-            echo json_encode([
-                'resultado' => false,
-                'mensaje' => 'El nombre del departamento no puede estar vacío.'
-            ]);
-            return;
+            return [
+                'tipo' => 'warning',
+                'mensaje' => "El nombre del area de gasto no puede estar vacío."
+            ];
         }
 
-        $modelo = $this->model("Departamento");
-
-        if ($modelo->comprobrarNombre($nombre, $id)) {
-            echo json_encode([
-                'resultado' => false,
-                'mensaje' => 'El nombre del departamento ya existe.'
-            ]);
-            return;
+        if ($id!=0 && !$departamentoDAO->comprobarId($id)) {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => "El departamento no existe."
+            ];
         }
 
-        $ok = $modelo->editar($id, $nombre);
+        if ($departamentoDAO->comprobrarNombre($nombre, $id)) {
+            return [
+                'tipo' => 'warning',
+                'mensaje' => "El nombre del adepartamento ya existe."
+            ];
+        }
 
-        echo json_encode([
-            'resultado' => $ok,
-            'mensaje' => $ok ? 'Departamento editado con éxito.' : 'Error al editar departamento.'
-        ]);
+        if ($id == 0) {
+            $ok = $departamentoDAO->crear($nombre);
+        } else {
+            $ok = $departamentoDAO->editar($id, $nombre);
+        }
 
+        if($ok){
+            return [
+                'tipo' => 'success',
+                'mensaje' => $id == 0 ? 'Se ha creado el area de gastos correctamente' : 'Se ha editado el area de gastos correctamente'
+            ];
+        }else{
+            return [
+                'tipo' => 'warning',
+                'mensaje' => $id == 0 ? 'No se ha podido crear el departamento' : 'No se ha podido editar el departamento'
+            ];
+        }
+    }
+
+    #[\Override]
+    public function tiene_permiso(): bool {
+        return requireAdmin();
     }
 }

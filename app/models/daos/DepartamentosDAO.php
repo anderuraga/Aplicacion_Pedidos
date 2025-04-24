@@ -5,10 +5,25 @@ require_once __DIR__ . '/../vo/Departamento.php';
 class DepartamentosDAO
 {
     private $db;
+    public $last_insert;
+
 
     public function __construct()
     {
         $this->db = Database::getInstance();
+    }
+
+    public function obtener($id): Departamento
+    {
+        $stmt = $this->db->prepare( "SELECT 
+                                                `id`, 
+                                                `nombre` 
+                                            FROM `departamentos` 
+                                            WHERE `id`=:id");
+
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch();
+        return new Departamento($row['id'], $row['nombre']);
     }
 
     public function comprobrarNombre($nombre, $excluirId = null)
@@ -37,8 +52,17 @@ class DepartamentosDAO
 
     public function crear($nombre)
     {
-        $stmt = $this->db->prepare("INSERT INTO departamentos (nombre) VALUES (:nombre)");
-        return $stmt->execute(['nombre' => $nombre]);
+        $stmt = $this->db->prepare("INSERT INTO `departamentos`(`nombre`) VALUES (:nombre)");
+        $ok = $stmt->execute([
+            'nombre' => $nombre
+        ]);
+
+        if ($ok) {
+            $this->last_insert = $this->db->lastInsertId();
+            return true;
+        }
+
+        return false;
     }
 
     public function editar($id, $nombre)
