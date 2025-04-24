@@ -9,7 +9,7 @@
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area">
             <h1 class="mt-2 ms-2">Departamentos</h1>
-            <a href="Departamentos/vereditar?id=0" class="btn btn-primary mb-2 ms-2 me-4">Nueva area de gastos</a>
+            <a href="Departamentos/vereditar?id=0" class="btn btn-primary mb-2 ms-2 me-4">Nuevo Departamento</a>
 
             <table id="Departamentos" class="tabla table table-striped dt-table-hover" style="width:100%">
                 <thead>

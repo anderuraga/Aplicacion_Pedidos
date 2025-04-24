@@ -53,17 +53,19 @@
                                     <div class="col-12">
                                         <?php
 
-                                        if (isset($alert)) {
+                                        if (isset($_SESSION['alert'])) {
 
                                             ?>
-                                            <div class="alert alert-<?= $alert['tipo'] ?> alert-dismissible fade show"
+                                            <div class="alert alert-<?= $_SESSION['alert']['tipo'] ?> alert-dismissible fade show"
                                                 role="alert">
-                                                <?= $alert['mensaje'] ?>
+                                                <?= $_SESSION['alert']['mensaje'] ?>
                                                 <button type="button" class="btn-close" data-bs-dismiss="alert"
                                                     aria-label="Close"></button>
                                             </div>
 
-                                        <?php } ?>
+                                            <?php
+                                            unset($_SESSION['alert']);
+                                        } ?>
                                         <div class="mb-4">
                                             <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
                                         </div>

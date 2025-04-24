@@ -1,11 +1,11 @@
 <?php
-
-    if ( isset($alert) ) {
-
+if ( isset($_SESSION['alert']) ) {
 ?>
-    <div class="alert alert-<?= $alert['tipo'] ?> alert-dismissible fade show" role="alert">
-    <?= $alert['mensaje'] ?>
+    <div class="alert alert-<?= $_SESSION['alert']['tipo'] ?> alert-dismissible fade show" role="alert">
+    <?= $_SESSION['alert']['mensaje'] ?>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 
-    <?php  } ?> 
+    <?php 
+    unset($_SESSION['alert']);
+ } ?> 

@@ -17,7 +17,6 @@ class AreasGastosController extends Controller
 
     public function historial()
     {
-        requireAdmin();
 
         $id = $_GET['id'];
 
@@ -42,11 +41,11 @@ class AreasGastosController extends Controller
         $areasGastoDAO = $this->dao("AreasGastos");
         $departamentosDAO = $this->dao("Departamentos");
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $alert = $this->guardar($areasGastoDAO,$departamentosDAO);
-            $id = $areasGastoDAO->last_insert == null ? $id : $areasGastoDAO->last_insert;
-            // FIXME Si se recarga la página después de un crear se vuelve a enviar una petición de crear página
-            //       Si se usa un location header para recargar la página arreglamos esto pero perdemos el mensaje de alerta
-            //       Se podrií considerar guardar el mensaje de alerta en una variable de sesión pero no se como de correcto es eso
+            $_SESSION['alert'] = $this->guardar($areasGastoDAO,$departamentosDAO);
+            if($areasGastoDAO->last_insert!=null){
+                session_write_close();
+                header("Location: vereditar?id=".$areasGastoDAO->last_insert);
+            }
         }
         
         $departamentos = $departamentosDAO->listar();
@@ -58,7 +57,7 @@ class AreasGastosController extends Controller
             $areaGasto = new AreaGastos(0, '', 0, '',0,0,0);
         }
 
-        $this->view("areasgastos/formulario", ['areaGasto' => $areaGasto, 'departamentos' => $departamentos, 'alert' => $alert]);
+        $this->view("areasgastos/formulario", ['areaGasto' => $areaGasto, 'departamentos' => $departamentos]);
 
     }
 

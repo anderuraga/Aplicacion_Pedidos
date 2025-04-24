@@ -13,17 +13,15 @@ class DepartamentosController extends Controller
 
     public function vereditar()
     {
-        $alert = null;
-
         $id = $_GET['id'];
 
         $departamentosDAO = $this->dao("Departamentos");
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $alert = $this->guardar($departamentosDAO);
-            $id = $departamentosDAO->last_insert == null ? $id : $departamentosDAO->last_insert;
-            // FIXME Si se recarga la página después de un crear se vuelve a enviar una petición de crear página
-            //       Si se usa un location header para recargar la página arreglamos esto pero perdemos el mensaje de alerta
-            //       Se podrií considerar guardar el mensaje de alerta en una variable de sesión pero no se como de correcto es eso
+            $_SESSION['alert'] = $this->guardar($departamentosDAO);
+            if($departamentosDAO->last_insert!=null){
+                session_write_close();
+                header("Location: vereditar?id=".$departamentosDAO->last_insert);
+            }
         }
         
 
@@ -33,7 +31,7 @@ class DepartamentosController extends Controller
             $departamento = new Departamento(0, '');
         }
 
-        $this->view("departamentos/formulario", ['departamento' => $departamento, 'alert' => $alert]);
+        $this->view("departamentos/formulario", ['departamento' => $departamento]);
 
     }
 

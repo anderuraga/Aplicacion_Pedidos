@@ -8,14 +8,14 @@ class LoginController extends Controller
             if ($usuario = $this->login()) {
                 header('Location: Menu');
             } else {
-                $alert = [
+                $_SESSION['alert'] = [
                     'tipo' => 'danger',
                     'mensaje' => "La combinación correo contraseña no es correcta"
                 ];
             }
         }
 
-        $this->view("auth/login", ['alert' => $alert]);
+        $this->view("auth/login");
     }
 
     public function login()
