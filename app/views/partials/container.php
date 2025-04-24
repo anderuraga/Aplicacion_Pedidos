@@ -6,7 +6,6 @@
 
       
         <?php 
-            $tab = 8;
             require __DIR__ . '/topbar.php'; 
         ?>
 
