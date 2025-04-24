@@ -52,7 +52,6 @@ class AreasGastosController extends Controller
         $departamentos = $departamentosDAO->listar();
 
         if ($id <> 0) {
-            
             $areaGasto = $areasGastoDAO->obtener($id);
         } else {
             require_once __DIR__ . "/../models/vo/AreaGastos.php";

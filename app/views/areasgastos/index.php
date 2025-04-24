@@ -1,4 +1,5 @@
 <?php require_once HOMEDIR.'/../app/helpers/url.php'; ?>
+<?php $titulo = "Area de Gastos"; ?>
 <?php require HOMEDIR.'/../app/views/partials/header.php' ?>
 <?php require HOMEDIR.'/../app/views/partials/navbar.php' ?>
 <?php $tab = 8; ?>
