@@ -17,25 +17,31 @@ class AreasGastosController extends Controller
 
     public function historial()
     {
-
         $id = $_GET['id'];
 
-        $AreasGastosModelo = $this->model("AreaGastos");
-        if (!$AreasGastosModelo->comprobarId($id)) {
-            die("Área de gasto no encontrada.");
+        $AreasGastosDAO = $this->dao("AreasGastos");
+        if (!$AreasGastosDAO->comprobarId($id)) {
+            $_SESSION['alert'] = [
+                'tipo' => 'warning',
+                'mensaje' => "El are de gasto no existe."
+            ];
+            session_write_close();
+            header('Location: '.BASE_URL.'AreasGastos');
         }
 
-        $area = $AreasGastosModelo->obtener($id);
+        $area = $AreasGastosDAO->obtener($id);
 
-        $this->view("areagastos/historial", [
-            'area' => $area
+        $transaccionesDAO = $this->dao("Transacciones");
+        $transacciones = $transaccionesDAO->transaccionesArea($id);
+
+        $this->view("areasgastos/historial", [
+            'area' => $area,
+            'transacciones' => $transacciones
         ]);
     }
 
     public function vereditar()
     {
-        $alert = null;
-
         $id = $_GET['id'];
 
         $areasGastoDAO = $this->dao("AreasGastos");

@@ -13,19 +13,25 @@ class TransaccionesDAO
 
     public function transaccionesArea($id_area)
     {
-        $stmt = $this->db->prepare("
-        SELECT t.*, ag.nombre AS nombre_area
-        FROM transacciones t
-        JOIN areas_gasto ag ON ag.id = t.id_area
-        WHERE t.id_area = :id_area
-        ORDER BY t.fecha DESC
-                ");
+        $stmt = $this->db->prepare("SELECT 
+                                                t.`id`,
+                                                t.`id_area`, 
+                                                t.`fecha`, 
+                                                t.`descripcion`, 
+                                                t.`cantidad`, 
+                                                ag.nombre as area_nombre 
+                                            FROM `transacciones` t 
+                                                JOIN areas_gastos ag 
+                                                    ON t.id_area=ag.id 
+                                            WHERE t.id_area=:id_area
+                                            ORDER BY t.fecha DESC");
 
         $stmt->execute(['id_area' => $id_area]);
 
         $result = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = new Transaccion($row);
+            $result[] = new Transaccion($row['id'], $row['id_area'], $row['area_nombre'],
+                                        $row['fecha'], $row['descripcion'], $row['cantidad']);
         }
 
         return $result;
