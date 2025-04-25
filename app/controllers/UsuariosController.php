@@ -3,11 +3,14 @@ require_once __DIR__.'/../helpers/auth.php';
 
 class UsuariosController extends Controller {
     public function index() {
-        requireAdmin();
-        $this->view("usuarios");
+        $usuariosDAO = $this->dao("Usuarios");
+        $usuarios = $usuariosDAO->listar();
+        
+        $this->view("usuarios/index",['usuarios' => $usuarios]);
     }
 
-    public function listar() {
-        
+    #[\Override]
+    public function tiene_permiso(): bool {
+        return requireAdmin();
     }
 }
