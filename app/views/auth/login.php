@@ -1,4 +1,5 @@
 <?php require_once HOMEDIR . '/../app/helpers/url.php'; ?>
+<?php $titulo = "Elorrieta" ?>
 <?php require HOMEDIR . '/../app/views/partials/header.php' ?>
 
 <body class="form">

@@ -71,7 +71,7 @@ class DepartamentosController extends Controller
         if($ok){
             return [
                 'tipo' => 'success',
-                'mensaje' => $id == 0 ? 'Se ha creado el area de gastos correctamente' : 'Se ha editado el area de gastos correctamente'
+                'mensaje' => $id == 0 ? 'Se ha creado el departamento correctamente' : 'Se ha editado el departamento correctamente'
             ];
         }else{
             return [
