@@ -5,8 +5,8 @@ class DepartamentosController extends Controller
 {
     public function index()
     {
-        $departamentosModelo = $this->dao("Departamentos");
-        $departamentos = $departamentosModelo->listar();
+        $departamentosDAO = $this->dao("Departamentos");
+        $departamentos = $departamentosDAO->listar();
 
         $this->view("departamentos/index", ['departamentos' => $departamentos]);
     }
