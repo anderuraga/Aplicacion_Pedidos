@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 
-                <a href="AreasGastos"
+                <a href="<?= BASE_URL ?>AreasGastos"
                     class="btn btn-secondary mt-2">Volver</a>
 
                 <button type="submit"

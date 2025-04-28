@@ -21,7 +21,7 @@
                     </div>
                 </div>
 
-                <a href="Departamentos"
+                <a href="<?= BASE_URL ?>Departamentos"
                     class="btn btn-secondary mt-2">Volver</a>
 
                 <button type="submit"
