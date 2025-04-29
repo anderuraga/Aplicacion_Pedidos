@@ -5,3 +5,9 @@ function getCantidadFormateada($cantidad, $locale = 'de_DE')
     $fmt->setAttribute(\NumberFormatter::FRACTION_DIGITS, 2);
     return $fmt->format($cantidad);
 }
+
+function getCantidadMysql($cantidad){
+    $cantidad = str_replace('.', '', $cantidad);
+    $cantidad = str_replace(',', '.', $cantidad);
+    return $cantidad;
+}

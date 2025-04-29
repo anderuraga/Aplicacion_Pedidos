@@ -35,7 +35,7 @@
     <link href="static/assets/css/light/components/modal.css" rel="stylesheet" type="text/css" />
     <link href="static/assets/css/dark/components/modal.css" rel="stylesheet" type="text/css" />
     <link href="static/plugins/static/sweetalerts2/sweetalerts2.css" rel="stylesheet" type="text/css" />
-
+    <link href="static/plugins/src/flatpickr/flatpickr.css" rel="stylesheet" type="text/css" />
     <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 
     <link href="static/css/custom.css" rel="stylesheet" type="text/css" />

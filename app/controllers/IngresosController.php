@@ -1,60 +1,97 @@
-<?php 
-require_once __DIR__.'/../helpers/auth.php';
+<?php
+require_once __DIR__ . '/../helpers/auth.php';
 
-class IngresosController extends Controller {
-    public function index() {
-        requireAdmin();
+class IngresosController extends Controller
+{
+    public function index()
+    {
 
-        $modeloAreaGastos = $this->model("AreaGastos");
-        $areasGastos = $modeloAreaGastos->listar();
+        $transaccionesDAO = $this->dao("Transacciones");
+        $ingresos = $transaccionesDAO->ingresos();
 
-        $this->view("ingresos", ['areasGastos' => $areasGastos]);
+        $this->view("ingresos/index", ['ingresos' => $ingresos]);
     }
 
-    public function listar() {
-        requireAdmin();
+    public function vereditar()
+    {
+        $id = $_GET['id'];
 
-        header('Content-Type: application/json');
-        $modeloTransaccion = $this->model("Transaccion");
-        $ingresos = $modeloTransaccion->ingresos();
-
-
-        echo json_encode([
-            'success' => true,
-            'data' => $ingresos
-        ]);
-    }
-
-    public function crear(){
-        requireAdmin();
-
-        require_once __DIR__.'/../helpers/formatos.php';
-
-        header('Content-Type: application/json');
-
-        $area = $_POST['areagasto'];
-        $fecha = $_POST['fecha'];
-        $descripcion = trim($_POST['descripcion']);
-        $cantidad = getCantidadFormateada($_POST['cantidad']);
-
-        $modeloAreaGastos = $this->model("AreaGastos");
-
-        if (!$modeloAreaGastos->comprobarId($area)) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'El area de gastos no existe.'
-            ]);
-            return;
+        $transaccionesDAO = $this->dao("Transacciones");
+        $areasGastosDAO = $this->dao("AreasGastos");
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $_SESSION['alert'] = $this->guardar($transaccionesDAO,$areasGastosDAO);
+            if($transaccionesDAO->last_insert!=null){
+                session_write_close();
+                header("Location: vereditar?id=".$transaccionesDAO->last_insert);
+            }
         }
 
-        $modeloTransaccion = $this->model("Transaccion");
+        $areasgastos = $areasGastosDAO->listar();
 
-        $ok = $modeloTransaccion->crear($area,$fecha,$descripcion,$cantidad);
+        if ($id <> 0) {
+            $ingreso = $transaccionesDAO->obtener($id);
+        } else {
+            require_once __DIR__ . "/../models/vo/AreaGastos.php";
+            $ingreso = new Transaccion(0, 0, '', '', '', 0);
+        }
 
-        echo json_encode([
-            'resultado' => $ok,
-            'mensaje' => $ok ? 'Ingreso añadido con éxito.' : 'Error al añadir el ingreso.'
-        ]);
+        $this->view("ingresos/formulario", ['ingreso' => $ingreso, 'areasgastos' => $areasgastos]);
+
     }
 
+    public function guardar($transaccionesDAO, $areasGastosDAO)
+    {
+
+        $id = $_POST['id'];
+        $fecha = trim($_POST['fecha']);
+        $descripcion = trim($_POST['descripcion']);
+        $areagasto = trim($_POST['areagasto']);
+        $cantidad = getCantidadMysql($_POST['cantidad']);
+
+        if ($descripcion === '') {
+            return [
+                'tipo' => 'warning',
+                'mensaje' => "La descripción no puede estar vacia."
+            ];
+        }
+
+        if ($id != 0 && !$transaccionesDAO->obtener($id)) {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => "La transacción a editar no existe."
+            ];
+        }
+
+        if (!$areasGastosDAO->comprobarId($areagasto)) {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => "El area de gasto no existe."
+            ];
+        }
+
+
+        if ($id == 0) {
+            $ok = $transaccionesDAO->crear($fecha, $descripcion, $areagasto, $cantidad);
+        } else {
+            $ok = $transaccionesDAO->editar($id, $fecha, $descripcion, $areagasto, $cantidad);
+        }
+
+        if ($ok) {
+            return [
+                'tipo' => 'success',
+                'mensaje' => $id == 0 ? 'Se ha añadido la transacción correctamente' : 'Se ha editado la transacción correctamente'
+            ];
+        } else {
+            return [
+                'tipo' => 'warning',
+                'mensaje' => $id == 0 ? 'No se ha podido crear la transacción' : 'No se ha podido editar la transacción'
+            ];
+        }
+    }
+
+    #[\Override]
+    public function tiene_permiso(): bool
+    {
+        return requireAdmin();
+    }
 }

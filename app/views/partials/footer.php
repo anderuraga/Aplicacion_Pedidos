@@ -35,7 +35,8 @@
 <script src="static/plugins/src/table/datatable/datatables.min.js"></script>
 <script src="static/plugins/src/sweetalerts2/sweetalerts2.min.js"></script>
 <script src="static/layouts/horizontal-light-menu/loader.js"></script>
-
+<script src="static/plugins/src/flatpickr/flatpickr.js"></script>
+<script src="static/plugins/src/input-mask/jquery.inputmask.bundle.min.js"></script>
 
 <script>
     let tabla = $('.tabla').DataTable({
@@ -54,7 +55,7 @@
             "info": "Mostrando _START_ de _END_ de un total de _TOTAL_ filas",
             "sEmptyTable": "Sin resultados"
         },
-        order: [[1, 'asc']],
+        order: [[1, <?= isset($order)?"'$order'":"'asc'" ?>]],
         columnDefs: [
             {
                 target: 0,
