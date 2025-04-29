@@ -6,6 +6,8 @@ class Usuario
     public int $tipo;
     public string $nombre;
     public string $correo;
+
+    // TODO deberia usar la class Departamento
     public int $departamento_id;
     public string $departamento_nombre;
 
