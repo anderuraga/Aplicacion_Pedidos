@@ -28,6 +28,7 @@ class EstadosDAO
 
     public function comprobrarNombre($nombre, $excluirId = null)
     {
+         // TODO cambiar * por un id
         $sql = "SELECT COUNT(*) FROM estado WHERE nombre = :nombre";
         if ($excluirId !== null) {
             $sql .= " AND id != :id";
@@ -45,6 +46,7 @@ class EstadosDAO
 
     public function comprobarId($id)
     {
+         // TODO cambiar * por un id
         $stmt = $this->db->prepare("SELECT COUNT(*) FROM estado WHERE id = :id");
         $stmt->execute(['id' => $id]);
         return $stmt->fetchColumn() > 0;

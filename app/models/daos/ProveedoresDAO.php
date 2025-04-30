@@ -53,6 +53,7 @@ class ProveedoresDAO
             factura_electronica: $row['factura_e'],
             cuenta_bancaria: $row['cuanta_bancaria'],
             contacto: $row['contacto'],
+            // TODO usar la clase Departamento
             tipo_servicio_id: $row['id_servicio'],
             tipo_servicio_nombre: $row['nombre_servicio']
         );
@@ -60,6 +61,7 @@ class ProveedoresDAO
 
     public function comprobrarCif($cif, $excluirId = null)
     {
+         // TODO cambiar * por un id
         $sql = "SELECT COUNT(*) FROM proveedores WHERE `cif` = :cif";
         if ($excluirId !== null) {
             $sql .= " AND id != :id";
@@ -188,6 +190,7 @@ class ProveedoresDAO
                 factura_electronica: $row['factura_e'],
                 cuenta_bancaria: $row['cuanta_bancaria'],
                 contacto: $row['contacto'],
+                 // TODO usar clase Servicio
                 tipo_servicio_id: $row['id_servicio'],
                 tipo_servicio_nombre: $row['nombre_servicio']
             );

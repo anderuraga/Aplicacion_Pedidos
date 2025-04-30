@@ -32,6 +32,7 @@ class AreasGastosDAO
 
     public function comprobarId($id): bool
     {
+        // TODO cambiar * por id
         $stmt = $this->db->prepare("SELECT COUNT(*) FROM areas_gastos WHERE id = :id");
         $stmt->execute(['id' => $id]);
         return $stmt->fetchColumn() > 0;

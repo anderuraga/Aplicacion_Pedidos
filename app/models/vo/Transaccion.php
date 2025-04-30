@@ -4,6 +4,8 @@ require_once __DIR__ . '/../../helpers/formatos.php';
 class Transaccion
 {
     public $id;
+
+    //TODO usar clase Area
     public $area_id;
     public $area_nombre;
     public $fecha;
