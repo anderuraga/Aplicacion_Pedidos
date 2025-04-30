@@ -39,7 +39,13 @@
     <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 
     <link href="static/css/custom.css" rel="stylesheet" type="text/css" />
-
+    <style>
+        .separador{
+            height: 1px;
+            width: 100%;
+            border: 1px solid lightgray;
+        }
+    </style>
 </head>
 
 <body class="layout-boxed">
