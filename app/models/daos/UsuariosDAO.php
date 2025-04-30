@@ -113,35 +113,51 @@ class UsuariosDAO
         return null;
     }
 
-    public function editar($id, $nombre, $correo, $departamento)
+    public function editar($id, $nombre, $correo, $departamento, $tipo, $contrasena)
     {
-        $stmt = $this->db->prepare("UPDATE `usuarios` 
-                                        SET 
-                                            `nombre`=:nombre,
-                                            `correo`=:correo,
-                                            `id_departamento`=:departamento 
-                                        WHERE `id`=:id");
-        return $stmt->execute([
+        $sql = "UPDATE `usuarios` 
+                SET 
+                    `nombre` = :nombre,
+                    `correo` = :correo,
+                    `id_departamento` = :departamento,
+                    `tipo` = :tipo";
+
+        if ($contrasena !== null) {
+            $sql .= ", `contrasena` = :contrasena";
+        }
+
+        $sql .= " WHERE `id` = :id";
+
+        $stmt = $this->db->prepare($sql);
+
+        $params = [
             'nombre' => $nombre,
             'correo' => $correo,
             'departamento' => $departamento,
-            'id' => $id
-        ]);
+            'id' => $id,
+            'tipo' => $tipo
+        ];
+
+        if ($contrasena !== null) {
+            $params['contrasena'] = password_hash($contrasena, PASSWORD_DEFAULT);
+        }
+
+        return $stmt->execute($params);
     }
 
-    public function crear($nombre, $correo, $departamento)
+    public function crear($nombre, $correo, $departamento, $tipo, $contrasena)
     {
-        $contrasena = $this->generarContrasena();
         $contrasenaHash = password_hash($contrasena, PASSWORD_DEFAULT);
         // TODO: Enviar correo con la contraseña generada al usuario
         $stmt = $this->db->prepare("INSERT INTO 
-                                                `usuarios`(`nombre`, `correo`, `contrasena`, `id_departamento`)
-                                                 VALUES (:nombre,:correo,:contrasena,:id_departamento)");
+                                                `usuarios`(`nombre`, `correo`, `contrasena`, `id_departamento`, `tipo`)
+                                                 VALUES (:nombre,:correo,:contrasena,:id_departamento, :tipo)");
         $ok = $stmt->execute([
             'nombre' => $nombre,
             'correo' => $correo,
             'contrasena' => $contrasenaHash,
             'id_departamento' => $departamento,
+            'tipo' => $tipo
         ]);
 
         if ($ok) {
@@ -150,19 +166,6 @@ class UsuariosDAO
         }
 
         return false;
-    }
-
-    private function generarContrasena($length = 10): string
-    {
-        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-,.?';
-        $charsLen = strlen($chars);
-        $contrasena = '';
-
-        for ($i = 0; $i < $length; $i++) {
-            $contrasena .= $chars[rand(0, $charsLen - 1)];
-        }
-
-        return $contrasena;
     }
 
 }
