@@ -34,10 +34,10 @@
                     <div class="col-sm-4">
                         <h5>Departamentos:</h5>
                         <select class="form-control" id="departamentoEdit" name="departamento">
-                            <option value="" disabled <?= $usuario->id == 0 ? 'selected' : '' ?>>Selecciona un
+                            <option value="" disabled <?= $usuario->departamento->id == 0 ? 'selected' : '' ?>>Selecciona un
                                 departamento</option>
                             <?php foreach ($departamentos as $d): ?>
-                                <option value="<?= $d->id ?>" <?= $d->id == $usuario->departamento_id ? 'selected' : '' ?>>
+                                <option value="<?= $d->id ?>" <?= $d->id == $usuario->departamento->id ? 'selected' : '' ?>>
                                     <?= htmlspecialchars($d->nombre) ?>
                                 </option>
                             <?php endforeach; ?>

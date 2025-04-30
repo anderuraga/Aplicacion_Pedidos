@@ -33,7 +33,7 @@ class LoginController extends Controller
                 'tipo' => $usuario->tipo,
                 'nombre' => $usuario->nombre,
                 'correo' => $usuario->correo,
-                'id_departamento' => $usuario->id_departamento
+                'id_departamento' => $usuario->departamento->id
             ];
             return true;
         } else {

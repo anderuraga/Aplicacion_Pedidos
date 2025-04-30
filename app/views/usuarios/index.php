@@ -27,7 +27,7 @@
                             <td><?= $u->id ?></td>
                             <td><?= htmlspecialchars($u->nombre) ?></td>
                             <td><?= htmlspecialchars($u->correo) ?></td>
-                            <td><?= htmlspecialchars($u->departamento_nombre) ?></td>
+                            <td><?= htmlspecialchars($u->departamento->nombre) ?></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="Basic example">
                                     <a href="Usuarios/vereditar?id=<?= $u->id ?>" class="btn btn-primary">Editar</a>

@@ -1,5 +1,5 @@
 <?php
-
+require 'Departamento.php';
 class Usuario
 {
     public int $id;
@@ -7,9 +7,7 @@ class Usuario
     public string $nombre;
     public string $correo;
 
-    // TODO deberia usar la class Departamento
-    public int $departamento_id;
-    public string $departamento_nombre;
+    public Departamento $departamento;
 
     public function __construct($id, $tipo, $nombre, $correo, $departamento_id, $departamento_nombre)
     {
@@ -17,7 +15,6 @@ class Usuario
         $this->tipo = $tipo;
         $this->nombre = $nombre;
         $this->correo = $correo;
-        $this->departamento_id = $departamento_id;
-        $this->departamento_nombre = $departamento_nombre;
+        $this->departamento = new Departamento($departamento_id, $departamento_nombre);
     }
 }
