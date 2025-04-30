@@ -1,12 +1,12 @@
 <?php
 require_once __DIR__ . '/../../helpers/formatos.php';
+require_once __DIR__ . '/Departamento.php';
 
 class AreaGastos
 {
     public int $id;
     public string $nombre;
-    public int $departamento_id;
-    public string $departamento_nombre;
+    public Departamento $departamento;
 
     public string $ingresos;
     public string $gastos;
@@ -16,8 +16,7 @@ class AreaGastos
     {
         $this->id = $id;
         $this->nombre = $nombre;
-        $this->departamento_id = $departamento_id;
-        $this->departamento_nombre = $departamento_nombre;
+        $this->departamento = new Departamento($departamento_id, $departamento_nombre);
         $this->ingresos = $ingresos;
         $this->gastos = $gastos;
         $this->diferencia = $diferencia;

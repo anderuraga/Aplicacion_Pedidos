@@ -31,7 +31,7 @@
                                                 <tr>
                                                     <td><?= htmlspecialchars($a->id) ?></td>
                                                     <td><?= htmlspecialchars($a->nombre) ?></td>
-                                                    <td><?= htmlspecialchars($a->departamento_nombre) ?></td>
+                                                    <td><?= htmlspecialchars($a->departamento->nombre) ?></td>
                                                     <td><?= $a->ingresos_formato() ?>€</td>
                                                     <td><?= $a->gastos_formato() ?>€</td>
                                                     <td><?= $a->diferencia_formato() ?>€</td>

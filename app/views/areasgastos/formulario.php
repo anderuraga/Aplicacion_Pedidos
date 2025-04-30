@@ -27,7 +27,7 @@
                             <option value="" disabled <?= $areaGasto->id == 0 ? 'selected' : '' ?>>Selecciona un
                                 departamento</option>
                             <?php foreach ($departamentos as $d): ?>
-                                <option value="<?= $d->id ?>" <?= $d->id == $areaGasto->departamento_id ? 'selected' : '' ?>>
+                                <option value="<?= $d->id ?>" <?= $d->id == $areaGasto->departamento->id ? 'selected' : '' ?>>
                                     <?= htmlspecialchars($d->nombre) ?>
                                 </option>
                             <?php endforeach; ?>
