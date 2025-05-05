@@ -32,7 +32,7 @@
                                 <div class="btn-group" role="group" aria-label="Basic example">
                                     <button type="button" onclick="editar()" class="btn btn-primary">Editar</button>
                                     <a href="HistorialItem.php" class="btn btn-primary">Historial</a>
-                                    <button type="button" onclick="salida()" class="btn btn-warning">Salida</button>
+                                    <a type="button" href="Inventario/movimiento?id=0&item=<?= $i->id ?>" class="btn btn-secondary">Entrada/Salida</a>
                                 </div>
                             </td>
                         </tr>

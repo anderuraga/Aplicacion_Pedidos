@@ -1,0 +1,125 @@
+<?php
+require_once __DIR__ . '/../../../core/Database.php';
+require_once __DIR__ . '/../vo/Movimiento.php';
+
+class MovimientosDAO
+{
+    private $db;
+    public $last_insert;
+
+
+    public function __construct()
+    {
+        $this->db = Database::getInstance();
+    }
+
+    public function obtener($id): Movimiento
+    {
+        $stmt = $this->db->prepare("SELECT
+                                                m.`id`,
+                                                m.`id_item`,
+                                                ma.nombre,
+                                                m.`fecha`,
+                                                m.`descripcion`,
+                                                m.`cantidad`
+                                            FROM
+                                                `movimientos` m
+                                            JOIN materiales ma ON
+                                                m.id_item = ma.id
+                                            WHERE
+                                                m.id = :id");
+
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch();
+        return new Movimiento(
+            $row['id'],
+            $row['id_item'],
+            $row['nombre'],
+            $row['fecha'],
+            $row['descripcion'],
+            $row['cantidad']
+        );
+    }
+
+    public function comprobarId($id)
+    {
+        $stmt = $this->db->prepare("SELECT COUNT(id) FROM materiales WHERE id = :id");
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetchColumn() > 0;
+    }
+
+    public function crear(array $data): bool
+    {
+        $sql = "INSERT INTO `movimientos`(
+                    `id_item`,
+                    `fecha`,
+                    `descripcion`,
+                    `cantidad`
+                )
+                VALUES(
+                    :item_id,
+                    :fecha,
+                    :descripcion,
+                    :cantidad
+                )";
+        $stmt = $this->db->prepare($sql);
+        $ok = $stmt->execute($data);
+        if ($ok) {
+            $this->last_insert = $this->db->lastInsertId();
+        }
+        return $ok;
+    }
+
+    public function editar($id, $data)
+    {
+        $sql = "UPDATE
+                    `movimientos`
+                SET
+                    `id_item` = :item_id,
+                    `fecha` = :fecha,
+                    `descripcion` = :descripcion,
+                    `cantidad` = :cantidad
+                WHERE
+                    `id`=:id";
+        $stmt = $this->db->prepare($sql);
+        $data['id'] = $id;
+        return $stmt->execute($data);
+    }
+
+    public function listar($id_item)
+    {
+        $stmt = $this->db->query("SELECT
+                                    m.`id`,
+                                    m.`id_item`,
+                                    ma.nombre,
+                                    m.`fecha`,
+                                    m.`descripcion`,
+                                    m.`cantidad`
+                                FROM
+                                    `movimientos` m
+                                JOIN materiales ma ON
+                                    m.id_item = ma.id
+                                WHERE
+                                    m.id_item=:id_item
+                                ORDER BY
+                                    m.fecha
+                                DESC
+                                    ");
+
+        $stmt->execute(['id_item' => $id_item]);
+
+        $result = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $result[] = new Movimiento(
+                $row['id'],
+                $row['id_item'],
+                $row['nombre'],
+                $row['fecha'],
+                $row['descripcion'],
+                $row['cantidad']
+            );
+        }
+
+        return $result;
+    }
+}

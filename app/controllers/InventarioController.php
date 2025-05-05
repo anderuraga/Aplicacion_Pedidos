@@ -82,6 +82,77 @@ class InventarioController extends Controller
         }
     }
 
+    public function movimiento()
+    {
+        $id = $_GET['id'];
+
+        $movimientosDAO = $this->dao("Movimientos");
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $_SESSION['alert'] = $this->guardarMovimiento($movimientosDAO);
+            //TODO Averiguar pro que desaparece el segundo parametro al editar en vez de crear
+            if($movimientosDAO->last_insert!=null){
+                session_write_close();
+                header("Location: movimiento?id=".$movimientosDAO->last_insert."&item=".$_POST['item_id']);
+            }
+        }
+
+        if ($id <> 0) {
+            $movimiento = $movimientosDAO->obtener($id);
+        } else {
+            $movimiento = new Movimiento(id: 0, id_item: 0, id_nombre: '', fecha: '', descripcion: '', cantidad: 0);
+        }
+
+        $this->view("inventario/movimientos", ['movimiento' => $movimiento]);
+
+    }
+
+    public function guardarMovimiento($movimientosDAO)
+    {
+
+        $id = (int) ($_POST['id']);
+        $tipo = $_POST['tipo'];
+        $cantidad = (int) ($_POST['cantidad']);
+        $fecha = trim($_POST['fecha']);
+        $descripcion = trim($_POST['descripcion']);
+        $item_id = $_POST['item_id'];
+
+        if ($cantidad <= 0 || $fecha === '' || $descripcion === '' || !in_array($tipo, ['Entrada', 'Salida'])) {
+            return [
+                'tipo' => 'warning',
+                'mensaje' => 'Todos los campos deben completarse correctamente.'
+            ];
+        }
+
+        if ($tipo === 'Salida') {
+            $cantidad *= -1;
+        }
+
+        $data = [
+            'item_id' => $item_id,
+            'cantidad' => $cantidad,
+            'fecha' => $fecha,
+            'descripcion' => $descripcion
+        ];
+
+        if ($id === 0) {
+            $ok = $movimientosDAO->crear($data);
+        } else {
+            $ok = $movimientosDAO->editar($id, $data);
+        }
+
+        if ($ok) {
+            return [
+                'tipo' => 'success',
+                'mensaje' => $id === 0 ? 'Movimiento creado correctamente.' : 'Movimiento editado correctamente.'
+            ];
+        } else {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => $id === 0 ? 'Error al crear el movimiento.' : 'Error al editar el movimiento.'
+            ];
+        }
+    }
+
     public function tiene_permiso(): bool
     {
         return requireAdmin();

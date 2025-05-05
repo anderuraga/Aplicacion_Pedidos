@@ -1,0 +1,76 @@
+<?php require_once HOMEDIR . '/../app/helpers/url.php'; ?>
+<?php $titulo = "Inventario - Movimiento"  ?>
+<?php require HOMEDIR . '/../app/views/partials/header.php' ?>
+<?php require HOMEDIR . '/../app/views/partials/navbar.php' ?>
+<?php $tab = 11; ?>
+<?php require HOMEDIR . '/../app/views/partials/container.php' ?>
+<?php require HOMEDIR . '/../app/views/partials/alert.php' ?>
+
+<div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
+    <div class="statbox widget box box-shadow">
+        <div class="widget-content widget-content-area p-3">
+            <h1>Item: Movimiento</h1>
+            <form id="editarMovimiento" class="mt-0" action="Inventario/movimiento?id=<?= $movimiento->id ?>"
+                method="post">
+                <input type="hidden" id="id" name="id" value="<?= $movimiento->id ?>">
+                <input type="hidden" id="item_id" name="item_id" value="<?= $_GET['item'] ?>">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h5>Tipo:</h5>
+                        <div class="form-check form-check-primary form-check-inline">
+                            <input class="form-check-input" type="radio" name="tipo" id="tipoEdit" value="Entrada" <?= $movimiento->cantidad>0?'checked':'' ?>>
+                            <label class="form-check-label" for="tipo">
+                                Entrada
+                            </label>
+                        </div>
+                        <div class="form-check form-check-primary form-check-inline">
+                            <input class="form-check-input" type="radio" name="tipo" id="tipoEdit" value="Salida" <?= $movimiento->cantidad<0?'checked':'' ?>>
+                            <label class="form-check-label" for="form-check-radio-default">
+                                Salida
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h5>Cantidad:</h5>
+                        <input type="text" class="form-control mb-2" placeholder="Cantidad" aria-label="cantidad"
+                            name="cantidad" id="cantidad" required value="<?= abs($movimiento->cantidad) ?>">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h5>Fecha:</h5>
+                        <input type="text" class="form-control flatTime mb-2" placeholder="Fecha" aria-label="fecha"
+                            name="fecha" id="fecha" required value="<?= $movimiento->fecha ?>">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h5>Descripción:</h5>
+                        <input type="text" class="form-control mb-2" placeholder="Descripción" aria-label="descripcion"
+                            name="descripcion" id="descripcion" required value="<?= $movimiento->descripcion ?>">
+                    </div>
+                </div>
+
+                <a href="<?= BASE_URL ?>Inventario" class="btn btn-secondary mt-2">Volver</a>
+
+                <button type="submit" class="btn btn-primary mt-2"><?= $movimiento->id == 0 ? 'Crear' : 'Editar' ?></button>
+
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        let datepickers = $('.flatTime').flatpickr({
+            enableTime: true,
+            altInput: true,
+            altFormat: "d-m-Y H:i",
+            dateFormat: "Y-m-d H:i",
+        })
+    });
+</script>
+<?php require HOMEDIR . '/../app/views/partials/footer.php' ?>
