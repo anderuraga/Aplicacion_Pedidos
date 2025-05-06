@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-04-2025 a las 12:36:46
+-- Tiempo de generación: 06-05-2025 a las 08:21:50
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -40,7 +40,7 @@ CREATE TABLE `areas_gastos` (
 INSERT INTO `areas_gastos` (`id`, `id_departamento`, `nombre`) VALUES
 (1, 2, 'Gastos Generales'),
 (4, 3, 'Materiales de fabricación'),
-(5, 5, 'Elorrieta Prueba 23'),
+(5, 2, 'Elorrieta Prueba 23'),
 (7, 4, 'test 2 22'),
 (8, 5, 'Prueba nueva'),
 (9, 4, 'Super prueba'),
@@ -62,6 +62,7 @@ CREATE TABLE `departamentos` (
 --
 
 INSERT INTO `departamentos` (`id`, `nombre`) VALUES
+(12, 'Bombillas led'),
 (1, 'Borrado2r'),
 (2, 'Conserjería'),
 (9, 'cuarta prueba'),
@@ -135,6 +136,14 @@ CREATE TABLE `materiales` (
   `nombre` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
+--
+-- Volcado de datos para la tabla `materiales`
+--
+
+INSERT INTO `materiales` (`id`, `nombre`) VALUES
+(1, 'Bombillas led'),
+(2, 'Teclados Logitech');
+
 -- --------------------------------------------------------
 
 --
@@ -148,6 +157,14 @@ CREATE TABLE `movimientos` (
   `descripcion` varchar(255) NOT NULL,
   `cantidad` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `movimientos`
+--
+
+INSERT INTO `movimientos` (`id`, `id_item`, `fecha`, `descripcion`, `cantidad`) VALUES
+(1, 2, '2025-05-04 12:00:00', 'Entrada teclados', 6),
+(2, 2, '2025-05-05 12:00:00', 'Entregados 2 teclados en la clase 101', -2);
 
 -- --------------------------------------------------------
 
@@ -221,6 +238,13 @@ CREATE TABLE `proveedores` (
   `contacto` varchar(45) NOT NULL,
   `id_servicio` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `proveedores`
+--
+
+INSERT INTO `proveedores` (`id`, `cif`, `nombre`, `direccion`, `cod_postal`, `poblacion`, `provincia`, `pais`, `telefono`, `correo`, `factura_e`, `cuanta_bancaria`, `contacto`, `id_servicio`) VALUES
+(1, 'P8536976G', 'Javier SL', 'Calle 122', '48901', 'Barakaldo', 'Bizkaia', 'España', '681260860', 'javier@sl.com', 0, '123456789123456789', 'Artetxe', 1);
 
 -- --------------------------------------------------------
 
@@ -307,8 +331,9 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `tipo`, `nombre`, `correo`, `contrasena`, `id_departamento`, `baja`) VALUES
-(1, 1, 'Javier Gómez', 'javier.gomez@emaginarte.com', '$2y$10$2iDisbSnjUv3qWM4fb0v9OC1zCXt6wmdyLp0NKjsjLILSspxPUkzO', 9, NULL),
-(3, 0, 'Prueba', 'prueba@prueba.com', '$2y$10$Z6J4mS/9qA5CWFaocQnY9uY3XHEg9AAso3QRUzlo54XlcSThzD.JS', 10, NULL);
+(1, 1, 'Javier Gómez', 'javier.gomez@emaginarte.com', '$2y$10$2iDisbSnjUv3qWM4fb0v9OC1zCXt6wmdyLp0NKjsjLILSspxPUkzO', 2, NULL),
+(3, 0, 'Prueba', 'prueba@prueba.com', '$2y$10$VS.RgJapSeXoUgUBdpXUlOgJjrQAP4NLDqXzOCQzHIXdMebOculV6', 10, NULL),
+(4, 0, 'Imanol', 'imanol@prueba.com', '$2y$10$EVV1fM.tCFIIJHLbrhblvejZhTsiCEfqmGj.0mDHH2Nb8bxCIwqdW', 4, NULL);
 
 -- --------------------------------------------------------
 
@@ -329,11 +354,32 @@ CREATE TABLE `vista_resumen_areas` (
 -- --------------------------------------------------------
 
 --
+-- Estructura Stand-in para la vista `vista_resumen_movimientos`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `vista_resumen_movimientos` (
+`id` int(11)
+,`nombre` varchar(45)
+,`cantidad` decimal(32,0)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura para la vista `vista_resumen_areas`
 --
 DROP TABLE IF EXISTS `vista_resumen_areas`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_resumen_areas`  AS SELECT `ag`.`id` AS `id_area`, `ag`.`nombre` AS `nombre_area`, `ag`.`id_departamento` AS `id_departamento`, `d`.`nombre` AS `nombre_departamento`, sum(case when `t`.`cantidad` > 0 then `t`.`cantidad` else 0 end) AS `ingresos`, sum(case when `t`.`cantidad` < 0 then abs(`t`.`cantidad`) else 0 end) AS `gastos`, ifnull(sum(`t`.`cantidad`),0) AS `total` FROM ((`areas_gastos` `ag` left join `departamentos` `d` on(`ag`.`id_departamento` = `d`.`id`)) left join `transacciones` `t` on(`ag`.`id` = `t`.`id_area`)) GROUP BY `ag`.`id`, `ag`.`nombre`, `ag`.`id_departamento`, `d`.`nombre` ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `vista_resumen_movimientos`
+--
+DROP TABLE IF EXISTS `vista_resumen_movimientos`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_resumen_movimientos`  AS SELECT `m`.`id` AS `id`, `m`.`nombre` AS `nombre`, ifnull(sum(`mv`.`cantidad`),0) AS `cantidad` FROM (`materiales` `m` left join `movimientos` `mv` on(`m`.`id` = `mv`.`id_item`)) WHERE 1 GROUP BY `m`.`id` ;
 
 --
 -- Índices para tablas volcadas
@@ -479,7 +525,7 @@ ALTER TABLE `areas_gastos`
 -- AUTO_INCREMENT de la tabla `departamentos`
 --
 ALTER TABLE `departamentos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `estado`
@@ -503,13 +549,13 @@ ALTER TABLE `incidencias`
 -- AUTO_INCREMENT de la tabla `materiales`
 --
 ALTER TABLE `materiales`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `movimientos`
 --
 ALTER TABLE `movimientos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
@@ -533,7 +579,7 @@ ALTER TABLE `presupuestos`
 -- AUTO_INCREMENT de la tabla `proveedores`
 --
 ALTER TABLE `proveedores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `subconceptos`
@@ -557,7 +603,7 @@ ALTER TABLE `transacciones`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas
