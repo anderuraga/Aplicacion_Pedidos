@@ -16,31 +16,34 @@ class TransaccionesDAO
     {
         // TODO: Modificar las query de la misma forma que en el historial de items para mostrar el total
         //       de dinero en cada transacción
-        $stmt = $this->db->prepare(query: "SELECT 
-                                                t.`id`,
-                                                t.`id_area`, 
-                                                t.`fecha`, 
-                                                t.`descripcion`, 
-                                                t.`cantidad`, 
-                                                ag.nombre as area_nombre 
-                                            FROM `transacciones` t 
-                                                JOIN areas_gastos ag 
-                                                    ON t.id_area=ag.id 
-                                            WHERE t.id_area=:id_area
-                                            ORDER BY t.fecha DESC");
+        $stmt = $this->db->prepare(query: "SELECT
+                                                t.`id` AS transaccion_id,
+                                                t.`id_area` AS area_id,
+                                                ag.nombre_area AS area_nombre,
+                                                ag.id_departamento AS departamento_id,
+                                                ag.nombre_departamento AS departamento_nombre,
+                                                ag.ingresos,
+                                                ag.gastos,
+                                                ag.total as diferencia,
+                                                t.`fecha` AS transaccion_fecha,
+                                                t.`descripcion` AS transaccion_descripcion,
+                                                t.`cantidad` AS transaccion_cantidad
+                                            FROM
+                                                `transacciones` t
+                                            JOIN vista_resumen_areas ag ON
+                                                t.id_area = ag.id_area
+                                            WHERE
+                                                t.id_area = :id_area
+                                            ORDER BY
+                                                t.fecha
+                                            DESC
+                                                ");
 
         $stmt->execute(['id_area' => $id_area]);
 
         $result = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = new Transaccion(
-                $row['id'],
-                $row['id_area'],
-                $row['area_nombre'],
-                $row['fecha'],
-                $row['descripcion'],
-                $row['cantidad']
-            );
+            $result[] = Transaccion::fromArray($row);
         }
 
         return $result;
@@ -48,31 +51,36 @@ class TransaccionesDAO
 
     public function ingresos()
     {
-        $stmt = $this->db->prepare(query: "SELECT 
-                                                t.`id`,
-                                                t.`id_area`, 
-                                                t.`fecha`, 
-                                                t.`descripcion`, 
-                                                t.`cantidad`, 
-                                                ag.nombre as area_nombre 
-                                            FROM `transacciones` t 
-                                                JOIN areas_gastos ag 
-                                                    ON t.id_area=ag.id
-                                            WHERE t.cantidad > 0
-                                            ORDER BY t.fecha DESC, t.id DESC
+        $stmt = $this->db->prepare(query: "SELECT
+                                                t.`id` AS transaccion_id,
+                                                t.`id_area` AS area_id,
+                                                ag.nombre_area AS area_nombre,
+                                                ag.id_departamento AS departamento_id,
+                                                ag.nombre_departamento AS departamento_nombre,
+                                                ag.ingresos,
+                                                ag.gastos,
+                                                ag.total as diferencia,
+                                                t.`fecha` AS transaccion_fecha,
+                                                t.`descripcion` AS transaccion_descripcion,
+                                                t.`cantidad` AS transaccion_cantidad
+                                            FROM
+                                                `transacciones` t
+                                            JOIN vista_resumen_areas ag ON
+                                                t.id_area = ag.id_area
+                                            WHERE
+                                                t.cantidad > 0
+                                            ORDER BY
+                                                t.fecha
+                                            DESC
+                                                ,
+                                                t.id
+                                            DESC
                                             ");
         $stmt->execute();
 
         $result = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = new Transaccion(
-                $row['id'],
-                $row['id_area'],
-                $row['area_nombre'],
-                $row['fecha'],
-                $row['descripcion'],
-                $row['cantidad']
-            );
+            $result[] = Transaccion::fromArray($row);
         }
 
         return $result;
@@ -110,18 +118,27 @@ class TransaccionesDAO
 
     public function obtener($id)
     {
-        $stmt = $this->db->prepare(query: "SELECT 
-                                                t.`id`,
-                                                t.`id_area`, 
-                                                t.`fecha`, 
-                                                t.`descripcion`, 
-                                                t.`cantidad`, 
-                                                ag.nombre as area_nombre 
-                                            FROM `transacciones` t 
-                                                JOIN areas_gastos ag 
-                                                    ON t.id_area=ag.id
-                                            WHERE t.`id`=:id
-                                            ORDER BY t.fecha DESC, t.id DESC
+        $stmt = $this->db->prepare(query: "SELECT
+                                                t.`id` AS transaccion_id,
+                                                t.`id_area` AS area_id,
+                                                ag.nombre_area AS area_nombre,
+                                                ag.id_departamento AS departamento_id,
+                                                ag.nombre_departamento AS departamento_nombre,
+                                                ag.ingresos,
+                                                ag.gastos,
+                                                ag.total AS diferencia,
+                                                t.`fecha` AS transaccion_fecha,
+                                                t.`descripcion` AS transaccion_descripcion,
+                                                t.`cantidad` AS transaccion_cantidad
+                                            FROM
+                                                `transacciones` t
+                                            JOIN vista_resumen_areas ag ON
+                                                t.id_area = ag.id_area
+                                            WHERE
+                                                t.`id` = :id
+                                            ORDER BY
+                                                t.fecha DESC,
+                                                t.id DESC
                                             ");
         $stmt->execute([
             'id' => $id
@@ -129,11 +146,10 @@ class TransaccionesDAO
         $row = $stmt->fetch();
         return new Transaccion(
             $row['id'],
-            $row['id_area'],
+            AreaGastos::fromArray($row),
             $row['area_nombre'],
             $row['fecha'],
             $row['descripcion'],
-            $row['cantidad']
         );
 
     }

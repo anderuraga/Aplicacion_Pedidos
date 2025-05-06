@@ -16,15 +16,15 @@ class SubconceptosDAO
     public function obtener($id): Subconcepto
     {
         $stmt = $this->db->prepare("SELECT 
-                                                `id`, 
-                                                `nombre`, 
-                                                `tipo`
+                                                `id` as subconcepto_id, 
+                                                `nombre` as subconcepto_nombre, 
+                                                `tipo` as subconcepto_tipo
                                             FROM `subconceptos` 
                                             WHERE `id`=:id");
 
         $stmt->execute(['id' => $id]);
         $row = $stmt->fetch();
-        return new Subconcepto($row['id'], $row['nombre'], $row['tipo']);
+        return Subconcepto::fromArray($row);
     }
 
     public function comprobrarNombre($nombre, $excluirId = null)
@@ -85,16 +85,16 @@ class SubconceptosDAO
     public function listar()
     {
         $stmt = $this->db->query("SELECT 
-                                    `id`, 
-                                    `nombre`, 
-                                    `tipo` 
-                                FROM `subconceptos` 
-                                WHERE 1 
-                                ORDER BY `nombre` ASC");
+                                            `id` as subconcepto_id, 
+                                            `nombre` as subconcepto_nombre, 
+                                            `tipo` as subconcepto_tipo
+                                        FROM `subconceptos` 
+                                        WHERE 1 
+                                        ORDER BY `nombre` ASC");
 
         $result = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = new Subconcepto($row['id'], $row['nombre'], $row['tipo']);
+            $result[] = Subconcepto::fromArray($row);
         }
 
         return $result;

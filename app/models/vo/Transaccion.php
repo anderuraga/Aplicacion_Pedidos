@@ -1,22 +1,19 @@
 <?php
 require_once __DIR__ . '/../../helpers/formatos.php';
+require_once __DIR__ . '/AreaGastos.php';
 
 class Transaccion
 {
-    public $id;
+    public int $id;
+    public AreaGastos $areaGastos;
+    public string $fecha;
+    public string $descripcion;
+    public string $cantidad;
 
-    //TODO usar clase Area
-    public $area_id;
-    public $area_nombre;
-    public $fecha;
-    public $descripcion;
-    public $cantidad;
-
-    public function __construct($id, $area_id, $area_nombre, $fecha, $descripcion, $cantidad)
+    public function __construct(int $id, AreaGastos $areaGastos, string $fecha, string $descripcion, string $cantidad)
     {
         $this->id = $id;
-        $this->area_id = $area_id;
-        $this->area_nombre = $area_nombre;
+        $this->areaGastos = $areaGastos;
         $this->fecha = $fecha;
         $this->descripcion = $descripcion;
         $this->cantidad = $cantidad;
@@ -33,7 +30,20 @@ class Transaccion
         return $this->cantidad > 0 ? 'Ingreso' : 'Gasto';
     }
 
-    public function cantidad_formato(){
+    public function cantidad_formato()
+    {
         return getCantidadFormateada($this->cantidad);
     }
+
+    public static function fromArray(array $row): Transaccion
+    {
+        return new Transaccion(
+            id: (int) $row['transaccion_id'],
+            areaGastos: AreaGastos::fromArray($row),
+            fecha: $row['transaccion_fecha'],
+            descripcion: $row['transaccion_descripcion'],
+            cantidad: $row['transaccion_cantidad']
+        );
+    }
+
 }

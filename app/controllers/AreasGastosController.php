@@ -60,7 +60,7 @@ class AreasGastosController extends Controller
             $areaGasto = $areasGastoDAO->obtener($id);
         } else {
             require_once __DIR__ . "/../models/vo/AreaGastos.php";
-            $areaGasto = new AreaGastos(0, '', 0, '',0,0,0);
+            $areaGasto = new AreaGastos(0, '', new Departamento(0,''), '',0,0,0);
         }
 
         $this->view("areasgastos/formulario", ['areaGasto' => $areaGasto, 'departamentos' => $departamentos]);

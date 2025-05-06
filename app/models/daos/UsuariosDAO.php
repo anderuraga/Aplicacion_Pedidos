@@ -15,12 +15,12 @@ class UsuariosDAO
     public function obtener($id)
     {
         $stmt = $this->db->prepare("SELECT 
-                                    u.`id`, 
-                                    u.`tipo`, 
-                                    u.`nombre`, 
-                                    u.`correo`, 
+                                    u.`id` as usuario_id, 
+                                    u.`tipo` as usuario_tipo, 
+                                    u.`nombre` as usuario_nombre, 
+                                    u.`correo` as usuario_correo, 
                                     u.`contrasena`, 
-                                    u.`id_departamento`,
+                                    u.`id_departamento` as departamento_id,
                                     d.nombre as departamento_nombre 
                                 FROM `usuarios` u 
                                     JOIN departamentos d 
@@ -29,14 +29,7 @@ class UsuariosDAO
                                 ORDER BY u.nombre ASC");
         $stmt->execute(['id' => $id]);
         $row = $stmt->fetch();
-        return new Usuario(
-            id: $row['id'],
-            tipo: $row['tipo'],
-            nombre: $row['nombre'],
-            correo: $row['correo'],
-            departamento_id: $row['id_departamento'],
-            departamento_nombre: $row['departamento_nombre']
-        );
+        return Usuario::fromArray($row);
     }
 
     public function comprobarCorreo($correo, $excluirId = 0)
@@ -55,12 +48,12 @@ class UsuariosDAO
     public function listar()
     {
         $stmt = $this->db->query("SELECT 
-                                    u.`id`, 
-                                    u.`tipo`, 
-                                    u.`nombre`, 
-                                    u.`correo`, 
+                                    u.`id` as usuario_id, 
+                                    u.`tipo` as usuario_tipo, 
+                                    u.`nombre` as usuario_nombre, 
+                                    u.`correo` as usuario_correo, 
                                     u.`contrasena`, 
-                                    u.`id_departamento`,
+                                    u.`id_departamento` as departamento_id,
                                     d.nombre as departamento_nombre 
                                 FROM `usuarios` u 
                                     JOIN departamentos d 
@@ -70,14 +63,7 @@ class UsuariosDAO
 
         $result = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = new Usuario(
-                id: $row['id'],
-                tipo: $row['tipo'],
-                nombre: $row['nombre'],
-                correo: $row['correo'],
-                departamento_id: $row['id_departamento'],
-                departamento_nombre: $row['departamento_nombre']
-            );
+            $result[] = Usuario::fromArray($row);
         }
 
         return $result;
@@ -86,12 +72,12 @@ class UsuariosDAO
     public function login($correo, $contrasena): Usuario|null
     {
         $stmt = $this->db->prepare(query: "SELECT 
-                                                u.`id`, 
-                                                u.`tipo`, 
-                                                u.`nombre`, 
-                                                u.`correo`, 
+                                                u.`id` as usuario_id, 
+                                                u.`tipo` as usuario_tipo, 
+                                                u.`nombre` as usuario_nombre, 
+                                                u.`correo` as usuario_correo, 
                                                 u.`contrasena`, 
-                                                u.`id_departamento`,
+                                                u.`id_departamento` as departamento_id,
                                                 d.nombre as departamento_nombre 
                                             FROM `usuarios` u 
                                                 JOIN departamentos d 
@@ -100,14 +86,7 @@ class UsuariosDAO
         $stmt->execute(['correo' => $correo]);
         if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             if (password_verify($contrasena, $row['contrasena'])) {
-                return new Usuario(
-                    id: $row['id'],
-                    tipo: $row['tipo'],
-                    nombre: $row['nombre'],
-                    correo: $row['correo'],
-                    departamento_id: $row['id_departamento'],
-                    departamento_nombre: $row['departamento_nombre']
-                );
+                return Usuario::fromArray($row);
             }
         }
         return null;

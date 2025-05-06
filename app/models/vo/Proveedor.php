@@ -31,8 +31,7 @@ class Proveedor
         bool $factura_electronica,
         string $cuenta_bancaria,
         string $contacto,
-        int $tipo_servicio_id,
-        string $tipo_servicio_nombre
+        TipoServicio $tipoServicio
     ) {
         $this->id = $id;
         $this->cif = $cif;
@@ -47,6 +46,26 @@ class Proveedor
         $this->factura_electronica = $factura_electronica;
         $this->cuenta_bancaria = $cuenta_bancaria;
         $this->contacto = $contacto;
-        $this->tipo_servicio = new TipoServicio($tipo_servicio_id, $tipo_servicio_nombre);
+        $this->tipo_servicio = $tipoServicio;
+    }
+
+    public static function fromArray(array $row): Proveedor
+    {
+        return new Proveedor(
+            (int) $row['proveedor_id'],
+            $row['proveedor_cif'],
+            $row['proveedor_nombre'],
+            $row['proveedor_direccion'],
+            (int) $row['proveedor_cod_postal'],
+            $row['proveedor_poblacion'],
+            $row['proveedor_provincia'],
+            $row['proveedor_pais'],
+            $row['proveedor_telefono'],
+            $row['proveedor_correo'],
+            $row['proveedor_factura_e']==1,
+            $row['proveedor_cuenta_bancaria'],
+            $row['proveedor_contacto'],
+            TipoServicio::fromArray($row)
+        );
     }
 }

@@ -16,21 +16,21 @@ class ProveedoresDAO
     public function obtener($id): Proveedor
     {
         $stmt = $this->db->prepare("SELECT 
-                                                p.`id`, 
-                                                p.`cif`, 
-                                                p.`nombre`, 
-                                                p.`direccion`, 
-                                                p.`cod_postal`, 
-                                                p.`poblacion`, 
-                                                p.`provincia`, 
-                                                p.`pais`, 
-                                                p.`telefono`, 
-                                                p.`correo`, 
-                                                p.`factura_e`, 
-                                                p.`cuanta_bancaria`, 
-                                                p.`contacto`, 
-                                                p.`id_servicio` ,
-                                                t.nombre as nombre_servicio
+                                                p.`id` as proveedor_id, 
+                                                p.`cif` as proveedor_cif, 
+                                                p.`nombre` as proveedor_nombre, 
+                                                p.`direccion` as proveedor_direccion, 
+                                                p.`cod_postal` as proveedor_cod_postal, 
+                                                p.`poblacion` as proveedor_poblacion, 
+                                                p.`provincia` as proveedor_provincia, 
+                                                p.`pais` as proveedor_pais, 
+                                                p.`telefono` as proveedor_telefono, 
+                                                p.`correo` as proveedor_correo, 
+                                                p.`factura_e` as proveedor_factura_e, 
+                                                p.`cuanta_bancaria` as proveedor_cuenta_bancaria, 
+                                                p.`contacto` as proveedor_contacto, 
+                                                p.`id_servicio` as tiposervicio_id,
+                                                t.nombre as tiposervicio_nombre
                                             FROM `proveedores` p 
                                                 JOIN tipos_servicio t 
                                                     ON t.id=p.id_servicio 
@@ -39,24 +39,7 @@ class ProveedoresDAO
 
         $stmt->execute(['id' => $id]);
         $row = $stmt->fetch();
-        return new Proveedor(
-            id: $row['id'],
-            cif: $row['cif'],
-            nombre: $row['nombre'],
-            direccion: $row['direccion'],
-            cod_postal: $row['cod_postal'],
-            poblacion: $row['poblacion'],
-            provincia: $row['provincia'],
-            pais: $row['pais'],
-            telefono: $row['telefono'],
-            correo: $row['correo'],
-            factura_electronica: $row['factura_e'],
-            cuenta_bancaria: $row['cuanta_bancaria'],
-            contacto: $row['contacto'],
-            // TODO usar la clase Departamento
-            tipo_servicio_id: $row['id_servicio'],
-            tipo_servicio_nombre: $row['nombre_servicio']
-        );
+        return Proveedor::fromArray($row);
     }
 
     public function comprobrarCif($cif, $excluirId = null)
@@ -153,22 +136,22 @@ class ProveedoresDAO
     public function listar()
     {
         $stmt = $this->db->query("SELECT 
-                                    p.`id`, 
-                                    p.`cif`, 
-                                    p.`nombre`, 
-                                    p.`direccion`, 
-                                    p.`cod_postal`, 
-                                    p.`poblacion`, 
-                                    p.`provincia`, 
-                                    p.`pais`, 
-                                    p.`telefono`, 
-                                    p.`correo`, 
-                                    p.`factura_e`, 
-                                    p.`cuanta_bancaria`, 
-                                    p.`contacto`, 
-                                    p.`id_servicio` ,
-                                    t.nombre as nombre_servicio
-                                FROM `proveedores` p 
+                                        p.`id` as proveedor_id, 
+                                        p.`cif` as proveedor_cif, 
+                                        p.`nombre` as proveedor_nombre, 
+                                        p.`direccion` as proveedor_direccion, 
+                                        p.`cod_postal` as proveedor_cod_postal, 
+                                        p.`poblacion` as proveedor_poblacion, 
+                                        p.`provincia` as proveedor_provincia, 
+                                        p.`pais` as proveedor_pais, 
+                                        p.`telefono` as proveedor_telefono, 
+                                        p.`correo` as proveedor_correo, 
+                                        p.`factura_e` as proveedor_factura_e, 
+                                        p.`cuanta_bancaria` as proveedor_cuenta_bancaria, 
+                                        p.`contacto` as proveedor_contacto, 
+                                        p.`id_servicio` as tiposervicio_id,
+                                        t.nombre as tiposervicio_nombre
+                                    FROM `proveedores` p 
                                     JOIN tipos_servicio t 
                                         ON t.id=p.id_servicio 
                                 WHERE 1
@@ -176,24 +159,7 @@ class ProveedoresDAO
 
         $result = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = new Proveedor(
-                id: $row['id'],
-                cif: $row['cif'],
-                nombre: $row['nombre'],
-                direccion: $row['direccion'],
-                cod_postal: $row['cod_postal'],
-                poblacion: $row['poblacion'],
-                provincia: $row['provincia'],
-                pais: $row['pais'],
-                telefono: $row['telefono'],
-                correo: $row['correo'],
-                factura_electronica: $row['factura_e'],
-                cuenta_bancaria: $row['cuanta_bancaria'],
-                contacto: $row['contacto'],
-                 // TODO usar clase Servicio
-                tipo_servicio_id: $row['id_servicio'],
-                tipo_servicio_nombre: $row['nombre_servicio']
-            );
+            $result[] = Proveedor::fromArray($row);
         }
 
         return $result;

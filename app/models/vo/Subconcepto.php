@@ -6,7 +6,7 @@ enum tipo_subconcepto
 
     public static function fromString(string $value): tipo_subconcepto
     {
-        return match($value) {
+        return match ($value) {
             'Fungible' => self::Fungible,
             'Inventariable' => self::Inventariable,
             default => throw new InvalidArgumentException("Valor no válido para tipo_subconcepto: $value")
@@ -25,5 +25,14 @@ class Subconcepto
         $this->id = $id;
         $this->nombre = $nombre;
         $this->tipo = tipo_subconcepto::fromString($tipo);
+    }
+
+    public static function fromArray(array $row): Subconcepto
+    {
+        return new Subconcepto(
+            id: (int) $row['subconcepto_id'],
+            nombre: $row['subconcepto_nombre'],
+            tipo: $row['subconcepto_tipo']
+        );
     }
 }

@@ -9,10 +9,10 @@ class Movimiento
     public int $cantidad;
     public int $total;
 
-    public function __construct($id, $id_item, $id_nombre, $fecha, $descripcion, $cantidad, $total=0)
+    public function __construct(int $id, Item $item, string $fecha, string $descripcion, int $cantidad, int $total=0)
     {
         $this->id = $id;
-        $this->item = new Item($id_item,$id_nombre,0);
+        $this->item = $item;
         $this->fecha = $fecha;
         $this->descripcion = $descripcion;
         $this->cantidad = $cantidad;
@@ -23,5 +23,17 @@ class Movimiento
     {
         $date = new DateTime($this->fecha);
         return $date->format('d/m/Y H:i');
+    }
+    
+    public static function fromArray(array $row): Movimiento
+    {
+        return new Movimiento(
+            (int)$row['movimiento_id'],
+            Item::fromArray($row),
+            $row['movimiento_fecha'],
+            $row['movimiento_descripcion'],
+            (int)$row['movimiento_cantidad'],
+            isset($row['movimiento_total']) ? (int)$row['movimiento_total'] : 0
+        );
     }
 }

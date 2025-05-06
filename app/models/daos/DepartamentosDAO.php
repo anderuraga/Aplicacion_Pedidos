@@ -15,15 +15,15 @@ class DepartamentosDAO
 
     public function obtener($id): Departamento
     {
-        $stmt = $this->db->prepare( "SELECT 
-                                                `id`, 
-                                                `nombre` 
+        $stmt = $this->db->prepare("SELECT 
+                                                `id` as departamento_id, 
+                                                `nombre` as departamento_nombre
                                             FROM `departamentos` 
                                             WHERE `id`=:id");
 
         $stmt->execute(['id' => $id]);
         $row = $stmt->fetch();
-        return new Departamento($row['id'], $row['nombre']);
+        return Departamento::fromArray($row);
     }
 
     public function comprobrarNombre($nombre, $excluirId = null)
@@ -78,11 +78,19 @@ class DepartamentosDAO
 
     public function listar()
     {
-        $stmt = $this->db->query("SELECT `id`,`nombre` FROM `departamentos` WHERE 1 ORDER BY `nombre` ASC");
+        $stmt = $this->db->query("SELECT
+    `id` as departamento_id, 
+    `nombre` as departamento_nombre
+FROM
+    `departamentos`
+WHERE
+    1
+ORDER BY
+    `nombre` ASC");
 
         $result = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = new Departamento($row['id'],$row['nombre']);
+            $result[] = Departamento::fromArray($row);
         }
 
         return $result;

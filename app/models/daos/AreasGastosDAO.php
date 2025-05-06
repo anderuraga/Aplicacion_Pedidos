@@ -42,13 +42,13 @@ class AreasGastosDAO
     public function listar()
     {
         $stmt = $this->db->query("SELECT 
-                                    `id_area`, 
-                                    `nombre_area`, 
-                                    `id_departamento`, 
-                                    `nombre_departamento`, 
+                                    `id_area` as area_id, 
+                                    `nombre_area` as area_nombre, 
+                                    `id_departamento` as departamento_id, 
+                                    `nombre_departamento` as departamento_nombre, 
                                     `ingresos`, 
                                     `gastos`, 
-                                    `total` 
+                                    `total` as diferencia
                                 FROM `vista_resumen_areas` 
                                 WHERE 1 
                                 ORDER BY 
@@ -56,7 +56,7 @@ class AreasGastosDAO
 
         $result = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = new AreaGastos($row['id_area'], $row['nombre_area'], $row['id_departamento'], $row['nombre_departamento'],$row['ingresos'],$row['gastos'],$row['total']);
+            $result[] = AreaGastos::fromArray($row);
         }
 
         return $result;
@@ -64,20 +64,20 @@ class AreasGastosDAO
 
     public function obtener($id)
     {
-        $stmt = $this->db->prepare( "SELECT 
-                                                `id_area`, 
-                                                `nombre_area`, 
-                                                `id_departamento`, 
-                                                `nombre_departamento`, 
-                                                `ingresos`, 
-                                                `gastos`, 
-                                                `total` 
-                                            FROM `vista_resumen_areas` 
-                                            WHERE `id_area` = :id");
+        $stmt = $this->db->prepare("SELECT 
+                                            `id_area` as area_id, 
+                                            `nombre_area` as area_nombre, 
+                                            `id_departamento` as departamento_id, 
+                                            `nombre_departamento` as departamento_nombre, 
+                                            `ingresos`, 
+                                            `gastos`, 
+                                            `total` as diferencia
+                                        FROM `vista_resumen_areas`
+                                        WHERE `id_area` = :id");
 
         $stmt->execute(['id' => $id]);
         $row = $stmt->fetch();
-        return new AreaGastos($row['id_area'], $row['nombre_area'], $row['id_departamento'], $row['nombre_departamento'],$row['ingresos'],$row['gastos'],$row['total']);
+        return AreaGastos::fromArray($row);
     }
 
     public function crear($nombre, $id_departamento)

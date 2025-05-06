@@ -16,14 +16,14 @@ class TiposServicioDAO
     public function obtener($id): TipoServicio
     {
         $stmt = $this->db->prepare( "SELECT 
-                                        `id`, 
-                                        `nombre` 
+                                        `id` as tiposervicio_id, 
+                                        `nombre` as tiposervicio_nombre
                                     FROM `tipos_servicio`
                                     WHERE `id`=:id");
 
         $stmt->execute(['id' => $id]);
         $row = $stmt->fetch();
-        return new TipoServicio($row['id'], $row['nombre']);
+        return TipoServicio::fromArray($row);
     }
 
     public function comprobrarNombre($nombre, $excluirId = null)
@@ -76,11 +76,19 @@ class TiposServicioDAO
 
     public function listar()
     {
-        $stmt = $this->db->query("SELECT `id`,`nombre` FROM `tipos_servicio` WHERE 1 ORDER BY `nombre` ASC");
+        $stmt = $this->db->query("SELECT
+                                            `id` as tiposervicio_id,
+                                            `nombre` as tiposervicio_nombre
+                                        FROM
+                                            `tipos_servicio`
+                                        WHERE
+                                            1
+                                        ORDER BY
+                                            `nombre` ASC");
 
         $result = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = new TipoServicio($row['id'],$row['nombre']);
+            $result[] = TipoServicio::fromArray($row);
         }
 
         return $result;

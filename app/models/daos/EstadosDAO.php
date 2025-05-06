@@ -16,15 +16,15 @@ class EstadosDAO
     public function obtener($id): Estado
     {
         $stmt = $this->db->prepare( "SELECT 
-                                                `id`, 
-                                                `nombre`,
+                                                `id` as estado_id,
+                                                `nombre` as estado_nombre,
                                                 `icono`
                                             FROM `estado` 
                                             WHERE `id`=:id");
 
         $stmt->execute(['id' => $id]);
         $row = $stmt->fetch();
-        return new Estado($row['id'], $row['nombre'],$row['icono']);
+        return Estado::fromArray($row);
     }
 
     public function comprobrarNombre($nombre, $excluirId = null)
@@ -64,8 +64,8 @@ class EstadosDAO
     public function listar()
     {
         $stmt = $this->db->query("SELECT
-    `id`,
-    `nombre`,
+    `id` as estado_id,
+    `nombre` as estado_nombre,
     `icono`
 FROM
     `estado`
@@ -76,7 +76,7 @@ ORDER BY
 
         $result = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = new Estado($row['id'],$row['nombre'],$row['icono']);
+            $result[] = Estado::fromArray($row);
         }
 
         return $result;

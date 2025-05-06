@@ -16,12 +16,18 @@ class MovimientosDAO
     public function obtener($id): Movimiento
     {
         $stmt = $this->db->prepare("SELECT
-                                                m.`id`,
-                                                m.`id_item`,
-                                                ma.nombre,
-                                                m.`fecha`,
-                                                m.`descripcion`,
-                                                m.`cantidad`
+                                                m.`id` as movimiento_id,
+                                                m.`id_item` as item_id,
+                                                ma.nombre as item_nombre,
+                                                m.`fecha` as movimiento_fecha,
+                                                m.`descripcion` as movimiento_descripcion,
+                                                m.`cantidad` as movimiento_cantidad,
+                                                SUM(m.cantidad) 
+                                                OVER (
+                                                    PARTITION BY m.id_item 
+                                                    ORDER BY m.fecha, m.id 
+                                                    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+                                                ) AS movimiento_total
                                             FROM
                                                 `movimientos` m
                                             JOIN materiales ma ON
@@ -31,14 +37,7 @@ class MovimientosDAO
 
         $stmt->execute(['id' => $id]);
         $row = $stmt->fetch();
-        return new Movimiento(
-            $row['id'],
-            $row['id_item'],
-            $row['nombre'],
-            $row['fecha'],
-            $row['descripcion'],
-            $row['cantidad']
-        );
+        return Movimiento::fromArray($row);
     }
 
     public function comprobarId($id)
@@ -89,18 +88,18 @@ class MovimientosDAO
     public function listar($id_item)
     {
         $stmt = $this->db->prepare("SELECT
-                                    m.`id`,
-                                    m.`id_item`,
-                                    ma.nombre,
-                                    m.`fecha`,
-                                    m.`descripcion`,
-                                    m.`cantidad`,
+                                    m.`id` as movimiento_id,
+                                    m.`id_item` as item_id,
+                                    ma.nombre as item_nombre,
+                                    m.`fecha` as movimiento_fecha,
+                                    m.`descripcion` as movimiento_descripcion,
+                                    m.`cantidad` as movimiento_cantidad,
                                     SUM(m.cantidad) 
                                     OVER (
                                         PARTITION BY m.id_item 
                                         ORDER BY m.fecha, m.id 
                                         ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
-                                    ) AS total
+                                    ) AS movimiento_total
                                 FROM
                                     `movimientos` m
                                 JOIN materiales ma ON
@@ -116,15 +115,7 @@ class MovimientosDAO
 
         $result = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = new Movimiento(
-                $row['id'],
-                $row['id_item'],
-                $row['nombre'],
-                $row['fecha'],
-                $row['descripcion'],
-                $row['cantidad'],
-                $row['total']
-            );
+            $result[] = Movimiento::fromArray($row);
         }
 
         return $result;

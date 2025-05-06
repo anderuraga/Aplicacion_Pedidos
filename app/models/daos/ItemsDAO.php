@@ -16,15 +16,15 @@ class ItemsDAO
     public function obtener($id): Item
     {
         $stmt = $this->db->prepare( "SELECT 
-                                            `id`, 
-                                            `nombre`,
-                                            `cantidad`
+                                            `id` as item_id, 
+                                            `nombre` as item_nombre,
+                                            `cantidad` as item_cantidad
                                         FROM `vista_resumen_movimientos` 
                                         WHERE `id`=:id");
 
         $stmt->execute(['id' => $id]);
         $row = $stmt->fetch();
-        return new Item($row['id'], $row['nombre'],$row['cantidad']);
+        return Item::fromArray($row);
     }
 
     public function comprobrarNombre($nombre, $excluirId = null)
@@ -78,16 +78,16 @@ class ItemsDAO
     public function listar()
     {
         $stmt = $this->db->query("SELECT 
-            `id`, 
-            `nombre`, 
-            `cantidad` 
+            `id` as item_id, 
+            `nombre` as item_nombre,  
+            `cantidad` as item_cantidad
         FROM `vista_resumen_movimientos`
         WHERE 1
         ORDER BY `nombre` ASC");
 
         $result = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = new Item($row['id'],$row['nombre'], $row['cantidad']);
+            $result[] = Item::fromArray($row);
         }
 
         return $result;

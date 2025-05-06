@@ -27,7 +27,7 @@
                         <tr>
                             <td><?= $i->id ?></td>
                             <td data-sort="<?= $i->fecha ?>"><?= $i->getFechaVisible() ?></td>
-                            <td><?= htmlspecialchars($i->area_nombre) ?></td>
+                            <td><?= htmlspecialchars($i->areaGastos->nombre) ?></td>
                             <td><?= htmlspecialchars($i->descripcion) ?></td>
                             <td><?= $i->cantidad_formato() ?>€</td>
                             <td>

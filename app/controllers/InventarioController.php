@@ -123,7 +123,7 @@ class InventarioController extends Controller
         if ($id <> 0) {
             $movimiento = $movimientosDAO->obtener($id);
         } else {
-            $movimiento = new Movimiento(id: 0, id_item: 0, id_nombre: '', fecha: '', descripcion: '', cantidad: 0);
+            $movimiento = new Movimiento(id: 0, item: new Item(0,'',0), fecha: '', descripcion: '', cantidad: 0);
         }
 
         $this->view("inventario/movimientos", ['movimiento' => $movimiento]);
