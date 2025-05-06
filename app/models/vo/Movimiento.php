@@ -16,4 +16,10 @@ class Movimiento
         $this->descripcion = $descripcion;
         $this->cantidad = $cantidad;
     }
+
+    public function getFechaVisible()
+    {
+        $date = new DateTime($this->fecha);
+        return $date->format('d/m/Y H:i');
+    }
 }

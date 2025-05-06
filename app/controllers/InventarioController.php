@@ -12,6 +12,31 @@ class InventarioController extends Controller
         $this->view("inventario/index", ['items' => $items]);
     }
 
+    public function historial()
+    {
+        $id = $_GET['id'];
+
+        $itemsDAO = $this->dao("Items");
+        if (!$itemsDAO->comprobarId($id)) {
+            $_SESSION['alert'] = [
+                'tipo' => 'warning',
+                'mensaje' => "El item no existe."
+            ];
+            session_write_close();
+            header('Location: '.BASE_URL.'AreasGastos');
+        }
+
+        $item = $itemsDAO->obtener($id);
+
+        $movimientosDAO = $this->dao("Movimientos");
+        $movimientos = $movimientosDAO->listar($id);
+
+        $this->view("inventario/historial", [
+            'item' => $item,
+            'movimientos' => $movimientos
+        ]);
+    }
+
     public function vereditar()
     {
         $id = $_GET['id'];

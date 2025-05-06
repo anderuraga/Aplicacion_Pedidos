@@ -29,9 +29,9 @@
                             <td><?= htmlspecialchars($i->nombre) ?></td>
                             <td><?= $i->cantidad ?></td>
                             <td>
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                    <button type="button" onclick="editar()" class="btn btn-primary">Editar</button>
-                                    <a href="HistorialItem.php" class="btn btn-primary">Historial</a>
+                                <div class="btn-group" role="group" aria-label="Opciones">
+                                    <a type="button" href="Inventario/vereditar?id=<?= $i->id ?>" class="btn btn-primary">Editar</a>
+                                    <a href="Inventario/historial?id=<?= $i->id ?>" class="btn btn-primary">Historial</a>
                                     <a type="button" href="Inventario/movimiento?id=0&item=<?= $i->id ?>" class="btn btn-secondary">Entrada/Salida</a>
                                 </div>
                             </td>

@@ -88,7 +88,7 @@ class MovimientosDAO
 
     public function listar($id_item)
     {
-        $stmt = $this->db->query("SELECT
+        $stmt = $this->db->prepare("SELECT
                                     m.`id`,
                                     m.`id_item`,
                                     ma.nombre,
