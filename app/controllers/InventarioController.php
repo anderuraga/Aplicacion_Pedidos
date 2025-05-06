@@ -114,7 +114,6 @@ class InventarioController extends Controller
         $movimientosDAO = $this->dao("Movimientos");
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['alert'] = $this->guardarMovimiento($movimientosDAO);
-            //TODO Averiguar pro que desaparece el segundo parametro al editar en vez de crear
             if($movimientosDAO->last_insert!=null){
                 session_write_close();
                 header("Location: movimiento?id=".$movimientosDAO->last_insert."&item=".$_POST['item_id']);
@@ -133,7 +132,6 @@ class InventarioController extends Controller
 
     public function guardarMovimiento($movimientosDAO)
     {
-
         $id = (int) ($_POST['id']);
         $tipo = $_POST['tipo'];
         $cantidad = (int) ($_POST['cantidad']);

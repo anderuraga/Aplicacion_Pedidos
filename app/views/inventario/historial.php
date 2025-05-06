@@ -43,7 +43,7 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-                <a href="<?= BASE_URL ?>Inventario" class="btn btn-secondary m-2">Volver</a>
+                <a href="<?= BASE_URL ?>Inventario/historial?id=<?= $item->id ?>" class="btn btn-secondary m-2">Volver</a>
             </div>
         </div>
     </div>
