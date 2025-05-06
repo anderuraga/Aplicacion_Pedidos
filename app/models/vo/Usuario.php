@@ -1,5 +1,5 @@
 <?php
-require 'Departamento.php';
+require_once __DIR__ .'Departamento.php';
 class Usuario
 {
     public int $id;
@@ -18,13 +18,13 @@ class Usuario
     }
 
     public static function fromArray(array $row): Usuario
-{
-    return new Usuario(
-        id: (int) $row['usuario_id'],
-        tipo: (int) $row['usuario_tipo'],
-        nombre: $row['usuario_nombre'],
-        correo: $row['usuario_correo'],
-        departamento: Departamento::fromArray($row)
-    );
-}
+    {
+        return new Usuario(
+            id: (int) $row['usuario_id'],
+            tipo: (int) $row['usuario_tipo'],
+            nombre: $row['usuario_nombre'],
+            correo: $row['usuario_correo'],
+            departamento: Departamento::fromArray($row)
+        );
+    }
 }
