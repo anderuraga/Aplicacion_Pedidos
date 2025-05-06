@@ -14,6 +14,8 @@ class TransaccionesDAO
 
     public function transaccionesArea($id_area)
     {
+        // TODO: Modificar las query de la misma forma que en el historial de items para mostrar el total
+        //       de dinero en cada transacción
         $stmt = $this->db->prepare(query: "SELECT 
                                                 t.`id`,
                                                 t.`id_area`, 

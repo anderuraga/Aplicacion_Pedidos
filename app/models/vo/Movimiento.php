@@ -7,14 +7,16 @@ class Movimiento
     public string $fecha;
     public string $descripcion;
     public int $cantidad;
+    public int $total;
 
-    public function __construct($id, $id_item, $id_nombre, $fecha, $descripcion, $cantidad)
+    public function __construct($id, $id_item, $id_nombre, $fecha, $descripcion, $cantidad, $total=0)
     {
         $this->id = $id;
         $this->item = new Item($id_item,$id_nombre,0);
         $this->fecha = $fecha;
         $this->descripcion = $descripcion;
         $this->cantidad = $cantidad;
+        $this->total = $total;
     }
 
     public function getFechaVisible()

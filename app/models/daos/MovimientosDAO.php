@@ -94,7 +94,13 @@ class MovimientosDAO
                                     ma.nombre,
                                     m.`fecha`,
                                     m.`descripcion`,
-                                    m.`cantidad`
+                                    m.`cantidad`,
+                                    SUM(m.cantidad) 
+                                    OVER (
+                                        PARTITION BY m.id_item 
+                                        ORDER BY m.fecha, m.id 
+                                        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+                                    ) AS total
                                 FROM
                                     `movimientos` m
                                 JOIN materiales ma ON
@@ -102,8 +108,8 @@ class MovimientosDAO
                                 WHERE
                                     m.id_item=:id_item
                                 ORDER BY
-                                    m.fecha
-                                DESC
+                                    m.fecha DESC, 
+                                    m.id DESC
                                     ");
 
         $stmt->execute(['id_item' => $id_item]);
@@ -116,7 +122,8 @@ class MovimientosDAO
                 $row['nombre'],
                 $row['fecha'],
                 $row['descripcion'],
-                $row['cantidad']
+                $row['cantidad'],
+                $row['total']
             );
         }
 

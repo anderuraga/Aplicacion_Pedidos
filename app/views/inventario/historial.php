@@ -20,6 +20,7 @@
                             <th>Tipo</th>
                             <th>Descripción</th>
                             <th>Cantidad</th>
+                            <th>Total</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -30,6 +31,7 @@
                                 <td><?= $m->cantidad>0?'Entrada':'Salida' ?></td>
                                 <td><?= htmlspecialchars($m->descripcion) ?></td>
                                 <td><?= abs($m->cantidad) ?></td>
+                                <td><?= $m->total ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
