@@ -21,6 +21,7 @@
                             <th>Descripción</th>
                             <th>Cantidad</th>
                             <th>Total</th>
+                            <th>Opciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -28,20 +29,26 @@
                             <tr>
                                 <td><?= $m->id ?></td>
                                 <td data-sort="<?= $m->fecha ?>"><?= $m->getFechaVisible() ?></td>
-                                <td><?= $m->cantidad>0?'Entrada':'Salida' ?></td>
+                                <td><?= $m->cantidad > 0 ? 'Entrada' : 'Salida' ?></td>
                                 <td><?= htmlspecialchars($m->descripcion) ?></td>
                                 <td><?= abs($m->cantidad) ?></td>
                                 <td><?= $m->total ?></td>
+                                <td>
+                                    <div class="btn-group" role="group" aria-label="Opciones">
+                                        <a type="button" href="Inventario/movimiento?id=<?= $m->id ?>&item=<?= $item->id ?>"
+                                            class="btn btn-primary">Editar</a>
+                                    </div>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-                <a href="<?= BASE_URL ?>AreasGastos" class="btn btn-secondary m-2">Volver</a>
+                <a href="<?= BASE_URL ?>Inventario" class="btn btn-secondary m-2">Volver</a>
             </div>
         </div>
     </div>
 </div>
 
-<?php 
+<?php
 $order = 'desc';
 require HOMEDIR . '/../app/views/partials/footer.php' ?>
