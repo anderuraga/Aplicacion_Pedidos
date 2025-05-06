@@ -17,19 +17,19 @@ class EstadosDAO
     {
         $stmt = $this->db->prepare( "SELECT 
                                                 `id`, 
-                                                `nombre` 
+                                                `nombre`,
+                                                `icono`
                                             FROM `estado` 
                                             WHERE `id`=:id");
 
         $stmt->execute(['id' => $id]);
         $row = $stmt->fetch();
-        return new Estado($row['id'], $row['nombre']);
+        return new Estado($row['id'], $row['nombre'],$row['icono']);
     }
 
     public function comprobrarNombre($nombre, $excluirId = null)
     {
-         // TODO cambiar * por un id
-        $sql = "SELECT COUNT(*) FROM estado WHERE nombre = :nombre";
+        $sql = "SELECT COUNT(id) FROM estado WHERE nombre = :nombre";
         if ($excluirId !== null) {
             $sql .= " AND id != :id";
         }
@@ -46,28 +46,37 @@ class EstadosDAO
 
     public function comprobarId($id)
     {
-         // TODO cambiar * por un id
-        $stmt = $this->db->prepare("SELECT COUNT(*) FROM estado WHERE id = :id");
+        $stmt = $this->db->prepare("SELECT COUNT(id) FROM estado WHERE id = :id");
         $stmt->execute(['id' => $id]);
         return $stmt->fetchColumn() > 0;
     }
 
-    public function editar($id, $nombre)
+    public function editar($id, $nombre, $icono)
     {
-        $stmt = $this->db->prepare("UPDATE estado SET nombre = :nombre WHERE id = :id");
+        $stmt = $this->db->prepare("UPDATE estado SET nombre = :nombre, icono = :icono WHERE id = :id");
         return $stmt->execute([
             'id' => $id,
-            'nombre' => $nombre
+            'nombre' => $nombre,
+            'icono' => $icono
         ]);
     }
 
     public function listar()
     {
-        $stmt = $this->db->query("SELECT `id`,`nombre` FROM `estado` WHERE 1 ORDER BY `id` ASC");
+        $stmt = $this->db->query("SELECT
+    `id`,
+    `nombre`,
+    `icono`
+FROM
+    `estado`
+WHERE
+    1
+ORDER BY
+    `id` ASC");
 
         $result = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $result[] = new Estado($row['id'],$row['nombre']);
+            $result[] = new Estado($row['id'],$row['nombre'],$row['icono']);
         }
 
         return $result;

@@ -55,7 +55,7 @@
             "info": "Mostrando _START_ de _END_ de un total de _TOTAL_ filas",
             "sEmptyTable": "Sin resultados"
         },
-        order: [[1, <?= isset($order)?"'$order'":"'asc'" ?>]],
+        order: [[<?= $target??'1' ?>, '<?= $order??"asc" ?>']],
         columnDefs: [
             {
                 target: 0,

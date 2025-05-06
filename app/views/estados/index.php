@@ -15,6 +15,7 @@
                     <tr>
                         <th>id</th>
                         <th>Nombre</th>
+                        <th>Icono</th>
                         <th>Opciones</th>
                     </tr>
                 </thead>
@@ -23,6 +24,7 @@
                         <tr>
                             <td><?= htmlspecialchars($e->id) ?></td>
                             <td><?= htmlspecialchars($e->nombre) ?></td>
+                            <td><?= $e->icono ?></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="Basic example">
                                     <a href="Estados/vereditar?id=<?= $e->id ?>" class="btn btn-primary">Editar</a>
@@ -35,4 +37,6 @@
         </div>
     </div>
 </div>
-<?php require HOMEDIR . '/../app/views/partials/footer.php' ?>
+<?php 
+$target = 0;
+require HOMEDIR . '/../app/views/partials/footer.php' ?>

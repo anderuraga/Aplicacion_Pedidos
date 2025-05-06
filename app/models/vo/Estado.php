@@ -2,12 +2,14 @@
 
 class Estado
 {
-    public $id;
-    public $nombre;
+    public int $id;
+    public string $nombre;
+    public string $icono;
 
-    public function __construct($id, $nombre)
+    public function __construct($id, $nombre, $icono)
     {
         $this->id = $id;
         $this->nombre = $nombre;
+        $this->icono = $icono;
     }
 }

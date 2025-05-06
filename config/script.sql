@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-05-2025 a las 08:21:50
+-- Tiempo de generación: 06-05-2025 a las 11:01:15
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -83,17 +83,18 @@ INSERT INTO `departamentos` (`id`, `nombre`) VALUES
 
 CREATE TABLE `estado` (
   `id` int(11) NOT NULL,
-  `nombre` varchar(45) NOT NULL
+  `nombre` varchar(45) NOT NULL,
+  `icono` mediumtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `estado`
 --
 
-INSERT INTO `estado` (`id`, `nombre`) VALUES
-(1, 'Borrador'),
-(2, 'Enviado Secretaría'),
-(3, 'Enviado Proveedor');
+INSERT INTO `estado` (`id`, `nombre`, `icono`) VALUES
+(1, 'Borrador', '<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-paperclip\"><path d=\"M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48\"></path></svg>'),
+(2, 'Enviado Secretaría', '<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-send\"><line x1=\"22\" y1=\"2\" x2=\"11\" y2=\"13\"></line><polygon points=\"22 2 15 22 11 13 2 9 22 2\"></polygon></svg>'),
+(3, 'Enviado Proveedor', '<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\"\r\n                                    fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"\r\n                                    stroke-linejoin=\"round\" class=\"feather feather-clock\">\r\n                                    <circle cx=\"12\" cy=\"12\" r=\"10\"></circle>\r\n                                    <polyline points=\"12 6 12 12 16 14\"></polyline>\r\n                                </svg>');
 
 -- --------------------------------------------------------
 
@@ -142,7 +143,7 @@ CREATE TABLE `materiales` (
 
 INSERT INTO `materiales` (`id`, `nombre`) VALUES
 (1, 'Bombillas led'),
-(2, 'Teclados Logitech');
+(2, 'Teclados K120');
 
 -- --------------------------------------------------------
 

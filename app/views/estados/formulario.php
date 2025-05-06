@@ -20,6 +20,12 @@
                             name="nombre" id="nombreEdit" required value="<?= $estado->nombre ?>">
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h5>Icono:</h5>
+                        <textarea id="icono" name="icono" rows="5" class="form-control"><?= $estado->icono ?></textarea>
+                    </div>
+                </div>
 
                 <a href="<?= BASE_URL ?>Estados"
                     class="btn btn-secondary mt-2">Volver</a>

@@ -29,6 +29,7 @@ class EstadosController extends Controller {
     {
         $id = $_POST['id'];
         $nombre = trim($_POST['nombre']);
+        $icono = trim($_POST['icono']);
 
         if ($nombre === '') {
             return [
@@ -44,7 +45,7 @@ class EstadosController extends Controller {
             ];
         }
 
-        $ok = $departamentoDAO->editar($id, $nombre);
+        $ok = $departamentoDAO->editar($id, $nombre, $icono);
         
         if($ok){
             return [
