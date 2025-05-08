@@ -28,13 +28,7 @@ class LoginController extends Controller
 
         if ($usuario) {
             session_start();
-            $_SESSION['usuario'] = [
-                'id' => $usuario->id,
-                'tipo' => $usuario->tipo,
-                'nombre' => $usuario->nombre,
-                'correo' => $usuario->correo,
-                'id_departamento' => $usuario->departamento->id
-            ];
+            $_SESSION['usuario'] = serialize($usuario);
             return true;
         } else {
             return false;

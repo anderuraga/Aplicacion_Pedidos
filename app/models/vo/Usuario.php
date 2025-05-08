@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ .'\\Departamento.php';
-class Usuario
+class Usuario implements \Serializable
 {
     public int $id;
     public int $tipo;
@@ -26,5 +26,26 @@ class Usuario
             correo: $row['usuario_correo'],
             departamento: Departamento::fromArray($row)
         );
+    }
+
+    public function serialize(): string
+    {
+        return serialize([
+            'id' => $this->id,
+            'tipo' => $this->tipo,
+            'nombre' => $this->nombre,
+            'correo' => $this->correo,
+            'departamento' => $this->departamento,
+        ]);
+    }
+
+    public function unserialize($data): void
+    {
+        $unserialized = unserialize($data);
+        $this->id = $unserialized['id'];
+        $this->tipo = $unserialized['tipo'];
+        $this->nombre = $unserialized['nombre'];
+        $this->correo = $unserialized['correo'];
+        $this->departamento = $unserialized['departamento'];
     }
 }

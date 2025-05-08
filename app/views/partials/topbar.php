@@ -1,3 +1,4 @@
+<?php global $usuario ?>
 <div class="sidebar-wrapper sidebar-theme">
     <nav id="sidebar">
         <div class="navbar-nav theme-brand flex-row  text-center">
@@ -44,11 +45,11 @@
                     </div>
                 </a>
             </li>
-            <?php if ($_SESSION['usuario']['tipo'] == 0): ?>
+            <?php if ($usuario->tipo == 0): ?>
             <?php endif; ?>
 
 
-            <?php if ($_SESSION['usuario']['tipo'] == 1): ?>
+            <?php if ($usuario->tipo == 1): ?>
                 <li class="menu <?= $tab == 12 ? 'active' : '' ?>">
                     <a href="<?= recurso('Estados') ?>" aria-expanded="false" class="dropdown-toggle">
                         <div class="">

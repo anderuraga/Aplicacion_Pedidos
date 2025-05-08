@@ -1,6 +1,8 @@
 <?php require_once HOMEDIR . '/../app/helpers/url.php'; ?>
+<?php $titulo = "Menu" ?>
 <?php require HOMEDIR . '/../app/views/partials/header.php' ?>
 <?php require HOMEDIR . '/../app/views/partials/navbar.php' ?>
+<?php $tab = 0 ?>
 <?php require HOMEDIR . '/../app/views/partials/container.php' ?>
 <?php require HOMEDIR . '/../app/views/partials/alert.php' ?>
 
