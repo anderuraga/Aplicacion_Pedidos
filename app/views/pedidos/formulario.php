@@ -32,7 +32,7 @@
                     <div class="input-group mb-2">
                         <input class="form-control" placeholder="Cantidad" aria-label="cantidad"
                             aria-describedby="basic-addon2" name="cantidad" id="cantidad"
-                            value="<?= $pedido->cantidad_formato() ?>" disabled>
+                            value="<?= $pedido->cantidad_formato() ?>">
                         <span class="input-group-text" id="basic-addon2">€</span>
                     </div>
                 </div>

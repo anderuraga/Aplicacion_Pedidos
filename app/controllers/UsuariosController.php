@@ -33,8 +33,9 @@ class UsuariosController extends Controller
             require_once __DIR__ . "/../models/vo/AreaGastos.php";
             $usuario = new Usuario(0, 0, '', '', new Departamento(0, ''));
         }
+        
 
-        $this->view("usuarios/formulario", ['usuario' => $usuario, 'departamentos' => $departamentos]);
+        $this->view("usuarios/formulario", ['usuario_form' => $usuario, 'departamentos' => $departamentos]);
 
     }
 
