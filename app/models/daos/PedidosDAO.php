@@ -253,7 +253,7 @@ VALUES(
         $stmt = $this->db->prepare("UPDATE `pedidos` SET `albaran`=:albaran  WHERE `id`=:id");
 
         return $stmt->execute([
-            'albaran ' => $documento,
+            'albaran' => $documento,
             'id' => $id_pedido
         ]);
     }
