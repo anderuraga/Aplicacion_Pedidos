@@ -19,4 +19,4 @@
                 <div class="middle-content container-xxl p-0">
 
                     <!-- CONTENT AREA -->
-                    <div class="row layout-top-spacing"></div>
+                    <div class="row layout-top-spacing">

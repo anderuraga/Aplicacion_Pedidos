@@ -18,7 +18,7 @@ class Pedido
     public AreaGastos $areaGastos;
     public Proveedor $proveedor;
     public string $fecha_creada;
-    public string | null $fecha_enviada;
+    public string|null $fecha_enviada;
     public string $descripcion;
     public string $importe;
     public int $factura_id;
@@ -34,7 +34,7 @@ class Pedido
         AreaGastos $areaGastos,
         Proveedor $proveedor,
         string $fecha_creada,
-        string | null $fecha_enviada,
+        string|null $fecha_enviada,
         string $descripcion,
         string $importe,
         int $factura_id,
@@ -92,4 +92,9 @@ class Pedido
     {
         return getCantidadFormateada($this->importe);
     }
+
+    public function comprobacion_presupuestos(): bool{
+        return $this->importe>=1000;
+    }
+
 }

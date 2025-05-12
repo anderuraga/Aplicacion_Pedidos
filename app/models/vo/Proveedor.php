@@ -78,4 +78,9 @@ class Proveedor
     {
         return getCantidadFormateada($this->gasto_anual);
     }
+
+    public function direccion_completa()
+    {
+        return $this->direccion.", ".$this->cod_postal.", ".$this->poblacion.", ".$this->provincia.", ".$this->pais;
+    }
 }

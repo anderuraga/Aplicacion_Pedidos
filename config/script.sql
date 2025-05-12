@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-05-2025 a las 17:21:25
+-- Tiempo de generación: 12-05-2025 a las 19:14:48
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -87,8 +87,11 @@ CREATE TABLE `estado` (
 
 INSERT INTO `estado` (`id`, `nombre`, `icono`) VALUES
 (1, 'Borrador', '<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-paperclip\"><path d=\"M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48\"></path></svg>'),
-(2, 'Enviado Secretaría', '<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-send\"><line x1=\"22\" y1=\"2\" x2=\"11\" y2=\"13\"></line><polygon points=\"22 2 15 22 11 13 2 9 22 2\"></polygon></svg>'),
-(3, 'Enviado Proveedor', '<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\"\r\n                                    fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"\r\n                                    stroke-linejoin=\"round\" class=\"feather feather-clock\">\r\n                                    <circle cx=\"12\" cy=\"12\" r=\"10\"></circle>\r\n                                    <polyline points=\"12 6 12 12 16 14\"></polyline>\r\n                                </svg>');
+(2, 'Pendiente de validación', '<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-paperclip\"><path d=\"M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48\"></path></svg>'),
+(3, 'Pendiente proveedor', '<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-send\"><line x1=\"22\" y1=\"2\" x2=\"11\" y2=\"13\"></line><polygon points=\"22 2 15 22 11 13 2 9 22 2\"></polygon></svg>'),
+(4, 'pendiente factura', '<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\"\r\n                                    fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"\r\n                                    stroke-linejoin=\"round\" class=\"feather feather-clock\">\r\n                                    <circle cx=\"12\" cy=\"12\" r=\"10\"></circle>\r\n                                    <polyline points=\"12 6 12 12 16 14\"></polyline>\r\n                                </svg>'),
+(5, 'Pendiente pago', '<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-dollar-sign\"><line x1=\"12\" y1=\"1\" x2=\"12\" y2=\"23\"></line><path d=\"M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6\"></path></svg>'),
+(6, 'Completado', '<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-thumbs-up\"><path d=\"M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3\"></path></svg>');
 
 -- --------------------------------------------------------
 
@@ -189,7 +192,7 @@ CREATE TABLE `pedidos` (
 --
 
 INSERT INTO `pedidos` (`id`, `referencia`, `id_estado`, `id_usuario`, `id_departamento`, `id_subconcepto`, `id_area_gasto`, `id_proveedor`, `fecha_creada`, `fecha_enviada`, `descripcion`, `importe`, `id_factura`, `anio_contable`) VALUES
-(3, '1-20250512-96309', 1, 1, 2, 1, 1, 1, '2025-05-12 17:16:00', NULL, 'Prueba de que los pedidos funcionan', 1400.5, NULL, '2025');
+(3, '1-20250512-96309', 2, 1, 2, 1, 1, 1, '2025-05-12 17:16:00', NULL, 'Prueba de que los pedidos funcionan', 1400.5, NULL, '2025');
 
 -- --------------------------------------------------------
 
@@ -213,11 +216,20 @@ CREATE TABLE `pedidos_estados` (
 
 CREATE TABLE `presupuestos` (
   `id` int(11) NOT NULL,
-  `identificador` varchar(20) NOT NULL,
-  `id_pedido` varchar(20) NOT NULL,
+  `id_pedido` int(11) NOT NULL,
   `documento` varchar(45) NOT NULL,
-  `fecha` date NOT NULL
+  `fecha` date NOT NULL DEFAULT current_timestamp(),
+  `seleccionado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `presupuestos`
+--
+
+INSERT INTO `presupuestos` (`id`, `id_pedido`, `documento`, `fecha`, `seleccionado`) VALUES
+(3, 3, 'Presupuesto1.pdf', '2025-05-12', 1),
+(4, 3, 'Presupuesto2.pdf', '2025-05-12', 0),
+(5, 3, 'Presupuesto3.pdf', '2025-05-12', 0);
 
 -- --------------------------------------------------------
 
@@ -504,7 +516,6 @@ ALTER TABLE `pedidos_estados`
 --
 ALTER TABLE `presupuestos`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `identificador_UNIQUE` (`identificador`),
   ADD UNIQUE KEY `id_UNIQUE` (`id`),
   ADD KEY `presupuesto_pedido_idx` (`id_pedido`);
 
@@ -568,7 +579,7 @@ ALTER TABLE `departamentos`
 -- AUTO_INCREMENT de la tabla `estado`
 --
 ALTER TABLE `estado`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `facturas`
@@ -610,7 +621,7 @@ ALTER TABLE `pedidos_estados`
 -- AUTO_INCREMENT de la tabla `presupuestos`
 --
 ALTER TABLE `presupuestos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `proveedores`
@@ -686,7 +697,7 @@ ALTER TABLE `pedidos_estados`
 -- Filtros para la tabla `presupuestos`
 --
 ALTER TABLE `presupuestos`
-  ADD CONSTRAINT `presupuesto_pedido` FOREIGN KEY (`id_pedido`) REFERENCES `pedidos` (`referencia`);
+  ADD CONSTRAINT `presupuesto_pedido` FOREIGN KEY (`id_pedido`) REFERENCES `pedidos` (`id`);
 
 --
 -- Filtros para la tabla `proveedores`

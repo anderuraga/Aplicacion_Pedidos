@@ -80,7 +80,7 @@ class PedidosController extends Controller
 
     public function detalles()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             /**
              * @var PedidosDAO
              */
@@ -127,13 +127,30 @@ class PedidosController extends Controller
         $this->view("pedidos/detalles", $data);
     }
 
-    public function vereditar(){
+    public function vereditar()
+    {
+        /**
+         * @var PedidosDAO
+         */
+        $pedidosDAO = $this->dao("Pedidos");
+        $pedido = $pedidosDAO->obtener($_GET['id']);
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        /* */
-    }
-   
-    $this->view("pedidos/formulario", []);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if ($_POST['action'] == "siguiente") {
+                switch ($pedido->estado->id) {
+                    case 1:
+                        $this->guardarPresupuestos($pedidosDAO);
+                        break;
+                    default:
+                        # code...
+                        break;
+                }
+            }
+        }
+
+
+
+        $this->view("pedidos/formulario", ['pedido' => $pedido]);
     }
 
     private function crear(PedidosDAO $pedidosDAO)
@@ -186,9 +203,68 @@ class PedidosController extends Controller
         }
     }
 
+    public function guardarPresupuestos(PedidosDAO $pedidosDAO)
+    {
+        $pedidoId = $_POST['id'] ?? null;
+
+        if (!$pedidoId) {
+            $_SESSION['alert'] = 'ID de pedido no recibido.';
+            header('Location: /Pedidos');
+            return;
+        }
+
+        $archivos = [
+            'presupuesto1',
+            'presupuesto2',
+            'presupuesto3',
+        ];
+
+        $rutaBase = __DIR__ . "/../../public/uploads/presupuestos/$pedidoId";
+        if (!is_dir($rutaBase)) {
+            mkdir($rutaBase, 0777, true);
+        }
+
+        $errores = [];
+
+        foreach ($archivos as $campo) {
+            if (!empty($_FILES[$campo]['tmp_name'])) {
+                $original = $_FILES[$campo]['name'];
+                $nombreLimpio = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $original);
+                $rutaFinal = "$rutaBase/$nombreLimpio";
+
+                if (move_uploaded_file($_FILES[$campo]['tmp_name'], $rutaFinal)) {
+                    $ok = $pedidosDAO->insertar_presupuestos([
+                        'id_pedido' => $pedidoId,
+                        'documento' => $nombreLimpio,
+                        'seleccionado' => $campo == "presupuesto1" ? 1 : 0
+                    ]);
+                    if(!$ok){
+                        return [
+                            'tipo' => 'danger',
+                            'mensaje' => 'Error al subir archivo'
+                        ];
+                    }
+                } else {
+                    return [
+                        'tipo' => 'danger',
+                        'mensaje' => 'Error al subir archivos'
+                    ];
+                }
+            }
+        }
+
+        $pedidosDAO->cambiarEstado($pedidoId,2);
+        return [
+            'tipo' => 'success',
+            'mensaje' => 'Archivos subidos correctamente.'
+        ];
+    }
+
     #[\Override]
     public function tiene_permiso(): bool
     {
         return requireLogin();
     }
+
+
 }

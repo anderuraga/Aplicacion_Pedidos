@@ -62,8 +62,8 @@
                                             <td><?= $p->cantidad_formato() ?></td>
                                             <td>
                                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                                    <button type="button" onclick="editar()"
-                                                        class="btn btn-primary">Ver</button>
+                                                    <a href="<?= BASE_URL . "Pedidos/vereditar?id=".$p->id ?>"
+                                                        class="btn btn-primary">Ver</a>
                                                 </div>
                                             </td>
                                         </tr>

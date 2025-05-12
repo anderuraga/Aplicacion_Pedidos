@@ -1,5 +1,5 @@
 <?php
-define('BASE_URL', '/elorrieta/');
+define('BASE_URL', '/elorreita/');
 // Incluye el archivo que contiene la clase App, que se encarga del enrutamiento de la aplicación.
 require_once 'core/App.php';
 
