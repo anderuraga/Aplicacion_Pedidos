@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../helpers/formatos.php';
 require_once __DIR__ . '/TipoServicio.php';
 class Proveedor
 {
@@ -16,6 +17,7 @@ class Proveedor
     public string $cuenta_bancaria;
     public string $contacto;
     public TipoServicio $tipo_servicio;
+    public float $gasto_anual;
 
     public function __construct(
         int $id,
@@ -31,7 +33,8 @@ class Proveedor
         bool $factura_electronica,
         string $cuenta_bancaria,
         string $contacto,
-        TipoServicio $tipoServicio
+        TipoServicio $tipoServicio,
+        float $gasto_anual,
     ) {
         $this->id = $id;
         $this->cif = $cif;
@@ -47,6 +50,7 @@ class Proveedor
         $this->cuenta_bancaria = $cuenta_bancaria;
         $this->contacto = $contacto;
         $this->tipo_servicio = $tipoServicio;
+        $this->gasto_anual = $gasto_anual;
     }
 
     public static function fromArray(array $row): Proveedor
@@ -65,7 +69,13 @@ class Proveedor
             $row['proveedor_factura_e']==1,
             $row['proveedor_cuenta_bancaria'],
             $row['proveedor_contacto'],
-            TipoServicio::fromArray($row)
+            TipoServicio::fromArray($row),
+            $row['gasto_anual']
         );
+    }
+
+    public function cantidad_formato()
+    {
+        return getCantidadFormateada($this->gasto_anual);
     }
 }

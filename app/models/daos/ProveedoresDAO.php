@@ -13,38 +13,45 @@ class ProveedoresDAO
         $this->db = Database::getInstance();
     }
 
-    public function obtener($id): Proveedor
+    public function obtener($id, $anio = null): Proveedor
     {
         $stmt = $this->db->prepare("SELECT 
-                                                p.`id` as proveedor_id, 
-                                                p.`cif` as proveedor_cif, 
-                                                p.`nombre` as proveedor_nombre, 
-                                                p.`direccion` as proveedor_direccion, 
-                                                p.`cod_postal` as proveedor_cod_postal, 
-                                                p.`poblacion` as proveedor_poblacion, 
-                                                p.`provincia` as proveedor_provincia, 
-                                                p.`pais` as proveedor_pais, 
-                                                p.`telefono` as proveedor_telefono, 
-                                                p.`correo` as proveedor_correo, 
-                                                p.`factura_e` as proveedor_factura_e, 
-                                                p.`cuanta_bancaria` as proveedor_cuenta_bancaria, 
-                                                p.`contacto` as proveedor_contacto, 
-                                                p.`id_servicio` as tiposervicio_id,
-                                                t.nombre as tiposervicio_nombre
-                                            FROM `proveedores` p 
-                                                JOIN tipos_servicio t 
-                                                    ON t.id=p.id_servicio 
-                                            WHERE p.id=:id
-                                            ORDER BY p.cif ASC");
+                                            vpg.id AS proveedor_id, 
+                                            vpg.cif AS proveedor_cif, 
+                                            vpg.nombre AS proveedor_nombre, 
+                                            vpg.direccion AS proveedor_direccion, 
+                                            vpg.cod_postal AS proveedor_cod_postal, 
+                                            vpg.poblacion AS proveedor_poblacion, 
+                                            vpg.provincia AS proveedor_provincia, 
+                                            vpg.pais AS proveedor_pais, 
+                                            vpg.telefono AS proveedor_telefono, 
+                                            vpg.correo AS proveedor_correo, 
+                                            vpg.factura_e AS proveedor_factura_e, 
+                                            vpg.cuanta_bancaria AS proveedor_cuenta_bancaria, 
+                                            vpg.contacto AS proveedor_contacto, 
+                                            vpg.id_servicio AS tiposervicio_id, 
+                                            ts.nombre AS tiposervicio_nombre,
+                                            vpg.anio_contable,
+                                            vpg.gasto_anual
+                                        FROM 
+                                            vista_proveedores_gastos vpg
+                                        JOIN 
+                                            tipos_servicio ts ON ts.id = vpg.id_servicio
+                                        WHERE 
+                                            vpg.id = :id
+                                            AND vpg.anio_contable = :anio_contable
+                                        ORDER BY 
+                                            vpg.cif ASC;");
 
-        $stmt->execute(['id' => $id]);
+        $anio_contable = is_null($anio) ? date('Y') : intval($anio);
+        $stmt->execute(['id' => $id, 'anio_contable' => $anio_contable]);
         $row = $stmt->fetch();
         return Proveedor::fromArray($row);
     }
 
     public function comprobrarCif($cif, $excluirId = null)
     {
-         // TODO cambiar * por un id
+        // TODO cambiar * por un id
         $sql = "SELECT COUNT(*) FROM proveedores WHERE `cif` = :cif";
         if ($excluirId !== null) {
             $sql .= " AND id != :id";
@@ -133,29 +140,37 @@ class ProveedoresDAO
         ]);
     }
 
-    public function listar()
+    public function listar($anio = null)
     {
-        $stmt = $this->db->query("SELECT 
-                                        p.`id` as proveedor_id, 
-                                        p.`cif` as proveedor_cif, 
-                                        p.`nombre` as proveedor_nombre, 
-                                        p.`direccion` as proveedor_direccion, 
-                                        p.`cod_postal` as proveedor_cod_postal, 
-                                        p.`poblacion` as proveedor_poblacion, 
-                                        p.`provincia` as proveedor_provincia, 
-                                        p.`pais` as proveedor_pais, 
-                                        p.`telefono` as proveedor_telefono, 
-                                        p.`correo` as proveedor_correo, 
-                                        p.`factura_e` as proveedor_factura_e, 
-                                        p.`cuanta_bancaria` as proveedor_cuenta_bancaria, 
-                                        p.`contacto` as proveedor_contacto, 
-                                        p.`id_servicio` as tiposervicio_id,
-                                        t.nombre as tiposervicio_nombre
-                                    FROM `proveedores` p 
-                                    JOIN tipos_servicio t 
-                                        ON t.id=p.id_servicio 
-                                WHERE 1
-                                ORDER BY p.cif ASC");
+        $stmt = $this->db->prepare("SELECT 
+                                            vpg.id AS proveedor_id, 
+                                            vpg.cif AS proveedor_cif, 
+                                            vpg.nombre AS proveedor_nombre, 
+                                            vpg.direccion AS proveedor_direccion, 
+                                            vpg.cod_postal AS proveedor_cod_postal, 
+                                            vpg.poblacion AS proveedor_poblacion, 
+                                            vpg.provincia AS proveedor_provincia, 
+                                            vpg.pais AS proveedor_pais, 
+                                            vpg.telefono AS proveedor_telefono, 
+                                            vpg.correo AS proveedor_correo, 
+                                            vpg.factura_e AS proveedor_factura_e, 
+                                            vpg.cuanta_bancaria AS proveedor_cuenta_bancaria, 
+                                            vpg.contacto AS proveedor_contacto, 
+                                            vpg.id_servicio AS tiposervicio_id, 
+                                            ts.nombre AS tiposervicio_nombre,
+                                            vpg.anio_contable,
+                                            vpg.gasto_anual
+                                        FROM 
+                                            vista_proveedores_gastos vpg
+                                        JOIN 
+                                            tipos_servicio ts ON ts.id = vpg.id_servicio
+                                        WHERE 
+                                            vpg.anio_contable = :anio_contable
+                                        ORDER BY 
+                                            vpg.cif ASC;");
+
+        $anio_contable = is_null($anio) ? date('Y') : intval($anio);
+        $stmt->execute(['anio_contable' => $anio_contable]);
 
         $result = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
