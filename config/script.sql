@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-05-2025 a las 11:01:15
+-- Tiempo de generación: 12-05-2025 a las 17:21:25
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -40,7 +40,7 @@ CREATE TABLE `areas_gastos` (
 INSERT INTO `areas_gastos` (`id`, `id_departamento`, `nombre`) VALUES
 (1, 2, 'Gastos Generales'),
 (4, 3, 'Materiales de fabricación'),
-(5, 2, 'Elorrieta Prueba 23'),
+(5, 2, 'Elorrieta Prueba 2'),
 (7, 4, 'test 2 22'),
 (8, 5, 'Prueba nueva'),
 (9, 4, 'Super prueba'),
@@ -62,18 +62,12 @@ CREATE TABLE `departamentos` (
 --
 
 INSERT INTO `departamentos` (`id`, `nombre`) VALUES
-(12, 'Bombillas led'),
-(1, 'Borrado2r'),
+(1, 'Borrado2r prueba'),
 (2, 'Conserjería'),
-(9, 'cuarta prueba'),
 (5, 'Electricidad'),
 (3, 'Fabricación Mecánica'),
-(11, 'Materiales de fabricación'),
 (6, 'Nuevo departamento'),
-(4, 'Química'),
-(10, 'quinta prueba'),
-(7, 'segunda prueba'),
-(8, 'Tercera prueba');
+(4, 'Química');
 
 -- --------------------------------------------------------
 
@@ -176,18 +170,26 @@ INSERT INTO `movimientos` (`id`, `id_item`, `fecha`, `descripcion`, `cantidad`) 
 CREATE TABLE `pedidos` (
   `id` int(11) NOT NULL,
   `referencia` varchar(20) NOT NULL,
+  `id_estado` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `id_departamento` int(11) NOT NULL,
   `id_subconcepto` int(11) NOT NULL,
   `id_area_gasto` int(11) NOT NULL,
-  `id_proveedor` varchar(9) NOT NULL,
-  `fecha_creada` datetime NOT NULL,
+  `id_proveedor` int(11) NOT NULL,
+  `fecha_creada` datetime NOT NULL DEFAULT current_timestamp(),
   `fecha_enviada` datetime DEFAULT NULL,
   `descripcion` mediumtext NOT NULL,
   `importe` float NOT NULL,
-  `id_factura` varchar(20) NOT NULL,
+  `id_factura` varchar(20) DEFAULT NULL,
   `anio_contable` year(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `pedidos`
+--
+
+INSERT INTO `pedidos` (`id`, `referencia`, `id_estado`, `id_usuario`, `id_departamento`, `id_subconcepto`, `id_area_gasto`, `id_proveedor`, `fecha_creada`, `fecha_enviada`, `descripcion`, `importe`, `id_factura`, `anio_contable`) VALUES
+(3, '1-20250512-96309', 1, 1, 2, 1, 1, 1, '2025-05-12 17:16:00', NULL, 'Prueba de que los pedidos funcionan', 1400.5, NULL, '2025');
 
 -- --------------------------------------------------------
 
@@ -245,7 +247,7 @@ CREATE TABLE `proveedores` (
 --
 
 INSERT INTO `proveedores` (`id`, `cif`, `nombre`, `direccion`, `cod_postal`, `poblacion`, `provincia`, `pais`, `telefono`, `correo`, `factura_e`, `cuanta_bancaria`, `contacto`, `id_servicio`) VALUES
-(1, 'P8536976G', 'Javier SL', 'Calle 122', '48901', 'Barakaldo', 'Bizkaia', 'España', '681260860', 'javier@sl.com', 0, '123456789123456789', 'Artetxe', 1);
+(1, 'P8536976G', 'Javier SL', 'Calle 122', '48901', 'Barakaldos', 'Bizkaia', 'España', '681260860', 'javier@sl.com', 0, '123456789123456789', 'Artetxe', 1);
 
 -- --------------------------------------------------------
 
@@ -333,8 +335,33 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`id`, `tipo`, `nombre`, `correo`, `contrasena`, `id_departamento`, `baja`) VALUES
 (1, 1, 'Javier Gómez', 'javier.gomez@emaginarte.com', '$2y$10$2iDisbSnjUv3qWM4fb0v9OC1zCXt6wmdyLp0NKjsjLILSspxPUkzO', 2, NULL),
-(3, 0, 'Prueba', 'prueba@prueba.com', '$2y$10$VS.RgJapSeXoUgUBdpXUlOgJjrQAP4NLDqXzOCQzHIXdMebOculV6', 10, NULL),
+(3, 0, 'Prueba', 'prueba@prueba.com', '$2y$10$VS.RgJapSeXoUgUBdpXUlOgJjrQAP4NLDqXzOCQzHIXdMebOculV6', 2, NULL),
 (4, 0, 'Imanol', 'imanol@prueba.com', '$2y$10$EVV1fM.tCFIIJHLbrhblvejZhTsiCEfqmGj.0mDHH2Nb8bxCIwqdW', 4, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `vista_proveedores_gastos`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `vista_proveedores_gastos` (
+`id` int(11)
+,`cif` varchar(9)
+,`nombre` varchar(100)
+,`direccion` varchar(255)
+,`cod_postal` varchar(10)
+,`poblacion` varchar(45)
+,`provincia` varchar(45)
+,`pais` varchar(45)
+,`telefono` varchar(17)
+,`correo` varchar(255)
+,`factura_e` tinyint(4)
+,`cuanta_bancaria` varchar(35)
+,`contacto` varchar(45)
+,`id_servicio` int(11)
+,`anio_contable` decimal(4,0)
+,`gasto_anual` double
+);
 
 -- --------------------------------------------------------
 
@@ -363,6 +390,15 @@ CREATE TABLE `vista_resumen_movimientos` (
 ,`nombre` varchar(45)
 ,`cantidad` decimal(32,0)
 );
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `vista_proveedores_gastos`
+--
+DROP TABLE IF EXISTS `vista_proveedores_gastos`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_proveedores_gastos`  AS SELECT `pr`.`id` AS `id`, `pr`.`cif` AS `cif`, `pr`.`nombre` AS `nombre`, `pr`.`direccion` AS `direccion`, `pr`.`cod_postal` AS `cod_postal`, `pr`.`poblacion` AS `poblacion`, `pr`.`provincia` AS `provincia`, `pr`.`pais` AS `pais`, `pr`.`telefono` AS `telefono`, `pr`.`correo` AS `correo`, `pr`.`factura_e` AS `factura_e`, `pr`.`cuanta_bancaria` AS `cuanta_bancaria`, `pr`.`contacto` AS `contacto`, `pr`.`id_servicio` AS `id_servicio`, coalesce(`pe`.`anio_contable`,year(curdate())) AS `anio_contable`, coalesce(sum(`pe`.`importe`),0) AS `gasto_anual` FROM (`proveedores` `pr` left join `pedidos` `pe` on(`pr`.`cif` = `pe`.`id_proveedor`)) GROUP BY `pr`.`id`, `pr`.`cif`, `pr`.`nombre`, `pr`.`direccion`, `pr`.`cod_postal`, `pr`.`poblacion`, `pr`.`provincia`, `pr`.`pais`, `pr`.`telefono`, `pr`.`correo`, `pr`.`factura_e`, `pr`.`cuanta_bancaria`, `pr`.`contacto`, `pr`.`id_servicio`, `pe`.`anio_contable` ;
 
 -- --------------------------------------------------------
 
@@ -562,7 +598,7 @@ ALTER TABLE `movimientos`
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos_estados`
@@ -635,7 +671,7 @@ ALTER TABLE `pedidos`
   ADD CONSTRAINT `pedido_areagasto` FOREIGN KEY (`id_area_gasto`) REFERENCES `areas_gastos` (`id`),
   ADD CONSTRAINT `pedido_departamento` FOREIGN KEY (`id_departamento`) REFERENCES `departamentos` (`id`),
   ADD CONSTRAINT `pedido_factura` FOREIGN KEY (`id_factura`) REFERENCES `facturas` (`identificador`),
-  ADD CONSTRAINT `pedido_proveedor` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedores` (`cif`),
+  ADD CONSTRAINT `pedido_proveedor` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedores` (`id`),
   ADD CONSTRAINT `pedido_subconcepto` FOREIGN KEY (`id_subconcepto`) REFERENCES `subconceptos` (`id`),
   ADD CONSTRAINT `pedido_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`);
 
