@@ -139,7 +139,12 @@ class PedidosController extends Controller
             if ($_POST['action'] == "siguiente") {
                 switch ($pedido->estado->id) {
                     case 1:
-                        $this->guardarPresupuestos($pedidosDAO);
+                        $_SESSION['alert'] = $this->guardarPresupuestos($pedidosDAO, $pedido);
+                        $pedido = $pedidosDAO->obtener($_GET['id']);
+                        break;
+                    case 2:
+                        $pedidosDAO->cambiarEstado($pedido->id,3);
+                        $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
                     default:
                         # code...
@@ -148,9 +153,16 @@ class PedidosController extends Controller
             }
         }
 
+        $data = [
+            'pedido' => $pedido
+        ];
 
+        if ($pedido->estado->id > 0) {
+            $presupuestos = $pedidosDAO->obtener_presupuestos($pedido->id);
+            $data['presupuestos'] = $presupuestos;
+        }
 
-        $this->view("pedidos/formulario", ['pedido' => $pedido]);
+        $this->view("pedidos/formulario", $data);
     }
 
     private function crear(PedidosDAO $pedidosDAO)
@@ -203,14 +215,31 @@ class PedidosController extends Controller
         }
     }
 
-    public function guardarPresupuestos(PedidosDAO $pedidosDAO)
+    public function guardarPresupuestos(PedidosDAO $pedidosDAO, Pedido $pedido)
     {
         $pedidoId = $_POST['id'] ?? null;
 
         if (!$pedidoId) {
-            $_SESSION['alert'] = 'ID de pedido no recibido.';
-            header('Location: /Pedidos');
-            return;
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Falta la id del pedido'
+            ];
+        }
+
+        if ($pedido->comprobacion_presupuestos()) {
+            if (empty($_FILES["presupuesto1"]['tmp_name']) || empty($_FILES["presupuesto2"]['tmp_name']) || empty($_FILES["presupuesto3"]['tmp_name']) || empty($_FILES["anexo"]['tmp_name'])) {
+                return [
+                    'tipo' => 'danger',
+                    'mensaje' => 'Hay que subir todos los archivos'
+                ];
+            }
+        } else {
+            if (empty($_FILES["presupuesto1"]['tmp_name'])) {
+                return [
+                    'tipo' => 'danger',
+                    'mensaje' => 'Hay que subir todos los archivos'
+                ];
+            }
         }
 
         $archivos = [
@@ -224,8 +253,6 @@ class PedidosController extends Controller
             mkdir($rutaBase, 0777, true);
         }
 
-        $errores = [];
-
         foreach ($archivos as $campo) {
             if (!empty($_FILES[$campo]['tmp_name'])) {
                 $original = $_FILES[$campo]['name'];
@@ -238,7 +265,7 @@ class PedidosController extends Controller
                         'documento' => $nombreLimpio,
                         'seleccionado' => $campo == "presupuesto1" ? 1 : 0
                     ]);
-                    if(!$ok){
+                    if (!$ok) {
                         return [
                             'tipo' => 'danger',
                             'mensaje' => 'Error al subir archivo'
@@ -252,8 +279,28 @@ class PedidosController extends Controller
                 }
             }
         }
+        if ($pedido->comprobacion_presupuestos()) {
+            $original = $_FILES["anexo"]['name'];
+            $nombreLimpio = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $original);
+            $rutaFinal = "$rutaBase/$nombreLimpio";
 
-        $pedidosDAO->cambiarEstado($pedidoId,2);
+            if (move_uploaded_file($_FILES["anexo"]['tmp_name'], $rutaFinal)) {
+                $ok = $pedidosDAO->insertar_anexo($pedidoId,$nombreLimpio);
+                if (!$ok) {
+                    return [
+                        'tipo' => 'danger',
+                        'mensaje' => 'Error al subir archivo'
+                    ];
+                }
+            } else {
+                return [
+                    'tipo' => 'danger',
+                    'mensaje' => 'Error al subir archivos'
+                ];
+            }
+        }
+
+        $pedidosDAO->cambiarEstado($pedidoId, 2);
         return [
             'tipo' => 'success',
             'mensaje' => 'Archivos subidos correctamente.'
@@ -265,6 +312,4 @@ class PedidosController extends Controller
     {
         return requireLogin();
     }
-
-
 }

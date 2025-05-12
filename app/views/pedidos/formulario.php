@@ -8,7 +8,9 @@
 <?php
 /**
  * @var Pedido $pedido
+ * @var Presupuesto[] $presupuestos
  */
+
 ?>
 <style>
     .item-timeline>.t-time {
@@ -157,7 +159,7 @@
                                             <h5>Presupuesto alternativo 2:</h5>
                                             <input type="file" id="presupuesto3" name="presupuesto3" accept="application/pdf">
                                             <h5><a>Anexo III, Anexo XV </a></h5>
-                                            <input type="file" id="anexos" name="anexos" accept="application/pdf">
+                                            <input type="file" id="anexo" name="anexo" accept="application/pdf">
                                             <button class="btn btn-success float-end">Enviar</button><br>
                                         </form>
                                     </div>
@@ -171,7 +173,15 @@
                                     </form>
                                 </div>
                             <?php endif; ?>
-                            <?php break;
+                        <?php break;
+                        case 2: ?>
+                            <?php if ($usuario->tipo == 1) { ?>
+                                <form id="seguir" method="post" action="Pedidos/vereditar?id=<?= $_GET['id'] ?>">
+                                    <input type="hidden" name="action" value="siguiente">
+                                    <button class="btn btn-success float-end">Enviar Proveedor</button><br>
+                                </form>
+                            <?php } ?>
+                    <?php break;
                         default:
                             # code...
                             break;
@@ -190,28 +200,25 @@
                     <h2>Documentos</h2>
                 </div>
             </div>
-            <h4>Factura</h4>
-            <div class="row mb-2">
+            <?php
+            if ($pedido->estado->id == 1) {
+                echo "<h5>Todavía no hay documentos subidos</h5>";
+            } else {
+            ?>
+                <h5 class="mb-0">Presupuesto seleccionado</h5>
+                <a target="_blank" href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $presupuestos[0]->documento ?>">Ver Presupuesto</a>
+                <?php if ($pedido->comprobacion_presupuestos()) { ?>
+                    <h5 class="mb-0 mt-2">Presupuesto alternativo 1</h5>
+                    <a target="_blank" href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $presupuestos[1]->documento ?>">Ver Presupuesto</a>
+                    <h5 class="mb-0 mt-2">Presupuesto alternativo 2</h5>
+                    <a target="_blank" href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $presupuestos[2]->documento ?>">Ver Presupuesto</a>
+                    <h5 class="mb-0 mt-2">Anexo III, Anexo XV</h5>
+                    <a target="_blank" href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pedido->anexo ?>">Ver Anexos</a>
 
-                <div class="col-12" id="facturaSubidaDiv" style="display: none;">
-                    <h5>Factura:</h5>
-                    <h5><a href="<?= recurso('#') ?>">Ver archhivo</a></h5>
-                </div>
-            </div>
-            <h4>Presupuesto/s</h4>
-            <div class="row mb-2">
-                <div class="col-12" id="subirPresupuestodiv">
-                    <h5>Subir presupuesto:</h5>
-                    <form id="subirPresupuesto">
-                        <input type="file" id="presupuesto" name="presupuesto" accept="application/pdf">
-                        <button type="submit">Subir</button>
-                    </form>
-                </div>
-                <div class="col-12" id="presupuestoSubidoDiv" style="display: none;">
-                    <h5>Presupuesto:</h5>
-                    <h5><a href="<?= recurso('#') ?>">Ver archhivo</a></h5>
-                </div>
-            </div>
+                <?php } ?>
+            <?php
+            }
+            ?>
         </div>
     </div>
     <div class="statbox widget box box-shadow mt-2">

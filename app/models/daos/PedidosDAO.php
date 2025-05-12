@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../../core/Database.php';
 require_once __DIR__ . '/../vo/Pedido.php';
+require_once __DIR__ . '/../vo/Presupuesto.php';
 
 class PedidosDAO
 {
@@ -56,7 +57,8 @@ class PedidosDAO
                 p.descripcion AS pedido_descripcion,
                 p.importe AS pedido_importe,
                 p.id_factura AS pedido_factura_id,
-                p.anio_contable AS pedido_anio_contable
+                p.anio_contable AS pedido_anio_contable,
+                p.anexo AS pedido_anexo
             FROM
                 `pedidos` p
             JOIN estado e ON
@@ -128,7 +130,8 @@ class PedidosDAO
                 p.descripcion AS pedido_descripcion,
                 p.importe AS pedido_importe,
                 p.id_factura AS pedido_factura_id,
-                p.anio_contable AS pedido_anio_contable
+                p.anio_contable AS pedido_anio_contable,
+                p.anexo AS pedido_anexo
             FROM
                 `pedidos` p
             JOIN estado e ON
@@ -228,6 +231,38 @@ VALUES(
             'documento' => $datos['documento'],
             'seleccionado' => $datos['seleccionado']
         ]);
+    }
+    public function insertar_anexo($id_pedido, $documento)
+    {
+        $stmt = $this->db->prepare("UPDATE `pedidos` SET `anexo`=:anexo WHERE `id`=:id");
+
+        return $stmt->execute([
+            'anexo' => $documento,
+            'id' => $id_pedido
+        ]);
+    }
+
+    public function obtener_presupuestos($id){
+        $stmt = $this->db->prepare("SELECT
+    `id` as presupuesto_id,
+    `documento` as presupuesto_documento,
+    `fecha` as presupuesto_fecha,
+    `seleccionado` as presupuesto_seleccionado
+FROM
+    `presupuestos`
+WHERE
+    `id_pedido` = :id
+ORDER BY
+    `seleccionado` DESC,
+    `id` DESC
+    ");
+
+        $stmt->execute(['id' => $id]);
+        $result = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $result[] = Presupuesto::fromArray($row);
+        }
+        return $result;
     }
 
     public function cambiarEstado($pedido, $estado)

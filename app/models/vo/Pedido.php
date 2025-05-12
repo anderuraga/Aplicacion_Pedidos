@@ -23,6 +23,7 @@ class Pedido
     public string $importe;
     public int $factura_id;
     public int $anio_contable;
+    public string | null $anexo;
 
     public function __construct(
         int $id,
@@ -38,7 +39,8 @@ class Pedido
         string $descripcion,
         string $importe,
         int $factura_id,
-        int $anio_contable
+        int $anio_contable,
+        string | null $anexo
     ) {
         $this->id = $id;
         $this->referencia = $referencia;
@@ -54,6 +56,7 @@ class Pedido
         $this->importe = $importe;
         $this->factura_id = $factura_id;
         $this->anio_contable = $anio_contable;
+        $this->anexo = $anexo;
     }
 
     public static function fromArray(array $row): Pedido
@@ -72,7 +75,8 @@ class Pedido
             descripcion: $row['pedido_descripcion'],
             importe: (float) $row['pedido_importe'],
             factura_id: (int) $row['pedido_factura_id'],
-            anio_contable: (int) $row['pedido_anio_contable']
+            anio_contable: (int) $row['pedido_anio_contable'],
+            anexo: $row['pedido_anexo']
         );
     }
 
