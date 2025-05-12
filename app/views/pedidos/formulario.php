@@ -255,6 +255,10 @@
                     <h5 class="mb-0 mt-2">Albarán</h5>
                     <a target="_blank" href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pedido->albaran ?>">Ver Albarán</a>
                 <?php } ?>
+                <?php if ($pedido->estado->id >= 5) { ?>
+                    <h5 class="mb-0 mt-2">Factura</h5>
+                    <a target="_blank" href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pedido->factura ?>">Ver Factura</a>
+                <?php } ?>
             <?php
             }
             ?>
