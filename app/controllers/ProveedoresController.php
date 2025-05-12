@@ -42,7 +42,8 @@ class ProveedoresController extends Controller
                 factura_electronica: false,
                 cuenta_bancaria: '',
                 contacto: '',
-                tipoServicio: new TipoServicio(0,'')
+                tipoServicio: new TipoServicio(0,''),
+                gasto_anual: 0
             );
         }
 

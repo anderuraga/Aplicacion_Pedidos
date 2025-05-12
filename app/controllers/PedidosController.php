@@ -80,6 +80,18 @@ class PedidosController extends Controller
 
     public function detalles()
     {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+            /**
+             * @var PedidosDAO
+             */
+            $pedidosDAO = $this->dao("Pedidos");
+            $_SESSION['alert'] = $this->crear($pedidosDAO);
+            if ($pedidosDAO->last_insert != null) {
+                session_write_close();
+                header("Location: vereditar?id=" . $pedidosDAO->last_insert);
+            }
+        }
+
         /**
          * @var ProveedoresDAO
          */
@@ -113,6 +125,65 @@ class PedidosController extends Controller
         ];
 
         $this->view("pedidos/detalles", $data);
+    }
+
+    public function vereditar(){
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        /* */
+    }
+   
+    $this->view("pedidos/formulario", []);
+    }
+
+    private function crear(PedidosDAO $pedidosDAO)
+    {
+        global $usuario;
+        $id_usuario = $usuario->id;
+        $id_departamento = (int) ($_POST['departamento']);
+        $id_subconcepto = (int) ($_POST['subconcepto']);
+        $id_area_gasto = (int) ($_POST['areaGasto']);
+        $id_proveedor = trim($_POST['proveedor']);
+        $descripcion = trim($_POST['descripcion']);
+        $importe = (float) getCantidadMysql($_POST['cantidad']);
+        $anio_contable = date('Y');
+
+        // Validación de campos obligatorios
+        if (
+            $id_usuario <= 0 || $id_departamento <= 0 || $id_subconcepto <= 0 ||
+            $id_area_gasto <= 0 || $id_proveedor === '' || $descripcion === '' ||
+            $importe <= 0 || $anio_contable <= 0
+        ) {
+            return [
+                'tipo' => 'warning',
+                'mensaje' => 'Todos los campos obligatorios deben rellenarse correctamente.'
+            ];
+        }
+
+        $data = [
+            'id_usuario' => $id_usuario,
+            'id_departamento' => $id_departamento,
+            'id_subconcepto' => $id_subconcepto,
+            'id_area_gasto' => $id_area_gasto,
+            'id_proveedor' => $id_proveedor,
+            'descripcion' => $descripcion,
+            'importe' => $importe,
+            'anio_contable' => $anio_contable
+        ];
+
+        $ok = $pedidosDAO->crear($data);
+
+        if ($ok) {
+            return [
+                'tipo' => 'success',
+                'mensaje' => 'Pedido creado correctamente.'
+            ];
+        } else {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Error al crear el pedido.'
+            ];
+        }
     }
 
     #[\Override]
