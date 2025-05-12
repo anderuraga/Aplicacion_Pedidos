@@ -143,11 +143,22 @@ class PedidosController extends Controller
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
                     case 2:
-                        $pedidosDAO->cambiarEstado($pedido->id,3);
+                        $pedidosDAO->cambiarEstado($pedido->id, 3);
+                        $pedido = $pedidosDAO->obtener($_GET['id']);
+                        break;
+                    case 3:
+                        $_SESSION['alert'] = $this->guardarAlbaran($pedidosDAO);
+                        $pedido = $pedidosDAO->obtener($_GET['id']);
+                        break;
+                    case 4:
+                        $_SESSION['alert'] = $this->guardarFactura($pedidosDAO);
+                        $pedido = $pedidosDAO->obtener($_GET['id']);
+                        break;
+                    case 5:
+                        $pedidosDAO->cambiarEstado($pedido->id, 6);
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
                     default:
-                        # code...
                         break;
                 }
             }
@@ -285,7 +296,7 @@ class PedidosController extends Controller
             $rutaFinal = "$rutaBase/$nombreLimpio";
 
             if (move_uploaded_file($_FILES["anexo"]['tmp_name'], $rutaFinal)) {
-                $ok = $pedidosDAO->insertar_anexo($pedidoId,$nombreLimpio);
+                $ok = $pedidosDAO->insertar_anexo($pedidoId, $nombreLimpio);
                 if (!$ok) {
                     return [
                         'tipo' => 'danger',
@@ -304,6 +315,104 @@ class PedidosController extends Controller
         return [
             'tipo' => 'success',
             'mensaje' => 'Archivos subidos correctamente.'
+        ];
+    }
+
+    public function guardarAlbaran(PedidosDAO $pedidosDAO)
+    {
+        $pedidoId = $_POST['id'] ?? null;
+
+        if (!$pedidoId) {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Falta la id del pedido'
+            ];
+        }
+
+        if (empty($_FILES["albaran"]['tmp_name'])) {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Hay que subir todos los archivos'
+            ];
+        }
+
+        $rutaBase = __DIR__ . "/../../public/uploads/presupuestos/$pedidoId";
+        if (!is_dir($rutaBase)) {
+            mkdir($rutaBase, 0777, true);
+        }
+
+        $original = $_FILES["albaran"]['name'];
+        $nombreLimpio = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $original);
+        $rutaFinal = "$rutaBase/$nombreLimpio";
+
+        if (move_uploaded_file($_FILES["albaran"]['tmp_name'], $rutaFinal)) {
+            $ok = $pedidosDAO->insertar_anexo($pedidoId, $nombreLimpio);
+            if (!$ok) {
+                return [
+                    'tipo' => 'danger',
+                    'mensaje' => 'Error al subir archivo'
+                ];
+            }
+        } else {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Error al subir archivos'
+            ];
+        }
+
+        $pedidosDAO->cambiarEstado($pedidoId, 4);
+        return [
+            'tipo' => 'success',
+            'mensaje' => 'Archivo subido correctamente.'
+        ];
+    }
+
+    public function guardarFactura(PedidosDAO $pedidosDAO)
+    {
+        $pedidoId = $_POST['id'] ?? null;
+
+        if (!$pedidoId) {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Falta la id del pedido'
+            ];
+        }
+
+        if (empty($_FILES["factura"]['tmp_name'])) {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Hay que subir todos los archivos'
+            ];
+        }
+
+        $rutaBase = __DIR__ . "/../../public/uploads/presupuestos/$pedidoId";
+        if (!is_dir($rutaBase)) {
+            mkdir($rutaBase, 0777, true);
+        }
+
+        $original = $_FILES["factura"]['name'];
+        $nombreLimpio = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $original);
+        $rutaFinal = "$rutaBase/$nombreLimpio";
+
+        if (move_uploaded_file($_FILES["factura"]['tmp_name'], $rutaFinal)) {
+            $ok = $pedidosDAO->insertar_factura($pedidoId, $nombreLimpio);
+            if (!$ok) {
+                return [
+                    'tipo' => 'danger',
+                    'mensaje' => 'Error al subir archivo'
+                ];
+            }
+        } else {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Error al subir archivos'
+            ];
+        }
+
+        $pedidosDAO->cambiarEstado($pedidoId, 5);
+        return [
+            'tipo' => 'success',
+            'mensaje' => 'Archivo subido correctamente.'
         ];
     }
 

@@ -58,7 +58,9 @@ class PedidosDAO
                 p.importe AS pedido_importe,
                 p.id_factura AS pedido_factura_id,
                 p.anio_contable AS pedido_anio_contable,
-                p.anexo AS pedido_anexo
+                p.anexo AS pedido_anexo,
+                p.albaran AS pedido_albaran,
+                p.factura AS pedido_factura
             FROM
                 `pedidos` p
             JOIN estado e ON
@@ -131,7 +133,9 @@ class PedidosDAO
                 p.importe AS pedido_importe,
                 p.id_factura AS pedido_factura_id,
                 p.anio_contable AS pedido_anio_contable,
-                p.anexo AS pedido_anexo
+                p.anexo AS pedido_anexo,
+                p.albaran AS pedido_albaran,
+                p.factura AS pedido_factura
             FROM
                 `pedidos` p
             JOIN estado e ON
@@ -238,6 +242,26 @@ VALUES(
 
         return $stmt->execute([
             'anexo' => $documento,
+            'id' => $id_pedido
+        ]);
+    }
+
+    public function insertar_albaran($id_pedido, $documento)
+    {
+        $stmt = $this->db->prepare("UPDATE `pedidos` SET `albaran`=:albaran  WHERE `id`=:id");
+
+        return $stmt->execute([
+            'albaran ' => $documento,
+            'id' => $id_pedido
+        ]);
+    }
+
+    public function insertar_factura($id_pedido, $documento)
+    {
+        $stmt = $this->db->prepare("UPDATE `pedidos` SET `factura`=:factura  WHERE `id`=:id");
+
+        return $stmt->execute([
+            'factura' => $documento,
             'id' => $id_pedido
         ]);
     }

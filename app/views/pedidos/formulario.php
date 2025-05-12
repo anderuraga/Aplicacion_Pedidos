@@ -176,9 +176,35 @@
                         <?php break;
                         case 2: ?>
                             <?php if ($usuario->tipo == 1) { ?>
-                                <form id="seguir" method="post" action="Pedidos/vereditar?id=<?= $_GET['id'] ?>">
+                                <form class="mb-2" id="seguir" method="post" action="Pedidos/vereditar?id=<?= $_GET['id'] ?>">
                                     <input type="hidden" name="action" value="siguiente">
                                     <button class="btn btn-success float-end">Enviar Proveedor</button><br>
+                                </form>
+                            <?php } ?>
+                        <?php break;
+                        case 3: ?>
+                            <h5>Subir albarán:</h5>
+                            <form class="mb-2" id="subirFacturas" method="post" action="Pedidos/vereditar?id=<?= $_GET['id'] ?>" enctype="multipart/form-data">
+                                <input type="hidden" name="action" value="siguiente">
+                                <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
+                                <input type="file" id="albaran" name="albaran" accept="application/pdf">
+                                <button class="btn btn-success float-end">Subir Albarán</button><br>
+                            </form>
+                        <?php break;
+                        case 4: ?>
+                            <h5>Subir factura:</h5>
+                            <form class="mb-2" id="subirFacturas" method="post" action="Pedidos/vereditar?id=<?= $_GET['id'] ?>" enctype="multipart/form-data">
+                                <input type="hidden" name="action" value="siguiente">
+                                <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
+                                <input type="file" id="factura" name="factura" accept="application/pdf">
+                                <button class="btn btn-success float-end">Subir factura</button><br>
+                            </form>
+                        <?php break;
+                        case 5: ?>
+                            <?php if ($usuario->tipo == 1) { ?>
+                                <form class="mb-2" id="seguir" method="post" action="Pedidos/vereditar?id=<?= $_GET['id'] ?>">
+                                    <input type="hidden" name="action" value="siguiente">
+                                    <button class="btn btn-success float-end">Confirmar Pago</button><br>
                                 </form>
                             <?php } ?>
                     <?php break;
