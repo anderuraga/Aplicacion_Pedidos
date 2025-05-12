@@ -135,6 +135,12 @@
                 .search($(this).val())
                 .draw();
         });
+
+        <?php if($usuario->tipo==0){ ?>
+            filtrarAreasGastos($("#departamento").val())
+            $(".areagastoDiv").show();
+            <?php
+        } ?>
     });
 
 </script>
