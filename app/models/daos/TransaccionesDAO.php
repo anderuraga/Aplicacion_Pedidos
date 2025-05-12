@@ -126,7 +126,7 @@ class TransaccionesDAO
                                                 ag.nombre_departamento AS departamento_nombre,
                                                 ag.ingresos,
                                                 ag.gastos,
-                                                ag.total AS diferencia,
+                                                ag.total as diferencia,
                                                 t.`fecha` AS transaccion_fecha,
                                                 t.`descripcion` AS transaccion_descripcion,
                                                 t.`cantidad` AS transaccion_cantidad
@@ -144,13 +144,7 @@ class TransaccionesDAO
             'id' => $id
         ]);
         $row = $stmt->fetch();
-        return new Transaccion(
-            $row['id'],
-            AreaGastos::fromArray($row),
-            $row['area_nombre'],
-            $row['fecha'],
-            $row['descripcion'],
-        );
+        return Transaccion::fromArray($row);
 
     }
 }
