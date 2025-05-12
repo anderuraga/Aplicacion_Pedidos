@@ -148,15 +148,18 @@
                             <?php if ($pedido->comprobacion_presupuestos()): ?>
                                 <div class="col-12 mb-3" id="subirfacturadiv">
                                     <h5>Subir facturas:</h5>
-                                    <div>
+                                    <div class="mb-2">
                                         <form id="subirFacturas" method="post" action="Pedidos/vereditar?id=<?= $_GET['id'] ?>" enctype="multipart/form-data">
                                             <input type="hidden" name="action" value="siguiente">
                                             <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
                                             <h5>Presupuesto Seleccionado:</h5>
+                                            <input type="text" class="form-control" id="presupuesto1_referencia" name="presupuesto1_referencia" placeholder="Referencia">
                                             <input type="file" id="presupuesto" name="presupuesto1" accept="application/pdf">
                                             <h5>Presupuesto alternativo 1:</h5>
+                                            <input type="text" class="form-control" id="presupuesto2_referencia" name="presupuesto2_referencia" placeholder="Referencia">
                                             <input type="file" id="presupuesto2" name="presupuesto2" accept="application/pdf">
                                             <h5>Presupuesto alternativo 2:</h5>
+                                            <input type="text" class="form-control" id="presupuesto3_referencia" name="presupuesto3_referencia" placeholder="Referencia">
                                             <input type="file" id="presupuesto3" name="presupuesto3" accept="application/pdf">
                                             <h5><a>Anexo III, Anexo XV </a></h5>
                                             <input type="file" id="anexo" name="anexo" accept="application/pdf">
@@ -165,11 +168,14 @@
                                     </div>
                                 </div>
                             <?php else: ?>
-                                <div class="col-12" id="subirfacturadiv">
-                                    <h5>Subir factura:</h5>
-                                    <form id="subirFactura">
-                                        <input type="file" id="factura" name="factura" accept="application/pdf">
-                                        <button type="submit">Subir</button>
+                                <div class="col-12 mb-2" id="subirfacturadiv">
+                                    <form id="subirFactura" method="post" action="Pedidos/vereditar?id=<?= $_GET['id'] ?>" enctype="multipart/form-data">
+                                        <input type="hidden" name="action" value="siguiente">
+                                        <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
+                                        <h5>Presupuesto Seleccionado:</h5>
+                                        <input type="text" class="form-control" id="presupuesto1_referencia" name="presupuesto1_referencia" placeholder="Referencia">
+                                        <input type="file" id="presupuesto" name="presupuesto1" accept="application/pdf">
+                                        <button class="btn btn-success float-end">Enviar</button><br>
                                     </form>
                                 </div>
                             <?php endif; ?>
@@ -232,15 +238,22 @@
             } else {
             ?>
                 <h5 class="mb-0">Presupuesto seleccionado</h5>
+                <p class="mb-0">Referencia: <?= $presupuestos[0]->referencia ?></p>
                 <a target="_blank" href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $presupuestos[0]->documento ?>">Ver Presupuesto</a>
                 <?php if ($pedido->comprobacion_presupuestos()) { ?>
                     <h5 class="mb-0 mt-2">Presupuesto alternativo 1</h5>
+                    <p class="mb-0">Referencia: <?= $presupuestos[1]->referencia ?></p>
                     <a target="_blank" href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $presupuestos[1]->documento ?>">Ver Presupuesto</a>
                     <h5 class="mb-0 mt-2">Presupuesto alternativo 2</h5>
+                    <p class="mb-0">Referencia: <?= $presupuestos[2]->referencia ?></p>
                     <a target="_blank" href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $presupuestos[2]->documento ?>">Ver Presupuesto</a>
                     <h5 class="mb-0 mt-2">Anexo III, Anexo XV</h5>
                     <a target="_blank" href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pedido->anexo ?>">Ver Anexos</a>
 
+                <?php } ?>
+                <?php if ($pedido->estado->id >= 4) { ?>
+                    <h5 class="mb-0 mt-2">Albarán</h5>
+                    <a target="_blank" href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pedido->albaran ?>">Ver Albarán</a>
                 <?php } ?>
             <?php
             }
@@ -258,47 +271,22 @@
                 <div class="col-12 ">
                     <div class="mt-container mx-auto">
                         <div class="timeline-line">
-
-                            <div class="item-timeline">
-                                <p class="t-time">21/03/2025</p>
-                                <div class="t-dot t-dot-warning">
+                            <?php
+                            /**
+                             * @var Historial $h
+                             */
+                            foreach ($historial as $h) {
+                            ?>
+                                <div class="item-timeline">
+                                    <p class="t-time"><?= $h->getFechaVisible() ?></p>
+                                    <div class="t-dot t-dot-warning">
+                                    </div>
+                                    <div class="t-text">
+                                        <p><?= $h->comentario ?></p>
+                                        <p class="t-meta-time"><?= $h->getHoraVisible() ?></p>
+                                    </div>
                                 </div>
-                                <div class="t-text">
-                                    <p>Nuevo estado: Pendiente de verificar</p>
-                                    <p class="t-meta-time">12:30</p>
-                                </div>
-                            </div>
-
-                            <div class="item-timeline">
-                                <p class="t-time">21/03/2025</p>
-                                <div class="t-dot t-dot-info">
-                                </div>
-                                <div class="t-text">
-                                    <p>Factura subida</p>
-                                    <p class="t-meta-time">12:10</p>
-                                </div>
-                            </div>
-
-                            <div class="item-timeline">
-                                <p class="t-time">21/03/2025</p>
-                                <div class="t-dot t-dot-danger">
-                                </div>
-                                <div class="t-text">
-                                    <p>Presupuesto subido</p>
-                                    <p class="t-meta-time">12:05</p>
-                                </div>
-                            </div>
-
-                            <div class="item-timeline">
-                                <p class="t-time">21/03/2025</p>
-                                <div class="t-dot t-dot-dark">
-                                </div>
-                                <div class="t-text">
-                                    <p>Pedido creado</p>
-                                    <p class="t-meta-time">12:00</p>
-                                </div>
-                            </div>
-
+                            <?php } ?>
                         </div>
                     </div>
                 </div>

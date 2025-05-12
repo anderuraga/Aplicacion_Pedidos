@@ -144,6 +144,7 @@ class PedidosController extends Controller
                         break;
                     case 2:
                         $pedidosDAO->cambiarEstado($pedido->id, 3);
+                        $pedidosDAO->rellenarEstado(3,$pedido->id, "Se ha enviado el pedido al proveedor");
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
                     case 3:
@@ -156,6 +157,7 @@ class PedidosController extends Controller
                         break;
                     case 5:
                         $pedidosDAO->cambiarEstado($pedido->id, 6);
+                        $pedidosDAO->rellenarEstado(6,$pedido->id, "Se ha confirmado el pago");
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
                     default:
@@ -164,8 +166,11 @@ class PedidosController extends Controller
             }
         }
 
+        $historial = $pedidosDAO->obtener_historial($pedido->id);
+
         $data = [
-            'pedido' => $pedido
+            'pedido' => $pedido,
+            'historial' => $historial
         ];
 
         if ($pedido->estado->id > 0) {
@@ -214,6 +219,7 @@ class PedidosController extends Controller
         $ok = $pedidosDAO->crear($data);
 
         if ($ok) {
+            $pedidosDAO->rellenarEstado(1,$pedidosDAO->last_insert, "Se ha creado el pedido");
             return [
                 'tipo' => 'success',
                 'mensaje' => 'Pedido creado correctamente.'
@@ -273,6 +279,7 @@ class PedidosController extends Controller
                 if (move_uploaded_file($_FILES[$campo]['tmp_name'], $rutaFinal)) {
                     $ok = $pedidosDAO->insertar_presupuestos([
                         'id_pedido' => $pedidoId,
+                        'referencia' => $_POST[$campo."_referencia"],
                         'documento' => $nombreLimpio,
                         'seleccionado' => $campo == "presupuesto1" ? 1 : 0
                     ]);
@@ -312,6 +319,7 @@ class PedidosController extends Controller
         }
 
         $pedidosDAO->cambiarEstado($pedidoId, 2);
+        $pedidosDAO->rellenarEstado(2,$pedidoId, "Se han subido los presupuestos");
         return [
             'tipo' => 'success',
             'mensaje' => 'Archivos subidos correctamente.'
@@ -346,7 +354,7 @@ class PedidosController extends Controller
         $rutaFinal = "$rutaBase/$nombreLimpio";
 
         if (move_uploaded_file($_FILES["albaran"]['tmp_name'], $rutaFinal)) {
-            $ok = $pedidosDAO->insertar_anexo($pedidoId, $nombreLimpio);
+            $ok = $pedidosDAO->insertar_albaran($pedidoId, $nombreLimpio);
             if (!$ok) {
                 return [
                     'tipo' => 'danger',
@@ -361,6 +369,7 @@ class PedidosController extends Controller
         }
 
         $pedidosDAO->cambiarEstado($pedidoId, 4);
+        $pedidosDAO->rellenarEstado(4,$pedidoId, "Se ha subido el albarán");
         return [
             'tipo' => 'success',
             'mensaje' => 'Archivo subido correctamente.'
@@ -410,6 +419,7 @@ class PedidosController extends Controller
         }
 
         $pedidosDAO->cambiarEstado($pedidoId, 5);
+        $pedidosDAO->rellenarEstado(5,$pedidoId, "Se ha subido la factura");
         return [
             'tipo' => 'success',
             'mensaje' => 'Archivo subido correctamente.'

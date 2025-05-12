@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../../../core/Database.php';
 require_once __DIR__ . '/../vo/Pedido.php';
 require_once __DIR__ . '/../vo/Presupuesto.php';
+require_once __DIR__ . '/../vo/Historial.php';
 
 class PedidosDAO
 {
@@ -226,13 +227,14 @@ VALUES(
     public function insertar_presupuestos($datos)
     {
         $stmt = $this->db->prepare("
-            INSERT INTO presupuestos (id_pedido, documento, seleccionado)
-            VALUES (:id_pedido, :documento, :seleccionado)
+            INSERT INTO presupuestos (id_pedido, referencia, documento, seleccionado)
+            VALUES (:id_pedido, :referencia, :documento, :seleccionado)
         ");
 
         return $stmt->execute([
             'id_pedido' => $datos['id_pedido'],
             'documento' => $datos['documento'],
+            'referencia' => $datos['referencia'],
             'seleccionado' => $datos['seleccionado']
         ]);
     }
@@ -266,12 +268,14 @@ VALUES(
         ]);
     }
 
-    public function obtener_presupuestos($id){
+    public function obtener_presupuestos($id)
+    {
         $stmt = $this->db->prepare("SELECT
     `id` as presupuesto_id,
     `documento` as presupuesto_documento,
     `fecha` as presupuesto_fecha,
-    `seleccionado` as presupuesto_seleccionado
+    `seleccionado` as presupuesto_seleccionado,
+    `referencia` as presupuesto_referencia
 FROM
     `presupuestos`
 WHERE
@@ -289,12 +293,45 @@ ORDER BY
         return $result;
     }
 
+    public function obtener_historial($id)
+    {
+        $stmt = $this->db->prepare("SELECT
+    `id` as historial_id,
+    `fecha` as historial_fecha,
+    `comentario` as historial_comentario
+FROM
+    `pedidos_estados`
+WHERE
+    `id_pedido` = :id_pedido
+ORDER BY
+    `fecha`
+DESC
+    ");
+
+        $stmt->execute(['id_pedido' => $id]);
+        $result = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $result[] = Historial::fromArray($row);
+        }
+        return $result;
+    }
+
     public function cambiarEstado($pedido, $estado)
     {
         $stmt = $this->db->prepare("UPDATE `pedidos` SET `id_estado`=:estado WHERE `id`=:pedido");
         return $stmt->execute([
             'estado' => $estado,
             'pedido' => $pedido
+        ]);
+    }
+
+    public function rellenarEstado($id_estado, $id_pedido, $comentario)
+    {
+        $stmt = $this->db->prepare("INSERT INTO `pedidos_estados`(`id_estado`, `id_pedido`, `comentario`) VALUES (:id_estado,:id_pedido,:comentario)");
+        return $stmt->execute([
+            'id_estado' => $id_estado,
+            'id_pedido' => $id_pedido,
+            'comentario' => $comentario
         ]);
     }
 }
