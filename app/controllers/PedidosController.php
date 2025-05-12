@@ -80,12 +80,17 @@ class PedidosController extends Controller
 
     public function detalles()
     {
+        /**
+         * @var AreasGastosDAO
+         */
+        $areasGastosDAO = $this->dao("AreasGastos");
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             /**
              * @var PedidosDAO
              */
             $pedidosDAO = $this->dao("Pedidos");
-            $_SESSION['alert'] = $this->crear($pedidosDAO);
+            $_SESSION['alert'] = $this->crear($pedidosDAO, $areasGastosDAO);
             if ($pedidosDAO->last_insert != null) {
                 session_write_close();
                 header("Location: vereditar?id=" . $pedidosDAO->last_insert);
@@ -98,10 +103,7 @@ class PedidosController extends Controller
         $proveedoresDAO = $this->dao("Proveedores");
         $proveedor = $proveedoresDAO->obtener($_GET['proveedor']);
 
-        /**
-         * @var AreasGastosDAO
-         */
-        $areasGastosDAO = $this->dao("AreasGastos");
+        
         $areaGastos = $areasGastosDAO->obtener($_GET['areaGasto']);
 
 
@@ -181,7 +183,7 @@ class PedidosController extends Controller
         $this->view("pedidos/formulario", $data);
     }
 
-    private function crear(PedidosDAO $pedidosDAO)
+    private function crear(PedidosDAO $pedidosDAO, AreasGastosDAO $areasGastosDAO)
     {
         global $usuario;
         $id_usuario = $usuario->id;
@@ -202,6 +204,15 @@ class PedidosController extends Controller
             return [
                 'tipo' => 'warning',
                 'mensaje' => 'Todos los campos obligatorios deben rellenarse correctamente.'
+            ];
+        }
+
+        $areaGastos = $areasGastosDAO->obtener($id_area_gasto);
+        $total = floatval($areaGastos->diferencia);
+        if($importe>$total){
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'No es posible hacer un pedido con un importe por encima del saldo del area de gasto.'
             ];
         }
 
