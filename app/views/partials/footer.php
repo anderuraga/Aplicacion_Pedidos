@@ -24,19 +24,19 @@
 
 
 <!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
-<script src="static/plugins/src/global/vendors.min.js"></script>
-<script src="static/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="static/plugins/src/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-<script src="static/layouts/horizontal-light-menu/app.js"></script>
-<script src="static/assets/js/custom.js"></script>
+<script src="<?= BASE_URL ?>static/plugins/src/global/vendors.min.js"></script>
+<script src="<?= BASE_URL ?>static/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="<?= BASE_URL ?>static/plugins/src/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="<?= BASE_URL ?>static/layouts/horizontal-light-menu/app.js"></script>
+<script src="<?= BASE_URL ?>static/assets/js/custom.js"></script>
 <!-- END GLOBAL MANDATORY SCRIPTS -->
 
 <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
-<script src="static/plugins/src/table/datatable/datatables.min.js"></script>
-<script src="static/plugins/src/sweetalerts2/sweetalerts2.min.js"></script>
-<script src="static/layouts/horizontal-light-menu/loader.js"></script>
-<script src="static/plugins/src/flatpickr/flatpickr.js"></script>
-<script src="static/plugins/src/input-mask/jquery.inputmask.bundle.min.js"></script>
+<script src="<?= BASE_URL ?>static/plugins/src/table/datatable/datatables.min.js"></script>
+<script src="<?= BASE_URL ?>static/plugins/src/sweetalerts2/sweetalerts2.min.js"></script>
+<script src="<?= BASE_URL ?>static/layouts/horizontal-light-menu/loader.js"></script>
+<script src="<?= BASE_URL ?>static/plugins/src/flatpickr/flatpickr.js"></script>
+<script src="<?= BASE_URL ?>static/plugins/src/input-mask/jquery.inputmask.bundle.min.js"></script>
 
 <script>
     var tabla = $('.tabla').DataTable({

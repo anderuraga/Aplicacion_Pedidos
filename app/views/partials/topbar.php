@@ -4,12 +4,12 @@
         <div class="navbar-nav theme-brand flex-row  text-center">
             <div class="nav-logo">
                 <div class="nav-item theme-logo">
-                    <a href="<?= recurso('index.html') ?>">
-                        <img src="<?= recurso('static/assets/img/logo/EEM-logo-color.svg') ?>" class="navbar-logo" alt="logo">
+                    <a href="<?= BASE_URL ?>">
+                        <img src="<?= BASE_URL ?>static/assets/img/logo/EEM-logo-color.svg" class="navbar-logo" alt="logo">
                     </a>
                 </div>
                 <div class="nav-item theme-text">
-                    <a href="<?= recurso('index.html') ?>" class="nav-link">
+                    <a href="<?= BASE_URL ?>" class="nav-link">
                         Elorrieta Erreka Mari
                     </a>
                 </div>
@@ -29,7 +29,7 @@
         <ul class="list-unstyled menu-categories ps" id="accordionExample">
 
             <li class="menu <?= $tab == 1 ? 'active' : '' ?>">
-                <a href="<?= recurso('Pedidos') ?>" aria-expanded="false" class="dropdown-toggle">
+                <a href="<?= BASE_URL ?>Pedidos" aria-expanded="false" class="dropdown-toggle">
                     <div class="">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -51,7 +51,7 @@
 
             <?php if ($usuario->tipo == 1): ?>
                 <li class="menu <?= $tab == 12 ? 'active' : '' ?>">
-                    <a href="<?= recurso('Estados') ?>" aria-expanded="false" class="dropdown-toggle">
+                    <a href="<?= BASE_URL ?>Estados" aria-expanded="false" class="dropdown-toggle">
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -65,7 +65,7 @@
                     </a>
                 </li>
                 <li class="menu <?= $tab == 8 ? 'active' : '' ?>">
-                    <a href="<?= recurso('AreasGastos') ?>" aria-expanded="false" class="dropdown-toggle">
+                    <a href="<?= BASE_URL ?>AreasGastos" aria-expanded="false" class="dropdown-toggle">
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -79,7 +79,7 @@
                     </a>
                 </li>
                 <li class="menu <?= $tab == 7 ? 'active' : '' ?>">
-                    <a href="<?= recurso('Subconceptos') ?>" aria-expanded="false" class="dropdown-toggle">
+                    <a href="<?= BASE_URL ?>Subconceptos" aria-expanded="false" class="dropdown-toggle">
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -94,7 +94,7 @@
                     </a>
                 </li>
                 <li class="menu <?= $tab == 2 ? 'active' : '' ?>">
-                    <a href="<?= recurso('Usuarios') ?>" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
+                    <a href="<?= BASE_URL ?>Usuarios" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -109,15 +109,15 @@
                     </a>
                     <ul class="dropdown-menu submenu list-unstyled" id="dashboard" data-bs-parent="#accordionExample">
                         <li>
-                            <a href="<?= recurso('Usuarios') ?>"> Altas/Modificaciones </a>
+                            <a href="<?= BASE_URL ?>Usuarios"> Altas/Modificaciones </a>
                         </li>
                         <li>
-                            <a href="<?= recurso('Departamentos') ?>"> Departamentos </a>
+                            <a href="<?= BASE_URL ?>Departamentos"> Departamentos </a>
                         </li>
                     </ul>
                 </li>
                 <li class="menu <?= $tab == 4 ? 'active' : '' ?>">
-                    <a href="<?= recurso('Proveedores') ?>" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
+                    <a href="<?= BASE_URL ?>Proveedores" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -132,15 +132,15 @@
                     </a>
                     <ul class="dropdown-menu submenu list-unstyled" id="dashboard" data-bs-parent="#accordionExample">
                         <li>
-                            <a href="<?= recurso('Proveedores') ?>"> Altas/Modificaciones </a>
+                            <a href="<?= BASE_URL ?>Proveedores"> Altas/Modificaciones </a>
                         </li>
                         <li>
-                            <a href="<?= recurso('TiposServicio') ?>"> Tipos de servicio </a>
+                            <a href="<?= BASE_URL ?>TiposServicio"> Tipos de servicio </a>
                         </li>
                     </ul>
                 </li>
                 <li class="menu <?= $tab == 11 ? 'active' : '' ?>">
-                    <a href="<?= recurso('Inventario') ?>" aria-expanded="false" class="dropdown-toggle">
+                    <a href="<?= BASE_URL ?>Inventario" aria-expanded="false" class="dropdown-toggle">
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -155,7 +155,7 @@
                     </a>
                 </li>
                 <li class="menu <?= $tab == 6 ? 'active' : '' ?>">
-                    <a href="<?= recurso('Reportes') ?>" aria-expanded="false" class="dropdown-toggle">
+                    <a href="<?= BASE_URL ?>Reportes" aria-expanded="false" class="dropdown-toggle">
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -169,7 +169,7 @@
                     </a>
                 </li>
                 <li class="menu <?= $tab == 9 ? 'active' : '' ?>">
-                    <a href="<?= recurso('Ingresos') ?>" aria-expanded="false" class="dropdown-toggle">
+                    <a href="<?= BASE_URL ?>Ingresos" aria-expanded="false" class="dropdown-toggle">
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
