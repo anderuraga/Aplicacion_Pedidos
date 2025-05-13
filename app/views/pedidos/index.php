@@ -52,7 +52,7 @@
                                         <tr>
                                             <td><?= $p->id ?></td>
                                             <td><?= $p->referencia ?></td>
-                                            <td data-order="<?= $p->getFechaCreadaVisible() ?>"><?= $p->fecha_creada ?></td>
+                                            <td data-order="<?= $p->fecha_creada ?>"><?= $p->getFechaCreadaVisible() ?></td>
                                             <td><?= $p->usuario->nombre ?></td>
                                             <td><?= $p->departamento->nombre ?></td>
                                             <td><?= $p->subconcepto->nombre ?></td>

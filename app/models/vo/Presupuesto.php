@@ -31,6 +31,6 @@ class Presupuesto
     public function getFechaVisible()
     {
         $date = new DateTime($this->fecha);
-        return $date->format('d/m/Y H:i');
+        return $date->format('d/m/Y');
     }
 }
