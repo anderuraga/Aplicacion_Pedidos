@@ -19,7 +19,7 @@
                                 data-bs-toggle="pill" data-bs-target="#pills-estado<?= $e->id ?>" type="button" role="tab"
                                 aria-controls="pills-estado<?= $e->id ?>" aria-selected="false">
                                 <?= $e->icono ?>
-                                <?= $e->nombre ?>
+                                <?= $e->nombre." (".count($pedidos[$e->id]).")" ?>
                             </button>
                         </li>
                     <?php } ?>
@@ -40,7 +40,7 @@
                                         <th>Subconcepto</th>
                                         <th>Tipo</th>
                                         <th>Proveedor</th>
-                                        <th>Descripcion</th>
+                                        <th>Descripción</th>
                                         <th>Cuantía</th>
                                         <th>Opciones</th>
                                     </tr>
