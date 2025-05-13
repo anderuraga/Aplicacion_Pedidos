@@ -40,7 +40,7 @@
 
 <script>
     var tabla = $('.tabla').DataTable({
-        "dom": "<'dt--top-section'<'row'<'col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center'l B><'col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3'f>>>" + "<'table-responsive'tr>" + "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
+        "dom": "<'dt--top-section' <'row'<'col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center'l B><'col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3'f>>>" + "<'table-responsive'tr>" + "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
         buttons: [{ extend: 'copy', text: 'Copiar' }, 'csv', 'excel', 'pdf', { extend: 'print', text: 'Imprimir' }],
         "oLanguage": {
             "oPaginate": {
@@ -55,13 +55,13 @@
             "info": "Mostrando _START_ de _END_ de un total de _TOTAL_ filas",
             "sEmptyTable": "Sin resultados"
         },
-        order: [[<?= $target??'1' ?>, '<?= $order??"asc" ?>']],
+        order: [[<?= $target ?? '1' ?>, '<?= $order ?? "asc" ?>']],
         columnDefs: [
             {
                 target: 0,
                 visible: false,
                 searchable: false
-            },<?= $extraColumndef??'' ?>
+            }, <?= $extraColumndef ?? '' ?>
         ],
         "stripeClasses": [],
         "lengthMenu": [
