@@ -48,7 +48,7 @@ class UsuariosController extends Controller
         $departamentoID = $_POST['departamento'];
         $tipo = $_POST['tipo'];
         $contrasena = null;
-        if (isset($_POST['contrasena'])) {
+        if (isset($_POST['contrasena']) && $_POST['contrasena']!='') {
             $contrasena = $_POST['contrasena'];
         }
 
