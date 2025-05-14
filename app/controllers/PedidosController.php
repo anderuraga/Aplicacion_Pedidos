@@ -218,12 +218,12 @@ class PedidosController extends Controller
     {
         global $usuario;
         $id_usuario = $usuario->id;
-        $id_departamento = (int) ($_POST['departamento']);
-        $id_subconcepto = (int) ($_POST['subconcepto']);
-        $id_area_gasto = (int) ($_POST['areaGasto']);
-        $id_proveedor = trim($_POST['proveedor']);
-        $descripcion = trim($_POST['descripcion']);
-        $importe = (float) getCantidadMysql($_POST['cantidad']);
+        $id_departamento = (int) ($_POST['departamento'] ?? 0);
+        $id_subconcepto = (int) ($_POST['subconcepto'] ?? 0);
+        $id_area_gasto = (int) ($_POST['areaGasto'] ?? 0);
+        $id_proveedor = trim($_POST['proveedor'] ?? '');
+        $descripcion = trim($_POST['descripcion'] ?? '');
+        $importe = (float) getCantidadMysql($_POST['cantidad'] ?? 0);
         $anio_contable = date('Y');
 
         // Validación de campos obligatorios
@@ -321,7 +321,6 @@ class PedidosController extends Controller
                 if (move_uploaded_file($_FILES[$campo]['tmp_name'], $rutaFinal)) {
                     $ok = $pedidosDAO->insertar_presupuestos([
                         'id_pedido' => $pedidoId,
-                        'referencia' => $_POST[$campo . "_referencia"],
                         'documento' => $nombreLimpio,
                         'seleccionado' => $campo == "presupuesto1" ? 1 : 0
                     ]);
