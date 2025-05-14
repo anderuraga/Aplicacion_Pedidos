@@ -21,8 +21,9 @@
                                                 <th>Nombre</th>
                                                 <th>Departamento</th>
                                                 <th>Ingresos</th>
+                                                <th>Gastos Pendiente</th>
                                                 <th>Gastos</th>
-                                                <th>Diferencia</th>
+                                                <th>Disponible</th>
                                                 <th>Opciones</th>
                                             </tr>
                                         </thead>
@@ -33,6 +34,7 @@
                                                     <td><?= htmlspecialchars($a->nombre) ?></td>
                                                     <td><?= htmlspecialchars($a->departamento->nombre) ?></td>
                                                     <td><?= $a->ingresos_formato() ?>€</td>
+                                                    <td><?= $a->gastos_pendiente_formato() ?>€</td>
                                                     <td><?= $a->gastos_formato() ?>€</td>
                                                     <td><?= $a->diferencia_formato() ?>€</td>
                                                     <td>

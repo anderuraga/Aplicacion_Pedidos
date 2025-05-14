@@ -47,7 +47,8 @@ class AreasGastosDAO
                                     `id_departamento` as departamento_id, 
                                     `nombre_departamento` as departamento_nombre, 
                                     `ingresos`, 
-                                    `gastos`, 
+                                    `gastos`,
+                                    `gasto_pendiente`,
                                     `total` as diferencia
                                 FROM `vista_resumen_areas` 
                                 WHERE 1 
@@ -70,7 +71,8 @@ class AreasGastosDAO
                                             `id_departamento` as departamento_id, 
                                             `nombre_departamento` as departamento_nombre, 
                                             `ingresos`, 
-                                            `gastos`, 
+                                            `gastos`,
+                                            `gasto_pendiente`,
                                             `total` as diferencia
                                         FROM `vista_resumen_areas`
                                         WHERE `id_area` = :id");
