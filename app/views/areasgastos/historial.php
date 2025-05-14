@@ -20,6 +20,7 @@
                             <th>Descripción</th>
                             <th>Operación</th>
                             <th>Cantidad</th>
+                            <th>Total</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -30,6 +31,7 @@
                                 <td><?= htmlspecialchars($t->descripcion) ?></td>
                                 <td><?= $t->getOperacion() ?></td>
                                 <td><?= $t->cantidad_formato() ?>€</td>
+                                <td><?= $t->total_formato() ?>€</td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -39,5 +41,7 @@
         </div>
     </div>
 </div>
-
+<?php
+$order = 'desc'
+?>
 <?php require HOMEDIR . '/../app/views/partials/footer.php' ?>

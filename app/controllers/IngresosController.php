@@ -32,7 +32,7 @@ class IngresosController extends Controller
             $ingreso = $transaccionesDAO->obtener($id);
         } else {
             require_once __DIR__ . "/../models/vo/AreaGastos.php";
-            $ingreso = new Transaccion(0, new AreaGastos(0,'',new Departamento(0,''),'','','',''), '', '', '');
+            $ingreso = new Transaccion(0, new AreaGastos(0,'',new Departamento(0,''),'','','',''), '', '', '', '');
         }
 
         $this->view("ingresos/formulario", ['ingreso' => $ingreso, 'areasgastos' => $areasgastos]);

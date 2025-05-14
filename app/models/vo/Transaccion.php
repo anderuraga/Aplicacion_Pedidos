@@ -9,14 +9,16 @@ class Transaccion
     public string $fecha;
     public string $descripcion;
     public string $cantidad;
+    public string $total;
 
-    public function __construct(int $id, AreaGastos $areaGastos, string $fecha, string $descripcion, string $cantidad)
+    public function __construct(int $id, AreaGastos $areaGastos, string $fecha, string $descripcion, string $cantidad, string $total)
     {
         $this->id = $id;
         $this->areaGastos = $areaGastos;
         $this->fecha = $fecha;
         $this->descripcion = $descripcion;
         $this->cantidad = $cantidad;
+        $this->total = $total;
     }
 
     public function getFechaVisible()
@@ -35,6 +37,11 @@ class Transaccion
         return getCantidadFormateada($this->cantidad);
     }
 
+    public function total_formato()
+    {
+        return getCantidadFormateada($this->total);
+    }
+
     public static function fromArray(array $row): Transaccion
     {
         return new Transaccion(
@@ -42,7 +49,8 @@ class Transaccion
             areaGastos: AreaGastos::fromArray($row),
             fecha: $row['transaccion_fecha'],
             descripcion: $row['transaccion_descripcion'],
-            cantidad: $row['transaccion_cantidad']
+            cantidad: $row['transaccion_cantidad'],
+            total: $row['transaccion_total']
         );
     }
 
