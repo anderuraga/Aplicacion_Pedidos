@@ -5,7 +5,7 @@ class PedidosController extends Controller
 {
     public function index()
     {
-
+        global $usuario;
         $estadosDAO = $this->dao("Estados");
         $estados = $estadosDAO->listar();
 
@@ -15,7 +15,12 @@ class PedidosController extends Controller
         $pedidosDAO = $this->dao("Pedidos");
         $pedidos = [];
         foreach ($estados as $e) {
-            $pedidos[$e->id] = $pedidosDAO->listar_estado($e->id);
+            if ($usuario->tipo == 1) {
+                $pedidos[$e->id] = $pedidosDAO->listar_estado($e->id);
+            } else {
+                $pedidos[$e->id] = $pedidosDAO->listar_estado_departamento($e->id,$usuario->departamento->id);
+            }
+
         }
 
         $this->view("pedidos/index", ['estados' => $estados, 'pedidos' => $pedidos]);
