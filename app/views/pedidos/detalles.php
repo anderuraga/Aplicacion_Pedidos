@@ -14,12 +14,40 @@
 ?>
 <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
     <div class="statbox widget box box-shadow">
-        <form method="post" action="Pedidos/detalles?proveedor=<?= $_GET['proveedor'] ?>&areaGasto=<?= $_GET['areaGasto'] ?>&departamento=<?= $_GET['departamento'] ?>">
-            <input type="hidden" name="proveedor" value="<?= $_GET['proveedor'] ?>">
-            <input type="hidden" name="areaGasto" value="<?= $_GET['areaGasto'] ?>">
-            <input type="hidden" name="departamento" value="<?= $_GET['departamento'] ?>">
-            <div class="widget-content widget-content-area ps-3">
-                <h1 class="mt-2 ms-2">Pedido: Detalles</h1>
+        <div class="widget-content widget-content-area ps-3">
+            <h1 class="mt-2 mb-0 ms-2">Nuevo pedido:</h1>
+            <div class="bs-stepper stepper-form-one linear">
+                <div class="bs-stepper-header" role="tablist">
+                    <div class="step " data-target="#defaultStep-one">
+                        <button type="button" class="step-trigger" role="tab" aria-selected="false" disabled="disabled">
+                            <span class="bs-stepper-circle">1</span>
+                            <span class="bs-stepper-label">Seleccionar Proveedor</span>
+                        </button>
+                    </div>
+                    <div class="line"></div>
+                    <div class="step " data-target="#defaultStep-two">
+                        <button type="button" class="step-trigger" role="tab" aria-selected="false" disabled="disabled">
+                            <span class="bs-stepper-circle">2</span>
+                            <span class="bs-stepper-label">Seleccionar area de gasto</span>
+                        </button>
+                    </div>
+                    <div class="line"></div>
+                    <div class="step active" data-target="#defaultStep-three">
+                        <button type="button" class="step-trigger" role="tab" aria-selected="true">
+                            <span class="bs-stepper-circle">3</span>
+                            <span class="bs-stepper-label">
+                                <span class="bs-stepper-title">Rellenar detalles</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <form method="post"
+                action="Pedidos/detalles?proveedor=<?= $_GET['proveedor'] ?>&areaGasto=<?= $_GET['areaGasto'] ?>&departamento=<?= $_GET['departamento'] ?>">
+                <input type="hidden" name="proveedor" value="<?= $_GET['proveedor'] ?>">
+                <input type="hidden" name="areaGasto" value="<?= $_GET['areaGasto'] ?>">
+                <input type="hidden" name="departamento" value="<?= $_GET['departamento'] ?>">
+
                 <div class="row">
                     <div class="col-4">
                         <h4>Departamento:</h4>
@@ -80,8 +108,9 @@
                     </div>
 
                 </div>
-            </div>
-        </form>
+
+            </form>
+        </div>
     </div>
 </div>
 <script>

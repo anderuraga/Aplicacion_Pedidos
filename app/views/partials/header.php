@@ -39,6 +39,10 @@
 
     <link href="<?= BASE_URL ?>static/assets/css/light/components/timeline.css" rel="stylesheet" type="text/css" />
     <link href="<?= BASE_URL ?>static/assets/css/dark/components/timeline.css" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" type="text/css" href="<?= BASE_URL ?>static/plugins/src/stepper/bsStepper.min.css">
+    <link rel="stylesheet" type="text/css" href="<?= BASE_URL ?>static/plugins/css/light/stepper/custom-bsStepper.css">
+    <link rel="stylesheet" type="text/css" href="<?= BASE_URL ?>static/plugins/css/dark/stepper/custom-bsStepper.css">
     <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 
     <link href="<?= BASE_URL ?>static/css/custom.css" rel="stylesheet" type="text/css" />
