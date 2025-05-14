@@ -18,7 +18,7 @@ class PedidosController extends Controller
             if ($usuario->tipo == 1) {
                 $pedidos[$e->id] = $pedidosDAO->listar_estado($e->id);
             } else {
-                $pedidos[$e->id] = $pedidosDAO->listar_estado_departamento($e->id,$usuario->departamento->id);
+                $pedidos[$e->id] = $pedidosDAO->listar_estado_departamento($e->id, $usuario->departamento->id);
             }
 
         }
@@ -194,7 +194,8 @@ class PedidosController extends Controller
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
                     case 5:
-                        $pedidosDAO->cambiarEstado($pedido->id, 6);
+                        $transaccionesDAO = $this->dao("Transacciones");
+                        $this->archivar($pedidosDAO, $transaccionesDAO);
                         $pedidosDAO->rellenarEstado(6, $pedido->id, "Se ha confirmado el pago");
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
@@ -470,6 +471,40 @@ class PedidosController extends Controller
             'tipo' => 'success',
             'mensaje' => 'Archivo subido correctamente.'
         ];
+    }
+
+    public function archivar(PedidosDAO $pedidosDAO, TransaccionesDAO $transaccionesDAO)
+    {
+        $pedidoId = $_POST['id'] ?? null;
+
+        if (!$pedidoId) {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Falta la id del pedido'
+            ];
+        }
+        if ($pedidosDAO->cambiarEstado($pedidoId, 6)) {
+            $pedido = $pedidosDAO->obtener($pedidoId);
+            $fecha = date("Y-m-d H:i:s");
+            $descr = "Pedido " . $pedido->referencia . " archivado";
+            $ok = $transaccionesDAO->crear($fecha, $descr, $pedido->areaGastos->id, getCantidadMysql("-" . $pedido->importe));
+            if ($ok) {
+                return [
+                    'tipo' => 'success',
+                    'mensaje' => 'Pedido archivado correctamente.'
+                ];
+            } else {
+                return [
+                    'tipo' => 'danger',
+                    'mensaje' => 'Error al cambiar el estado del pedido'
+                ];
+            }
+        } else {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Error al cambiar el estado del pedido'
+            ];
+        }
     }
 
     #[\Override]

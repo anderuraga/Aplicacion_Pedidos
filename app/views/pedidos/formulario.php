@@ -207,7 +207,8 @@
                             <?php if ($usuario->tipo == 1) { ?>
                                 <form class="mb-2" id="seguir" method="post" action="Pedidos/vereditar?id=<?= $_GET['id'] ?>">
                                     <input type="hidden" name="action" value="siguiente">
-                                    <button class="btn btn-success float-end">Confirmar Pago</button><br>
+                                    <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
+                                    <button class="btn btn-success float-end">Archivo</button><br>
                                 </form>
                             <?php } ?>
                     <?php break;
