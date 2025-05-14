@@ -8,7 +8,7 @@
 <?php
 /**
  * @var Departamento $departamento
- * @var AreaGastos $areagastos
+ * @var AreaGastos $areaGastos
  * @var Proveedor $proveedor
  */
 ?>
@@ -96,7 +96,7 @@
                 <div class="row">
                     <div class="col-6">
                         <h5>Descripción de la solicitud:</h5>
-                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3"></textarea>
+                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit. In iaculis erat justo, ac cursus nibh."></textarea>
                     </div>
                 </div>
                 <div class="row mx-4 my-1">
