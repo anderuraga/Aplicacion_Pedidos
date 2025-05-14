@@ -228,15 +228,20 @@ VALUES(
 
     public function insertar_presupuestos($datos)
     {
-        $stmt = $this->db->prepare("
-            INSERT INTO presupuestos (id_pedido, referencia, documento, seleccionado)
-            VALUES (:id_pedido, :referencia, :documento, :seleccionado)
-        ");
+        $stmt = $this->db->prepare("INSERT INTO presupuestos(
+    id_pedido,
+    documento,
+    seleccionado
+)
+VALUES(
+    :id_pedido,
+    :documento,
+    :seleccionado
+)");
 
         return $stmt->execute([
             'id_pedido' => $datos['id_pedido'],
             'documento' => $datos['documento'],
-            'referencia' => $datos['referencia'],
             'seleccionado' => $datos['seleccionado']
         ]);
     }
@@ -276,8 +281,7 @@ VALUES(
     `id` as presupuesto_id,
     `documento` as presupuesto_documento,
     `fecha` as presupuesto_fecha,
-    `seleccionado` as presupuesto_seleccionado,
-    `referencia` as presupuesto_referencia
+    `seleccionado` as presupuesto_seleccionado
 FROM
     `presupuestos`
 WHERE
