@@ -32,8 +32,7 @@ class AreasGastosDAO
 
     public function comprobarId($id): bool
     {
-        // TODO cambiar * por id
-        $stmt = $this->db->prepare("SELECT COUNT(*) FROM areas_gastos WHERE id = :id");
+        $stmt = $this->db->prepare("SELECT COUNT(id) FROM areas_gastos WHERE id = :id");
         $stmt->execute(['id' => $id]);
         return $stmt->fetchColumn() > 0;
     }
@@ -47,7 +46,8 @@ class AreasGastosDAO
                                     `id_departamento` as departamento_id, 
                                     `nombre_departamento` as departamento_nombre, 
                                     `ingresos`, 
-                                    `gastos`, 
+                                    `gastos`,
+                                    `gasto_pendiente`,
                                     `total` as diferencia
                                 FROM `vista_resumen_areas` 
                                 WHERE 1 
@@ -70,7 +70,8 @@ class AreasGastosDAO
                                             `id_departamento` as departamento_id, 
                                             `nombre_departamento` as departamento_nombre, 
                                             `ingresos`, 
-                                            `gastos`, 
+                                            `gastos`,
+                                            `gasto_pendiente`,
                                             `total` as diferencia
                                         FROM `vista_resumen_areas`
                                         WHERE `id_area` = :id");

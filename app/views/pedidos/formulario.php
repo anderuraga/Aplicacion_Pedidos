@@ -153,15 +153,13 @@
                                             <input type="hidden" name="action" value="siguiente">
                                             <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
                                             <h5>Presupuesto Seleccionado:</h5>
-                                            <input type="text" class="form-control" id="presupuesto1_referencia" name="presupuesto1_referencia" placeholder="Referencia">
                                             <input type="file" id="presupuesto" name="presupuesto1" accept="application/pdf">
                                             <h5>Presupuesto alternativo 1:</h5>
-                                            <input type="text" class="form-control" id="presupuesto2_referencia" name="presupuesto2_referencia" placeholder="Referencia">
                                             <input type="file" id="presupuesto2" name="presupuesto2" accept="application/pdf">
                                             <h5>Presupuesto alternativo 2:</h5>
-                                            <input type="text" class="form-control" id="presupuesto3_referencia" name="presupuesto3_referencia" placeholder="Referencia">
                                             <input type="file" id="presupuesto3" name="presupuesto3" accept="application/pdf">
-                                            <h5><a>Anexo III, Anexo XV </a></h5>
+                                            <h5>Anexo III, Anexo XV</h5>
+                                            <p><a href="<?= BASE_URL ?>public/Anexos_Rellenar.pdf" download>Descargar</a></p>
                                             <input type="file" id="anexo" name="anexo" accept="application/pdf">
                                             <button class="btn btn-success float-end">Enviar</button><br>
                                         </form>
@@ -173,7 +171,6 @@
                                         <input type="hidden" name="action" value="siguiente">
                                         <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
                                         <h5>Presupuesto Seleccionado:</h5>
-                                        <input type="text" class="form-control" id="presupuesto1_referencia" name="presupuesto1_referencia" placeholder="Referencia">
                                         <input type="file" id="presupuesto" name="presupuesto1" accept="application/pdf">
                                         <button class="btn btn-success float-end">Enviar</button><br>
                                     </form>
@@ -210,7 +207,8 @@
                             <?php if ($usuario->tipo == 1) { ?>
                                 <form class="mb-2" id="seguir" method="post" action="Pedidos/vereditar?id=<?= $_GET['id'] ?>">
                                     <input type="hidden" name="action" value="siguiente">
-                                    <button class="btn btn-success float-end">Confirmar Pago</button><br>
+                                    <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
+                                    <button class="btn btn-success float-end">Archivo</button><br>
                                 </form>
                             <?php } ?>
                     <?php break;
@@ -238,14 +236,11 @@
             } else {
             ?>
                 <h5 class="mb-0">Presupuesto seleccionado</h5>
-                <p class="mb-0">Referencia: <?= $presupuestos[0]->referencia ?></p>
                 <a target="_blank" href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $presupuestos[0]->documento ?>">Ver Presupuesto</a>
                 <?php if ($pedido->comprobacion_presupuestos()) { ?>
                     <h5 class="mb-0 mt-2">Presupuesto alternativo 1</h5>
-                    <p class="mb-0">Referencia: <?= $presupuestos[1]->referencia ?></p>
                     <a target="_blank" href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $presupuestos[1]->documento ?>">Ver Presupuesto</a>
                     <h5 class="mb-0 mt-2">Presupuesto alternativo 2</h5>
-                    <p class="mb-0">Referencia: <?= $presupuestos[2]->referencia ?></p>
                     <a target="_blank" href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $presupuestos[2]->documento ?>">Ver Presupuesto</a>
                     <h5 class="mb-0 mt-2">Anexo III, Anexo XV</h5>
                     <a target="_blank" href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pedido->anexo ?>">Ver Anexos</a>

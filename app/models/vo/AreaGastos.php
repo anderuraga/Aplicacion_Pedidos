@@ -10,15 +10,17 @@ class AreaGastos
 
     public string $ingresos;
     public string $gastos;
+    public string $gastos_pendiente;
     public string $diferencia;
 
-    public function __construct(int $id, string $nombre, Departamento $departamento, string $ingresos, string $gastos, string $diferencia)
+    public function __construct(int $id, string $nombre, Departamento $departamento, string $ingresos, string $gastos,string $gastos_pendiente, string $diferencia)
     {
         $this->id = $id;
         $this->nombre = $nombre;
         $this->departamento = $departamento;
         $this->ingresos = $ingresos;
         $this->gastos = $gastos;
+        $this->gastos_pendiente = $gastos_pendiente;
         $this->diferencia = $diferencia;
     }
 
@@ -30,6 +32,11 @@ class AreaGastos
     public function gastos_formato()
     {
         return getCantidadFormateada($this->gastos);
+    }
+
+    public function gastos_pendiente_formato()
+    {
+        return getCantidadFormateada($this->gastos_pendiente);
     }
 
     public function diferencia_formato()
@@ -45,6 +52,7 @@ class AreaGastos
             Departamento::fromArray($row),
             $row['ingresos'],
             $row['gastos'],
+            $row['gasto_pendiente'],
             $row['diferencia']
         );
     }

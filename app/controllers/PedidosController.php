@@ -5,7 +5,7 @@ class PedidosController extends Controller
 {
     public function index()
     {
-
+        global $usuario;
         $estadosDAO = $this->dao("Estados");
         $estados = $estadosDAO->listar();
 
@@ -15,7 +15,12 @@ class PedidosController extends Controller
         $pedidosDAO = $this->dao("Pedidos");
         $pedidos = [];
         foreach ($estados as $e) {
-            $pedidos[$e->id] = $pedidosDAO->listar_estado($e->id);
+            if ($usuario->tipo == 1) {
+                $pedidos[$e->id] = $pedidosDAO->listar_estado($e->id);
+            } else {
+                $pedidos[$e->id] = $pedidosDAO->listar_estado_departamento($e->id, $usuario->departamento->id);
+            }
+
         }
 
         $this->view("pedidos/index", ['estados' => $estados, 'pedidos' => $pedidos]);
@@ -24,23 +29,17 @@ class PedidosController extends Controller
     public function proveedor()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (isset($_POST['areagasto']) && $_POST['areagasto'] != 0 && isset($_POST['proveedor']) && isset($_POST['departamento']) && $_POST['departamento'] != 0) {
+            if (isset($_POST['proveedor'])) {
                 session_write_close();
-                header("Location:detalles?proveedor=$_POST[proveedor]&areaGasto=$_POST[areagasto]&departamento=$_POST[departamento]");
+                header("Location:areagastos?proveedor=$_POST[proveedor]");
                 exit;
             } else {
                 $_SESSION['alert'] = [
                     'tipo' => 'warning',
-                    'mensaje' => 'Es obligatorio seleccionar un proveedor y un area de gasto.'
+                    'mensaje' => 'Es obligatorio seleccionar un proveedor.'
                 ];
             }
         }
-
-        /**
-         * @var AreasGastosDAO
-         */
-        $areasGastosDAO = $this->dao("AreasGastos");
-        $areasGastos = $areasGastosDAO->listar();
 
         /**
          * @var TiposServicioDAO
@@ -60,12 +59,50 @@ class PedidosController extends Controller
         $usuario = unserialize($_SESSION['usuario']);
 
         $data = [
-            'areasGastos' => $areasGastos,
             'tiposServicio' => $tiposServicio,
             'proveedores' => $proveedores,
             'usuario' => $usuario,
         ];
 
+        $this->view("pedidos/proveedor", $data);
+    }
+
+    public function areagastos()
+    {
+        if (!isset($_GET['proveedor'])) {
+            $_SESSION['alert'] = [
+                'tipo' => 'danger',
+                'mensaje' => 'No hay proveedor seleccionado.'
+            ];
+            session_write_close();
+            header("Location:proveedor");
+            exit;
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['areagasto']) && $_POST['areagasto'] != 0 && isset($_POST['proveedor']) && isset($_POST['departamento']) && $_POST['departamento'] != 0) {
+                session_write_close();
+                header("Location:detalles?proveedor=$_POST[proveedor]&areaGasto=$_POST[areagasto]&departamento=$_POST[departamento]");
+                exit;
+            } else {
+                $_SESSION['alert'] = [
+                    'tipo' => 'warning',
+                    'mensaje' => 'Es obligatorio seleccionar un area de gasto.'
+                ];
+            }
+        }
+
+        /**
+         * @var AreasGastosDAO
+         */
+        $areasGastosDAO = $this->dao("AreasGastos");
+        $areasGastos = $areasGastosDAO->listar();
+
+
+        $data = [
+            'areasGastos' => $areasGastos,
+        ];
+
+        global $usuario;
         if ($usuario->tipo == 1) {
             /**
              * @var DepartamentosDAO
@@ -74,8 +111,7 @@ class PedidosController extends Controller
             $departamentos = $departamentosDAO->listar();
             $data['departamentos'] = $departamentos;
         }
-
-        $this->view("pedidos/proveedor", $data);
+        $this->view("pedidos/areagastos", $data);
     }
 
     public function detalles()
@@ -103,7 +139,7 @@ class PedidosController extends Controller
         $proveedoresDAO = $this->dao("Proveedores");
         $proveedor = $proveedoresDAO->obtener($_GET['proveedor']);
 
-        
+
         $areaGastos = $areasGastosDAO->obtener($_GET['areaGasto']);
 
 
@@ -147,7 +183,7 @@ class PedidosController extends Controller
                         break;
                     case 2:
                         $pedidosDAO->cambiarEstado($pedido->id, 3);
-                        $pedidosDAO->rellenarEstado(3,$pedido->id, "Se ha enviado el pedido al proveedor");
+                        $pedidosDAO->rellenarEstado(3, $pedido->id, "Se ha enviado el pedido al proveedor");
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
                     case 3:
@@ -159,8 +195,9 @@ class PedidosController extends Controller
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
                     case 5:
-                        $pedidosDAO->cambiarEstado($pedido->id, 6);
-                        $pedidosDAO->rellenarEstado(6,$pedido->id, "Se ha confirmado el pago");
+                        $transaccionesDAO = $this->dao("Transacciones");
+                        $this->archivar($pedidosDAO, $transaccionesDAO);
+                        $pedidosDAO->rellenarEstado(6, $pedido->id, "Se ha confirmado el pago");
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
                     default:
@@ -188,12 +225,12 @@ class PedidosController extends Controller
     {
         global $usuario;
         $id_usuario = $usuario->id;
-        $id_departamento = (int) ($_POST['departamento']);
-        $id_subconcepto = (int) ($_POST['subconcepto']);
-        $id_area_gasto = (int) ($_POST['areaGasto']);
-        $id_proveedor = trim($_POST['proveedor']);
-        $descripcion = trim($_POST['descripcion']);
-        $importe = (float) getCantidadMysql($_POST['cantidad']);
+        $id_departamento = (int) ($_POST['departamento'] ?? 0);
+        $id_subconcepto = (int) ($_POST['subconcepto'] ?? 0);
+        $id_area_gasto = (int) ($_POST['areaGasto'] ?? 0);
+        $id_proveedor = trim($_POST['proveedor'] ?? '');
+        $descripcion = trim($_POST['descripcion'] ?? '');
+        $importe = (float) getCantidadMysql($_POST['cantidad'] ?? 0);
         $anio_contable = date('Y');
 
         // Validación de campos obligatorios
@@ -210,7 +247,7 @@ class PedidosController extends Controller
 
         $areaGastos = $areasGastosDAO->obtener($id_area_gasto);
         $total = floatval($areaGastos->diferencia);
-        if($importe>$total){
+        if ($importe > $total) {
             return [
                 'tipo' => 'danger',
                 'mensaje' => 'No es posible hacer un pedido con un importe por encima del saldo del area de gasto.'
@@ -231,7 +268,7 @@ class PedidosController extends Controller
         $ok = $pedidosDAO->crear($data);
 
         if ($ok) {
-            $pedidosDAO->rellenarEstado(1,$pedidosDAO->last_insert, "Se ha creado el pedido");
+            $pedidosDAO->rellenarEstado(1, $pedidosDAO->last_insert, "Se ha creado el pedido");
             return [
                 'tipo' => 'success',
                 'mensaje' => 'Pedido creado correctamente.'
@@ -291,7 +328,6 @@ class PedidosController extends Controller
                 if (move_uploaded_file($_FILES[$campo]['tmp_name'], $rutaFinal)) {
                     $ok = $pedidosDAO->insertar_presupuestos([
                         'id_pedido' => $pedidoId,
-                        'referencia' => $_POST[$campo."_referencia"],
                         'documento' => $nombreLimpio,
                         'seleccionado' => $campo == "presupuesto1" ? 1 : 0
                     ]);
@@ -331,7 +367,7 @@ class PedidosController extends Controller
         }
 
         $pedidosDAO->cambiarEstado($pedidoId, 2);
-        $pedidosDAO->rellenarEstado(2,$pedidoId, "Se han subido los presupuestos");
+        $pedidosDAO->rellenarEstado(2, $pedidoId, "Se han subido los presupuestos");
         return [
             'tipo' => 'success',
             'mensaje' => 'Archivos subidos correctamente.'
@@ -381,7 +417,7 @@ class PedidosController extends Controller
         }
 
         $pedidosDAO->cambiarEstado($pedidoId, 4);
-        $pedidosDAO->rellenarEstado(4,$pedidoId, "Se ha subido el albarán");
+        $pedidosDAO->rellenarEstado(4, $pedidoId, "Se ha subido el albarán");
         return [
             'tipo' => 'success',
             'mensaje' => 'Archivo subido correctamente.'
@@ -431,11 +467,45 @@ class PedidosController extends Controller
         }
 
         $pedidosDAO->cambiarEstado($pedidoId, 5);
-        $pedidosDAO->rellenarEstado(5,$pedidoId, "Se ha subido la factura");
+        $pedidosDAO->rellenarEstado(5, $pedidoId, "Se ha subido la factura");
         return [
             'tipo' => 'success',
             'mensaje' => 'Archivo subido correctamente.'
         ];
+    }
+
+    public function archivar(PedidosDAO $pedidosDAO, TransaccionesDAO $transaccionesDAO)
+    {
+        $pedidoId = $_POST['id'] ?? null;
+
+        if (!$pedidoId) {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Falta la id del pedido'
+            ];
+        }
+        if ($pedidosDAO->cambiarEstado($pedidoId, 6)) {
+            $pedido = $pedidosDAO->obtener($pedidoId);
+            $fecha = date("Y-m-d H:i:s");
+            $descr = "Pedido " . $pedido->referencia . " archivado";
+            $ok = $transaccionesDAO->crear($fecha, $descr, $pedido->areaGastos->id, getCantidadMysql("-" . $pedido->importe));
+            if ($ok) {
+                return [
+                    'tipo' => 'success',
+                    'mensaje' => 'Pedido archivado correctamente.'
+                ];
+            } else {
+                return [
+                    'tipo' => 'danger',
+                    'mensaje' => 'Error al cambiar el estado del pedido'
+                ];
+            }
+        } else {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Error al cambiar el estado del pedido'
+            ];
+        }
     }
 
     #[\Override]

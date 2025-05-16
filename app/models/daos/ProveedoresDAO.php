@@ -51,8 +51,7 @@ class ProveedoresDAO
 
     public function comprobrarCif($cif, $excluirId = null)
     {
-        // TODO cambiar * por un id
-        $sql = "SELECT COUNT(*) FROM proveedores WHERE `cif` = :cif";
+        $sql = "SELECT COUNT(id) FROM proveedores WHERE `cif` = :cif";
         if ($excluirId !== null) {
             $sql .= " AND id != :id";
         }

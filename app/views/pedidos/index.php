@@ -19,28 +19,38 @@
                                 data-bs-toggle="pill" data-bs-target="#pills-estado<?= $e->id ?>" type="button" role="tab"
                                 aria-controls="pills-estado<?= $e->id ?>" aria-selected="false">
                                 <?= $e->icono ?>
-                                <?= $e->nombre ?>
+                                <?= $e->nombre . " (" . count($pedidos[$e->id]) . ")" ?>
                             </button>
                         </li>
                     <?php } ?>
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
-                    <?php foreach ($estados as $e) { ?>
+                    <?php
+                    /**
+                     * @var Estado $e
+                     */
+                    foreach ($estados as $e) { ?>
                         <div class="tab-pane fade show <?= $e->id == 1 ? 'active' : '' ?>" id="pills-estado<?= $e->id ?>"
                             role="tabpanel" aria-labelledby="pills-estado<?= $e->id ?>-tab" tabindex="0">
+                            <?php if ($usuario->tipo == 1 && $e->id == 5) { ?>
+                                <a class="btn btn-primary mb-2 ms-2 me-4" href="Pedidos/proveedor">Archivar</a>
+                            <?php } ?>
                             <table id="pedidos-estado<?= $e->id ?>"
                                 class="tabla table table-striped dt-table-hover pedidos-table" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th>id</th>
                                         <th>Referencia</th>
+                                        <?php if ($usuario->tipo == 1 && $e->id == 5) { ?>
+                                            <th></th>
+                                        <?php } ?>
                                         <th>Fecha</th>
                                         <th>Solicitante</th>
                                         <th>Departamento</th>
                                         <th>Subconcepto</th>
                                         <th>Tipo</th>
                                         <th>Proveedor</th>
-                                        <th>Descripcion</th>
+                                        <th>Descripción</th>
                                         <th>Cuantía</th>
                                         <th>Opciones</th>
                                     </tr>
@@ -52,7 +62,15 @@
                                         <tr>
                                             <td><?= $p->id ?></td>
                                             <td><?= $p->referencia ?></td>
-                                            <td data-order="<?= $p->getFechaCreadaVisible() ?>"><?= $p->fecha_creada ?></td>
+                                            <?php if ($usuario->tipo == 1 && $e->id == 5) { ?>
+                                                <td>
+                                                    <div class="form-check form-check-primary form-check-inline">
+                                                        <input class="form-check-input proveedorRadio" type="checkbox" name="pedido"
+                                                            value="<?= $p->id ?>">
+                                                    </div>
+                                                </td>
+                                            <?php } ?>
+                                            <td data-order="<?= $p->fecha_creada ?>"><?= $p->getFechaCreadaVisible() ?></td>
                                             <td><?= $p->usuario->nombre ?></td>
                                             <td><?= $p->departamento->nombre ?></td>
                                             <td><?= $p->subconcepto->nombre ?></td>
@@ -62,7 +80,7 @@
                                             <td><?= $p->cantidad_formato() ?></td>
                                             <td>
                                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                                    <a href="<?= BASE_URL . "Pedidos/vereditar?id=".$p->id ?>"
+                                                    <a href="<?= BASE_URL . "Pedidos/vereditar?id=" . $p->id ?>"
                                                         class="btn btn-primary">Ver</a>
                                                 </div>
                                             </td>

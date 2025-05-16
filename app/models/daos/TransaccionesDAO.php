@@ -14,8 +14,6 @@ class TransaccionesDAO
 
     public function transaccionesArea($id_area)
     {
-        // TODO: Modificar las query de la misma forma que en el historial de items para mostrar el total
-        //       de dinero en cada transacción
         $stmt = $this->db->prepare(query: "SELECT
                                                 t.`id` AS transaccion_id,
                                                 t.`id_area` AS area_id,
@@ -24,10 +22,17 @@ class TransaccionesDAO
                                                 ag.nombre_departamento AS departamento_nombre,
                                                 ag.ingresos,
                                                 ag.gastos,
+                                                ag.gasto_pendiente,
                                                 ag.total as diferencia,
                                                 t.`fecha` AS transaccion_fecha,
                                                 t.`descripcion` AS transaccion_descripcion,
-                                                t.`cantidad` AS transaccion_cantidad
+                                                t.`cantidad` AS transaccion_cantidad,
+                                                SUM(t.`cantidad`) 
+                                                OVER (
+                                                    PARTITION BY t.`id_area`
+                                                    ORDER BY t.`fecha`, t.`id`
+                                                    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+                                                ) AS transaccion_total
                                             FROM
                                                 `transacciones` t
                                             JOIN vista_resumen_areas ag ON
@@ -59,10 +64,17 @@ class TransaccionesDAO
                                                 ag.nombre_departamento AS departamento_nombre,
                                                 ag.ingresos,
                                                 ag.gastos,
+                                                ag.gasto_pendiente,
                                                 ag.total as diferencia,
                                                 t.`fecha` AS transaccion_fecha,
                                                 t.`descripcion` AS transaccion_descripcion,
-                                                t.`cantidad` AS transaccion_cantidad
+                                                t.`cantidad` AS transaccion_cantidad,
+                                                SUM(t.`cantidad`) 
+                                                OVER (
+                                                    PARTITION BY t.`id_area`
+                                                    ORDER BY t.`fecha`, t.`id`
+                                                    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+                                                ) AS transaccion_total
                                             FROM
                                                 `transacciones` t
                                             JOIN vista_resumen_areas ag ON
@@ -126,10 +138,17 @@ class TransaccionesDAO
                                                 ag.nombre_departamento AS departamento_nombre,
                                                 ag.ingresos,
                                                 ag.gastos,
+                                                ag.gasto_pendiente,
                                                 ag.total as diferencia,
                                                 t.`fecha` AS transaccion_fecha,
                                                 t.`descripcion` AS transaccion_descripcion,
-                                                t.`cantidad` AS transaccion_cantidad
+                                                t.`cantidad` AS transaccion_cantidad,
+                                                SUM(t.`cantidad`) 
+                                                OVER (
+                                                    PARTITION BY t.`id_area`
+                                                    ORDER BY t.`fecha`, t.`id`
+                                                    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+                                                ) AS transaccion_total
                                             FROM
                                                 `transacciones` t
                                             JOIN vista_resumen_areas ag ON

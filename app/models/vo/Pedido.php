@@ -91,13 +91,13 @@ class Pedido
     public function getFechaCreadaVisible()
     {
         $date = new DateTime($this->fecha_creada);
-        return $date->format('d/m/Y H:i');
+        return $date->format('d/m/Y');
     }
 
     public function getFechaEnviadaVisible()
     {
         $date = new DateTime($this->fecha_enviada);
-        return $date->format('d/m/Y H:i');
+        return $date->format('d/m/Y');
     }
 
     public function cantidad_formato()

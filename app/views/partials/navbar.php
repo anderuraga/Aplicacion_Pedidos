@@ -5,12 +5,12 @@
 
         <ul class="navbar-item theme-brand flex-row text-center">
             <li class="nav-item theme-logo">
-                <a href="index.php">
-                    <img src="static/assets/img/logo/EEM-logo-color.svg" class="navbar-logo" alt="logo">
+                <a href="<?= BASE_URL ?>">
+                    <img src="<?= BASE_URL ?>static/assets/img/logo/EEM-logo-color.svg" class="navbar-logo" alt="logo">
                 </a>
             </li>
             <li class="nav-item theme-text">
-                <a href="index.php" class="nav-link"> Elorrieta Erreka Mari </a>
+                <a href="<?= BASE_URL ?>" class="nav-link"> Elorrieta Erreka Mari </a>
             </li>
         </ul>
 

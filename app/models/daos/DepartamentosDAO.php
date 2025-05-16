@@ -28,8 +28,7 @@ class DepartamentosDAO
 
     public function comprobrarNombre($nombre, $excluirId = null)
     {
-        // TODO cambiar * por un id
-        $sql = "SELECT COUNT(*) FROM departamentos WHERE nombre = :nombre";
+        $sql = "SELECT COUNT(id) FROM departamentos WHERE nombre = :nombre";
         if ($excluirId !== null) {
             $sql .= " AND id != :id";
         }
@@ -46,8 +45,7 @@ class DepartamentosDAO
 
     public function comprobarId($id)
     {
-        // TODO cambiar * por un id
-        $stmt = $this->db->prepare("SELECT COUNT(*) FROM departamentos WHERE id = :id");
+        $stmt = $this->db->prepare("SELECT COUNT(id) FROM departamentos WHERE id = :id");
         $stmt->execute(['id' => $id]);
         return $stmt->fetchColumn() > 0;
     }
