@@ -13,6 +13,29 @@ class PedidosController extends Controller
          * @var PedidosDAO
          */
         $pedidosDAO = $this->dao("Pedidos");
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['pedidos'])) {
+                $_SESSION['alert'] = [
+                    'tipo' => 'success',
+                    'mensaje' => 'Se han archivado los pedidos correctamente.'
+                ];
+                /**
+                 * @var TransaccionesDAO
+                 */
+                $transaccionesDAO = $this->dao("Transacciones");
+                foreach ($_POST['pedidos'] as $pedido) {
+                    $return = $this->archivar($pedidosDAO, $transaccionesDAO, $pedido);
+                    if ($return['tipo'] != "success") {
+                        $_SESSION['alert'] = [
+                            'tipo' => 'warning',
+                            'mensaje' => 'Ha sucedido un error al archivar alguno de los pedidos.'
+                        ];
+                    }
+                }
+            }
+        }
+
         $pedidos = [];
         foreach ($estados as $e) {
             if ($usuario->tipo == 1) {
@@ -473,9 +496,9 @@ class PedidosController extends Controller
         ];
     }
 
-    public function archivar(PedidosDAO $pedidosDAO, TransaccionesDAO $transaccionesDAO)
+    public function archivar(PedidosDAO $pedidosDAO, TransaccionesDAO $transaccionesDAO, int $pedido_id = null)
     {
-        $pedidoId = $_POST['id'] ?? null;
+        $pedidoId = $_POST['id'] ?? $pedido_id;
 
         if (!$pedidoId) {
             return [
