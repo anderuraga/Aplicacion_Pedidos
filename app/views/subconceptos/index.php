@@ -16,7 +16,6 @@
                     <tr>
                         <th>id</th>
                         <th>Nombre</th>
-                        <th>Tipo</th>
                         <th>Opciones</th>
                     </tr>
                 </thead>
@@ -25,7 +24,6 @@
                         <tr>
                             <td><?= $s->id ?></td>
                             <td><?= htmlspecialchars($s->nombre) ?></td>
-                            <td><?= htmlspecialchars($s->tipo->name) ?></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="Basic example">
                                     <a href="Subconceptos/vereditar?id=<?= $s->id ?>" class="btn btn-primary">Editar</a>

@@ -49,7 +49,6 @@
                                             <th>Solicitante</th>
                                             <th>Departamento</th>
                                             <th>Subconcepto</th>
-                                            <th>Tipo</th>
                                             <th>Proveedor</th>
                                             <th>Descripción</th>
                                             <th>Cuantía</th>
@@ -75,7 +74,6 @@
                                                 <td><?= $p->usuario->nombre ?></td>
                                                 <td><?= $p->departamento->nombre ?></td>
                                                 <td><?= $p->subconcepto->nombre ?></td>
-                                                <td><?= $p->subconcepto->tipo->name ?></td>
                                                 <td><?= $p->proveedor->nombre ?></td>
                                                 <td><?= $p->descripcion ?></td>
                                                 <td><?= $p->cantidad_formato() ?></td>

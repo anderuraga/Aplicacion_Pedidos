@@ -101,11 +101,6 @@
                     <h5>Subconcepto:</h5>
                     <input type="text" class="form-control mb-2" value="<?= $pedido->subconcepto->nombre ?>" disabled>
                 </div>
-                <div class="col-4">
-                    <h5>Tipo:</h5>
-                    <input type="text" class="form-control mb-2" value="<?= $pedido->subconcepto->tipo->name ?>"
-                        disabled>
-                </div>
 
             </div>
             <div class="row">

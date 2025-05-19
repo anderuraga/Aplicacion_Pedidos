@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-05-2025 a las 09:33:50
+-- Tiempo de generación: 19-05-2025 a las 18:18:26
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -120,7 +120,8 @@ CREATE TABLE `incidencias` (
   `id` int(11) NOT NULL,
   `id_pedido` varchar(20) NOT NULL,
   `fecha` date NOT NULL,
-  `descipcion` mediumtext NOT NULL
+  `descipcion` mediumtext NOT NULL,
+  `estado` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 -- --------------------------------------------------------
@@ -196,7 +197,11 @@ CREATE TABLE `pedidos` (
 
 INSERT INTO `pedidos` (`id`, `referencia`, `id_estado`, `id_usuario`, `id_departamento`, `id_subconcepto`, `id_area_gasto`, `id_proveedor`, `fecha_creada`, `fecha_enviada`, `descripcion`, `importe`, `id_factura`, `anio_contable`, `anexo`, `albaran`, `factura`) VALUES
 (5, '1-20250512-122', 6, 1, 2, 1, 1, 1, '2025-05-12 23:04:59', NULL, 'Prueba menos mil euros', 500.00, NULL, '2025', NULL, 'Albaran.pdf', 'Factura.pdf'),
-(6, '1-20250512-283', 2, 1, 2, 1, 1, 1, '2025-05-12 23:54:08', NULL, 'Prueba pedido 5000', 5000.00, NULL, '2025', 'Anexo.pdf', NULL, '');
+(6, '1-20250512-283', 2, 1, 2, 1, 1, 1, '2025-05-12 23:54:08', NULL, 'Prueba pedido 5000', 5000.00, NULL, '2025', 'Anexo.pdf', NULL, ''),
+(7, '1-20250514-499', 6, 1, 2, 1, 1, 1, '2025-05-14 10:30:52', NULL, 'adsasfasda', 200.00, NULL, '2025', NULL, 'Pedidos.pdf', 'DataTables_example_-_File_export.pdf'),
+(8, '1-20250514-902', 2, 1, 2, 1, 1, 1, '2025-05-14 10:52:12', NULL, 'asdasdads', 1000.00, NULL, '2025', 'Anexos_que_hay_que_rellenar.pdf', NULL, ''),
+(9, '9-20250514-946', 1, 1, 4, 2, 9, 1, '2025-05-14 11:13:27', NULL, 'asdasgfsadasdas', 500.00, NULL, '2025', NULL, NULL, ''),
+(10, '1-20250514-579', 1, 1, 2, 1, 1, 1, '2025-05-14 11:13:54', NULL, 'adsasdasdas', 500.00, NULL, '2025', NULL, NULL, '');
 
 -- --------------------------------------------------------
 
@@ -224,7 +229,17 @@ INSERT INTO `pedidos_estados` (`id`, `id_estado`, `id_pedido`, `fecha`, `comenta
 (5, 5, 5, '2025-05-12 23:24:13', 'Se ha subido la factura'),
 (6, 6, 5, '2025-05-12 23:25:00', 'Se ha sconfirmado el pago'),
 (7, 1, 6, '2025-05-12 23:54:08', 'Se ha creado el pedido'),
-(8, 2, 6, '2025-05-12 23:54:53', 'Se han subido los presupuestos');
+(8, 2, 6, '2025-05-12 23:54:53', 'Se han subido los presupuestos'),
+(9, 1, 7, '2025-05-14 10:30:52', 'Se ha creado el pedido'),
+(10, 2, 7, '2025-05-14 10:43:15', 'Se han subido los presupuestos'),
+(11, 3, 7, '2025-05-14 10:43:33', 'Se ha enviado el pedido al proveedor'),
+(12, 1, 8, '2025-05-14 10:52:12', 'Se ha creado el pedido'),
+(13, 2, 8, '2025-05-14 10:53:46', 'Se han subido los presupuestos'),
+(14, 1, 9, '2025-05-14 11:13:27', 'Se ha creado el pedido'),
+(15, 1, 10, '2025-05-14 11:13:54', 'Se ha creado el pedido'),
+(16, 6, 5, '2025-05-14 12:24:09', 'Se ha confirmado el pago'),
+(17, 4, 7, '2025-05-19 17:21:08', 'Se ha subido el albarán'),
+(18, 5, 7, '2025-05-19 17:21:24', 'Se ha subido la factura');
 
 -- --------------------------------------------------------
 
@@ -235,7 +250,6 @@ INSERT INTO `pedidos_estados` (`id`, `id_estado`, `id_pedido`, `fecha`, `comenta
 CREATE TABLE `presupuestos` (
   `id` int(11) NOT NULL,
   `id_pedido` int(11) NOT NULL,
-  `referencia` varchar(255) NOT NULL,
   `documento` varchar(255) NOT NULL,
   `fecha` datetime NOT NULL DEFAULT current_timestamp(),
   `seleccionado` tinyint(1) NOT NULL
@@ -245,12 +259,16 @@ CREATE TABLE `presupuestos` (
 -- Volcado de datos para la tabla `presupuestos`
 --
 
-INSERT INTO `presupuestos` (`id`, `id_pedido`, `referencia`, `documento`, `fecha`, `seleccionado`) VALUES
-(13, 5, '1564584-46545', 'Presupuesto1.pdf', '2025-05-12 23:15:44', 1),
-(14, 5, '464-654564', 'Presupuesto1.pdf', '2025-05-12 23:16:44', 1),
-(15, 6, '464-654564', 'Presupuesto1.pdf', '2025-05-12 23:54:53', 1),
-(16, 6, '9999999', 'Presupuesto2.pdf', '2025-05-12 23:54:53', 0),
-(17, 6, '888888888', 'Presupuesto3.pdf', '2025-05-12 23:54:53', 0);
+INSERT INTO `presupuestos` (`id`, `id_pedido`, `documento`, `fecha`, `seleccionado`) VALUES
+(13, 5, 'Presupuesto1.pdf', '2025-05-12 23:15:44', 1),
+(14, 5, 'Presupuesto1.pdf', '2025-05-12 23:16:44', 1),
+(15, 6, 'Presupuesto1.pdf', '2025-05-12 23:54:53', 1),
+(16, 6, 'Presupuesto2.pdf', '2025-05-12 23:54:53', 0),
+(17, 6, 'Presupuesto3.pdf', '2025-05-12 23:54:53', 0),
+(18, 7, 'Presupuesto1.pdf', '2025-05-14 10:43:15', 1),
+(19, 8, 'Presupuesto1.pdf', '2025-05-14 10:53:46', 1),
+(20, 8, 'Presupuesto2.pdf', '2025-05-14 10:53:46', 0),
+(21, 8, 'Presupuesto3.pdf', '2025-05-14 10:53:46', 0);
 
 -- --------------------------------------------------------
 
@@ -290,17 +308,17 @@ INSERT INTO `proveedores` (`id`, `cif`, `nombre`, `direccion`, `cod_postal`, `po
 
 CREATE TABLE `subconceptos` (
   `id` int(11) NOT NULL,
-  `nombre` varchar(45) NOT NULL,
-  `tipo` enum('Fungible','Inventariable') NOT NULL
+  `nombre` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `subconceptos`
 --
 
-INSERT INTO `subconceptos` (`id`, `nombre`, `tipo`) VALUES
-(1, 'Subconcepto 1', 'Inventariable'),
-(2, 'Subconcepto 2', 'Fungible');
+INSERT INTO `subconceptos` (`id`, `nombre`) VALUES
+(1, 'Subconcepto 1'),
+(2, 'Subconcepto 2'),
+(3, 'Subconcepto 3');
 
 -- --------------------------------------------------------
 
@@ -344,7 +362,11 @@ INSERT INTO `transacciones` (`id`, `id_area`, `fecha`, `descripcion`, `cantidad`
 (2, 1, '2025-04-02 14:00:00', 'Ingreso para gastos generales', 9000.02),
 (3, 5, '2025-04-02 12:00:00', 'Nuevo ingreos', 10000.00),
 (4, 4, '2025-04-29 12:00:00', 'Nuevo ingreos prueba', 599.99),
-(5, 1, '2025-04-29 11:00:00', 'Otra prueba', 200.50);
+(5, 1, '2025-04-29 11:00:00', 'Otra prueba', 200.50),
+(6, 9, '0000-00-00 00:00:00', 'Nuevo ingreos prueba', 10000.00),
+(7, 1, '2025-05-14 12:24:09', 'Pedido 1-20250512-122 archivado', -500.00),
+(8, 1, '2025-05-19 17:26:15', 'Pedido 1-20250512-122 archivado', -500.00),
+(9, 1, '2025-05-19 17:26:15', 'Pedido 1-20250514-499 archivado', -200.00);
 
 -- --------------------------------------------------------
 
@@ -368,8 +390,8 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`id`, `tipo`, `nombre`, `correo`, `contrasena`, `id_departamento`, `baja`) VALUES
 (1, 1, 'Javier Gómez', 'javier.gomez@emaginarte.com', '$2y$10$2iDisbSnjUv3qWM4fb0v9OC1zCXt6wmdyLp0NKjsjLILSspxPUkzO', 2, NULL),
-(3, 0, 'Prueba', 'prueba@prueba.com', '$2y$10$VS.RgJapSeXoUgUBdpXUlOgJjrQAP4NLDqXzOCQzHIXdMebOculV6', 2, NULL),
-(4, 0, 'Imanol', 'imanol@prueba.com', '$2y$10$EVV1fM.tCFIIJHLbrhblvejZhTsiCEfqmGj.0mDHH2Nb8bxCIwqdW', 4, NULL);
+(3, 0, 'Prueba', 'prueba@prueba.com', '$2y$10$Jg.WK7IC84L3b1gWFnxLlujGbsZFpshoS9B4RikMQotltdr5kmSiW', 2, NULL),
+(4, 0, 'Imanol2', 'imanol@prueba.com', '$2y$10$/zW6rVVkr1ck5/UeXVGWDOAMNFu9m80IgFKxXbZPT.X4uhA/.whGO', 4, NULL);
 
 -- --------------------------------------------------------
 
@@ -628,19 +650,19 @@ ALTER TABLE `movimientos`
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos_estados`
 --
 ALTER TABLE `pedidos_estados`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `presupuestos`
 --
 ALTER TABLE `presupuestos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `proveedores`
@@ -652,7 +674,7 @@ ALTER TABLE `proveedores`
 -- AUTO_INCREMENT de la tabla `subconceptos`
 --
 ALTER TABLE `subconceptos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `tipos_servicio`
@@ -664,7 +686,7 @@ ALTER TABLE `tipos_servicio`
 -- AUTO_INCREMENT de la tabla `transacciones`
 --
 ALTER TABLE `transacciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`

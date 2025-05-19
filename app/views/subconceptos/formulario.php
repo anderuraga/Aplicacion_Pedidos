@@ -9,7 +9,7 @@
 <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
-            <h1>Subconcepto: <?= $subconcepto->id == 0 ? 'Nueva' : 'Editar' ?></h1>
+            <h1>Subconcepto: <?= $subconcepto->id == 0 ? 'Nuevo' : 'Editar' ?></h1>
             <form id="editarSubconcepto" class="mt-0" action="Subconceptos/vereditar?id=<?= $subconcepto->id ?>"
                 method="post">
                 <input type="hidden" id="idedit" name="id" value="<?= $subconcepto->id ?>">
@@ -18,23 +18,6 @@
                         <h5>Nombre:</h5>
                         <input type="text" class="form-control mb-2" placeholder="Nombre" aria-label="nombre"
                             name="nombre" id="nombreEdit" required value="<?= $subconcepto->nombre ?>">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <h5>Tipo:</h5>
-                        <div class="form-check form-check-primary form-check-inline">
-                            <input class="form-check-input" type="radio" name="tipo" id="tipoEdit" <?= $subconcepto->tipo->name == 'Fungible'?'checked':'' ?> value="Fungible">
-                            <label class="form-check-label" for="tipo">
-                                Fungible
-                            </label>
-                        </div>
-                        <div class="form-check form-check-primary form-check-inline">
-                            <input class="form-check-input" type="radio" name="tipo" id="tipoEdit" <?= $subconcepto->tipo->name == 'Inventariable'?'checked':'' ?> value="Inventariable">
-                            <label class="form-check-label" for="form-check-radio-default">
-                                Inventariable
-                            </label>
-                        </div>
                     </div>
                 </div>
 

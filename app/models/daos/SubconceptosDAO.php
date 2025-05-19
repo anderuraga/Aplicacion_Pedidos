@@ -17,8 +17,7 @@ class SubconceptosDAO
     {
         $stmt = $this->db->prepare("SELECT 
                                                 `id` as subconcepto_id, 
-                                                `nombre` as subconcepto_nombre, 
-                                                `tipo` as subconcepto_tipo
+                                                `nombre` as subconcepto_nombre
                                             FROM `subconceptos` 
                                             WHERE `id`=:id");
 
@@ -53,10 +52,9 @@ class SubconceptosDAO
 
     public function crear($nombre, $tipo)
     {
-        $stmt = $this->db->prepare("INSERT INTO `subconceptos`(`nombre`, `tipo`) VALUES (:nombre, :tipo)");
+        $stmt = $this->db->prepare("INSERT INTO `subconceptos`(`nombre`) VALUES (:nombre)");
         $ok = $stmt->execute([
-            'nombre' => $nombre,
-            'tipo' => $tipo
+            'nombre' => $nombre
         ]);
 
         if ($ok) {
@@ -71,14 +69,12 @@ class SubconceptosDAO
     {
         $stmt = $this->db->prepare(query:  "UPDATE `subconceptos` 
                                             SET 
-                                                `nombre`= :nombre, 
-                                                `tipo`= :tipo 
+                                                `nombre`= :nombre
                                             WHERE 
                                                 `id`=:id");
         return $stmt->execute([
             'id' => $id,
-            'nombre' => $nombre,
-            'tipo' => $tipo
+            'nombre' => $nombre
         ]);
     }
 
@@ -86,8 +82,7 @@ class SubconceptosDAO
     {
         $stmt = $this->db->query("SELECT 
                                             `id` as subconcepto_id, 
-                                            `nombre` as subconcepto_nombre, 
-                                            `tipo` as subconcepto_tipo
+                                            `nombre` as subconcepto_nombre
                                         FROM `subconceptos` 
                                         WHERE 1 
                                         ORDER BY `nombre` ASC");
