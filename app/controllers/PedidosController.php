@@ -199,6 +199,7 @@ class PedidosController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($_POST['action'] == "siguiente") {
                 switch ($pedido->estado->id) {
+                    //TODO cambiar numeros por constantes o enum que reflejen que son esos valores
                     case 1:
                         $_SESSION['alert'] = $this->guardarPresupuestos($pedidosDAO, $pedido);
                         $pedido = $pedidosDAO->obtener($_GET['id']);
