@@ -9,8 +9,15 @@
 /**
  * @var Pedido $pedido
  * @var Presupuesto[] $presupuestos
+ * @var Incidencia[] $incidenciasActivas
  */
-
+if (count($incidenciasActivas) > 0) { ?>
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        Hay <?= count($incidenciasActivas) ?> incidencia(s) abiertas en este pedido.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <?php
+}
 ?>
 <style>
     .item-timeline>.t-time {
@@ -126,6 +133,53 @@
 
             </div>
         </div>
+        <?php if (count($incidenciasActivas) > 0) { ?>
+            <div class="widget-content widget-content-area mt-2 p-3">
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12 ">
+                        <h1>Incidencias Activas:</h1>
+                    </div>
+                    <?php foreach ($incidenciasActivas as $incidencia) { ?>
+                        <div class="col-12 mb-2 p-2 incidencia">
+                            <form method="post">
+                                <input type="hidden" name="action" value="incidencia">
+                                <input type="hidden" name="id" value="<?= $incidencia->id ?>">
+                                <h4>Fecha: <?= $incidencia->getFechaVisible() ?></h4>
+                                <h5><?= $incidencia->descripcion ?></h5>
+                                <button class="btn btn-success">Marcar como solucionada</button>
+                                <?php if ($usuario->tipo == 1) { ?>
+                                    <a href="Incidencias/vereditar?id=<?= $incidencia->id ?>&pedido=<?= $pedido->id ?>"
+                                        class="btn btn-primary">Editar</a>
+                                <?php } ?>
+                            </form>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
+        <?php } ?>
+        <?php if (count($incidenciasResueltas) > 0) { ?>
+            <div class="widget-content widget-content-area mt-2 p-3">
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12 ">
+                        <h1>Incidencias Solucionadas:</h1>
+                    </div>
+                    <?php foreach ($incidenciasResueltas as $incidencia) { ?>
+                        <div class="col-12 mb-2 p-2 incidencia">
+                            <input type="hidden" name="id" value="<?= $incidencia->id ?>">
+                            <div class="row">
+                                <div class="col-6">
+                                    <h4>Fecha: <?= $incidencia->getFechaVisible() ?></h4>
+                                </div>
+                                <div class="col-6">
+                                    <h4>Fecha Solucionada: <?= $incidencia->getFechaSolucionVisible() ?></h4>
+                                </div>
+                            </div>
+                            <h5><?= $incidencia->descripcion ?></h5>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
+        <?php } ?>
     </div><!-- Cierra statbox widget box box-shadow -->
 </div> <!-- Cierra tableSimple -->
 <div id="sideDiv" class="col-lg-4 col-12 layout-spacing">
@@ -144,9 +198,10 @@
                                 <div class="col-12 mb-3" id="subirfacturadiv">
                                     <h5>Subir facturas:</h5>
                                     <div class="mb-2">
-                                        <form id="subirFacturas" method="post" action="Pedidos/vereditar?id=<?= $_GET['id'] ?>" enctype="multipart/form-data">
+                                        <form id="subirFacturas" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>"
+                                            enctype="multipart/form-data">
                                             <input type="hidden" name="action" value="siguiente">
-                                            <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
+                                            <input type="hidden" name="id" value="<?= $pedido->id ?>">
                                             <h5>Presupuesto Seleccionado:</h5>
                                             <input type="file" id="presupuesto" name="presupuesto1" accept="application/pdf">
                                             <h5>Presupuesto alternativo 1:</h5>
@@ -162,57 +217,60 @@
                                 </div>
                             <?php else: ?>
                                 <div class="col-12 mb-2" id="subirfacturadiv">
-                                    <form id="subirFactura" method="post" action="Pedidos/vereditar?id=<?= $_GET['id'] ?>" enctype="multipart/form-data">
+                                    <form id="subirFactura" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>"
+                                        enctype="multipart/form-data">
                                         <input type="hidden" name="action" value="siguiente">
-                                        <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
+                                        <input type="hidden" name="id" value="<?= $pedido->id ?>">
                                         <h5>Presupuesto Seleccionado:</h5>
                                         <input type="file" id="presupuesto" name="presupuesto1" accept="application/pdf">
                                         <button class="btn btn-success float-end">Enviar</button><br>
                                     </form>
                                 </div>
                             <?php endif; ?>
-                        <?php break;
+                            <?php break;
                         case 2: ?>
                             <?php if ($usuario->tipo == 1) { ?>
-                                <form class="mb-2" id="seguir" method="post" action="Pedidos/vereditar?id=<?= $_GET['id'] ?>">
+                                <form class="mb-2" id="seguir" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>">
                                     <input type="hidden" name="action" value="siguiente">
                                     <button class="btn btn-success float-end">Enviar Proveedor</button><br>
                                 </form>
                             <?php } ?>
-                        <?php break;
+                            <?php break;
                         case 3: ?>
                             <h5>Subir albarán:</h5>
-                            <form class="mb-2" id="subirFacturas" method="post" action="Pedidos/vereditar?id=<?= $_GET['id'] ?>" enctype="multipart/form-data">
+                            <form class="mb-2" id="subirFacturas" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>"
+                                enctype="multipart/form-data">
                                 <input type="hidden" name="action" value="siguiente">
-                                <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
+                                <input type="hidden" name="id" value="<?= $pedido->id ?>">
                                 <input type="file" id="albaran" name="albaran" accept="application/pdf">
                                 <button class="btn btn-success float-end">Subir Albarán</button><br>
                             </form>
-                        <?php break;
+                            <?php break;
                         case 4: ?>
                             <h5>Subir factura:</h5>
-                            <form class="mb-2" id="subirFacturas" method="post" action="Pedidos/vereditar?id=<?= $_GET['id'] ?>" enctype="multipart/form-data">
+                            <form class="mb-2" id="subirFacturas" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>"
+                                enctype="multipart/form-data">
                                 <input type="hidden" name="action" value="siguiente">
-                                <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
+                                <input type="hidden" name="id" value="<?= $pedido->id ?>">
                                 <input type="file" id="factura" name="factura" accept="application/pdf">
                                 <button class="btn btn-success float-end">Subir factura</button><br>
                             </form>
-                        <?php break;
+                            <?php break;
                         case 5: ?>
                             <?php if ($usuario->tipo == 1) { ?>
-                                <form class="mb-2" id="seguir" method="post" action="Pedidos/vereditar?id=<?= $_GET['id'] ?>">
+                                <form class="mb-2" id="seguir" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>">
                                     <input type="hidden" name="action" value="siguiente">
-                                    <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
+                                    <input type="hidden" name="id" value="<?= $pedido->id ?>">
                                     <button class="btn btn-success float-end">Archivo</button><br>
                                 </form>
                             <?php } ?>
-                    <?php break;
+                            <?php break;
                         default:
                             # code...
                             break;
                     } ?>
-                    <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-                        data-bs-target="#nuevaIncidenciaModal">Nueva Incidencia</button>
+                    <a class="btn btn-warning"
+                        href="<?= BASE_URL ?>Incidencias/vereditar?id=0&pedido=<?= $pedido->id ?>">Nueva Incidencia</a>
                     <button class="btn btn-light-success mr-a">Guardar</button>
                 </div>
             </div>
@@ -229,27 +287,39 @@
             if ($pedido->estado->id == 1) {
                 echo "<h5>Todavía no hay documentos subidos</h5>";
             } else {
-            ?>
+                ?>
                 <h5 class="mb-0">Presupuesto seleccionado</h5>
-                <a target="_blank" href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $presupuestos[0]->documento ?>">Ver Presupuesto</a>
+                <a target="_blank"
+                    href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $presupuestos[0]->documento ?>">Ver
+                    Presupuesto</a>
                 <?php if ($pedido->comprobacion_presupuestos()) { ?>
                     <h5 class="mb-0 mt-2">Presupuesto alternativo 1</h5>
-                    <a target="_blank" href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $presupuestos[1]->documento ?>">Ver Presupuesto</a>
+                    <a target="_blank"
+                        href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $presupuestos[1]->documento ?>">Ver
+                        Presupuesto</a>
                     <h5 class="mb-0 mt-2">Presupuesto alternativo 2</h5>
-                    <a target="_blank" href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $presupuestos[2]->documento ?>">Ver Presupuesto</a>
+                    <a target="_blank"
+                        href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $presupuestos[2]->documento ?>">Ver
+                        Presupuesto</a>
                     <h5 class="mb-0 mt-2">Anexo III, Anexo XV</h5>
-                    <a target="_blank" href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pedido->anexo ?>">Ver Anexos</a>
+                    <a target="_blank"
+                        href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pedido->anexo ?>">Ver
+                        Anexos</a>
 
                 <?php } ?>
                 <?php if ($pedido->estado->id >= 4) { ?>
                     <h5 class="mb-0 mt-2">Albarán</h5>
-                    <a target="_blank" href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pedido->albaran ?>">Ver Albarán</a>
+                    <a target="_blank"
+                        href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pedido->albaran ?>">Ver
+                        Albarán</a>
                 <?php } ?>
                 <?php if ($pedido->estado->id >= 5) { ?>
                     <h5 class="mb-0 mt-2">Factura</h5>
-                    <a target="_blank" href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pedido->factura ?>">Ver Factura</a>
+                    <a target="_blank"
+                        href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pedido->factura ?>">Ver
+                        Factura</a>
                 <?php } ?>
-            <?php
+                <?php
             }
             ?>
         </div>
@@ -270,7 +340,7 @@
                              * @var Historial $h
                              */
                             foreach ($historial as $h) {
-                            ?>
+                                ?>
                                 <div class="item-timeline">
                                     <p class="t-time"><?= $h->getFechaVisible() ?></p>
                                     <div class="t-dot t-dot-warning">

@@ -196,6 +196,11 @@ class PedidosController extends Controller
         $pedidosDAO = $this->dao("Pedidos");
         $pedido = $pedidosDAO->obtener($_GET['id']);
 
+        /**
+         * @var IncidenciasDAO
+         */
+        $incidenciasDAO = $this->dao("Incidencias");
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($_POST['action'] == "siguiente") {
                 switch ($pedido->estado->id) {
@@ -226,14 +231,33 @@ class PedidosController extends Controller
                     default:
                         break;
                 }
+            } else if ($_POST['action'] == "incidencia") {
+                if ($incidenciasDAO->marcar_solucionada($_POST['id'])) {
+                    $pedidosDAO->rellenarEstado($pedido->estado->id,$pedido->id,"Incidencia marcada como solucionada");
+                    $_SESSION['alert'] = [
+                        'tipo' => 'success',
+                        'mensaje' => 'Incidencia marcada como resuelta correctamente.'
+                    ];
+                }else{
+                    $_SESSION['alert'] = [
+                        'tipo' => 'warning',
+                        'mensaje' => 'Error al marcar como resuelta la incidencia.'
+                    ];
+                }
             }
         }
 
         $historial = $pedidosDAO->obtener_historial($pedido->id);
 
+
+        $incidenciasActivas = $incidenciasDAO->listar_estado($pedido->id, 0);
+        $incidenciasResueltas = $incidenciasDAO->listar_estado($pedido->id, 1);
+
         $data = [
             'pedido' => $pedido,
-            'historial' => $historial
+            'historial' => $historial,
+            'incidenciasActivas' => $incidenciasActivas,
+            'incidenciasResueltas' => $incidenciasResueltas,
         ];
 
         if ($pedido->estado->id > 0) {

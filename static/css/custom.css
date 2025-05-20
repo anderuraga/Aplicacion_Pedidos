@@ -77,3 +77,7 @@ body.dark .layout-px-spacing,
 .dt-buttons {
     margin-left: 10px;
 }
+
+.incidencia{
+    border-bottom: 1px solid lightgray;
+}
