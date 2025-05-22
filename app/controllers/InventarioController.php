@@ -5,9 +5,18 @@ class InventarioController extends Controller
 {
     public function index()
     {
-
+        global $usuario;
+        /**
+         * @var ItemsDAO
+         */
         $itemsDAO = $this->dao("Items");
-        $items = $itemsDAO->listar();
+
+        if ($usuario->tipo == ADMIN) {
+            $items = $itemsDAO->listar();
+        }else{
+            $items = $itemsDAO->listar_departamento($usuario->departamento->id);
+        }
+
 
         $this->view("inventario/index", ['items' => $items]);
     }
@@ -23,7 +32,7 @@ class InventarioController extends Controller
                 'mensaje' => "El item no existe."
             ];
             session_write_close();
-            header('Location: '.BASE_URL.'AreasGastos');
+            header('Location: ' . BASE_URL . 'AreasGastos');
         }
 
         $item = $itemsDAO->obtener($id);
@@ -50,22 +59,43 @@ class InventarioController extends Controller
             }
         }
 
-
         if ($id <> 0) {
             $item = $itemsDAO->obtener($id);
         } else {
-            $item = new Item(0, '', 0);
+            $item = new Item(0, new Departamento(0, ''), '', 0);
         }
 
-        $this->view("inventario/formulario", ['item' => $item]);
+        $data = [
+            'item' => $item,
+        ];
+
+        global $usuario;
+        if ($usuario->tipo == ADMIN) {
+            /**
+             * @var DepartamentosDAO
+             */
+            $departamentosDAO = $this->dao("Departamentos");
+            $departamentos = $departamentosDAO->listar();
+            $data['departamentos'] = $departamentos;
+        }
+
+        $this->view("inventario/formulario", $data);
 
     }
 
-    public function guardar($itemsDAO)
+    public function guardar(ItemsDAO $itemsDAO)
     {
+        global $usuario;
 
         $id = $_POST['id'];
         $nombre = trim($_POST['nombre']);
+
+        if ($usuario->tipo == ADMIN) {
+            $departamento = $_POST['departamento'];
+        } else {
+            $departamento = $usuario->departamento->id;
+        }
+
 
         if ($nombre === '') {
             return [
@@ -89,9 +119,9 @@ class InventarioController extends Controller
         }
 
         if ($id == 0) {
-            $ok = $itemsDAO->crear($nombre);
+            $ok = $itemsDAO->crear($nombre, $departamento);
         } else {
-            $ok = $itemsDAO->editar($id, $nombre);
+            $ok = $itemsDAO->editar($id, $nombre, $departamento);
         }
 
         if ($ok) {
@@ -114,16 +144,16 @@ class InventarioController extends Controller
         $movimientosDAO = $this->dao("Movimientos");
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['alert'] = $this->guardarMovimiento($movimientosDAO);
-            if($movimientosDAO->last_insert!=null){
+            if ($movimientosDAO->last_insert != null) {
                 session_write_close();
-                header("Location: movimiento?id=".$movimientosDAO->last_insert."&item=".$_POST['item_id']);
+                header("Location: movimiento?id=" . $movimientosDAO->last_insert . "&item=" . $_POST['item_id']);
             }
         }
 
         if ($id <> 0) {
             $movimiento = $movimientosDAO->obtener($id);
         } else {
-            $movimiento = new Movimiento(id: 0, item: new Item(0,'',0), fecha: '', descripcion: '', cantidad: 0);
+            $movimiento = new Movimiento(id: 0, item: new Item(0, new Departamento(0, ''), '', 0), fecha: '', descripcion: '', cantidad: 0);
         }
 
         $this->view("inventario/movimientos", ['movimiento' => $movimiento]);
@@ -178,6 +208,6 @@ class InventarioController extends Controller
 
     public function tiene_permiso(): bool
     {
-        return requireAdmin();
+        return requireLogin();
     }
 }

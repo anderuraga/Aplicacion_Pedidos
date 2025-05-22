@@ -18,21 +18,33 @@
                     <tr>
                         <th>id</th>
                         <th>Nombre</th>
+                        <?php if ($usuario->tipo = ADMIN) { ?>
+                            <th>Departamento</th>
+                        <?php } ?>
                         <th>Cantidad</th>
                         <th>Opciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($items as $i): ?>
+                    <?php
+                    /**
+                     * @var Item $i
+                     */
+                    foreach ($items as $i): ?>
                         <tr>
                             <td><?= $i->id ?></td>
                             <td><?= htmlspecialchars($i->nombre) ?></td>
+                            <?php if ($usuario->tipo == ADMIN) { ?>
+                                <td><?= $i->departamento->nombre ?></td>
+                            <?php } ?>
                             <td><?= $i->cantidad ?></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="Opciones">
-                                    <a type="button" href="Inventario/vereditar?id=<?= $i->id ?>" class="btn btn-primary">Editar</a>
+                                    <a type="button" href="Inventario/vereditar?id=<?= $i->id ?>"
+                                        class="btn btn-primary">Editar</a>
                                     <a href="Inventario/historial?id=<?= $i->id ?>" class="btn btn-primary">Historial</a>
-                                    <a type="button" href="Inventario/movimiento?id=0&item=<?= $i->id ?>" class="btn btn-secondary">Entrada/Salida</a>
+                                    <a type="button" href="Inventario/movimiento?id=0&item=<?= $i->id ?>"
+                                        class="btn btn-secondary">Entrada/Salida</a>
                                 </div>
                             </td>
                         </tr>

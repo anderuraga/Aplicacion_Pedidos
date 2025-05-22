@@ -5,7 +5,11 @@
 <?php $tab = 11; ?>
 <?php require HOMEDIR . '/../app/views/partials/container.php' ?>
 <?php require HOMEDIR . '/../app/views/partials/alert.php' ?>
-
+<?php
+/**
+ * @var Item $item
+ */
+?>
 <div class="row layout-top-spacing">
     <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
         <div class="statbox widget box box-shadow">
@@ -43,7 +47,7 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-                <a href="<?= BASE_URL ?>Inventario/historial?id=<?= $item->id ?>" class="btn btn-secondary m-2">Volver</a>
+                <a href="<?= BASE_URL ?>Inventario/" class="btn btn-secondary m-2">Volver</a>
             </div>
         </div>
     </div>

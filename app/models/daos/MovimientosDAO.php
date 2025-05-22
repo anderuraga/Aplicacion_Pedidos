@@ -16,24 +16,28 @@ class MovimientosDAO
     public function obtener($id): Movimiento
     {
         $stmt = $this->db->prepare("SELECT
-                                                m.`id` as movimiento_id,
-                                                m.`id_item` as item_id,
-                                                ma.nombre as item_nombre,
-                                                m.`fecha` as movimiento_fecha,
-                                                m.`descripcion` as movimiento_descripcion,
-                                                m.`cantidad` as movimiento_cantidad,
-                                                SUM(m.cantidad) 
-                                                OVER (
-                                                    PARTITION BY m.id_item 
-                                                    ORDER BY m.fecha, m.id 
-                                                    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
-                                                ) AS movimiento_total
-                                            FROM
-                                                `movimientos` m
-                                            JOIN materiales ma ON
-                                                m.id_item = ma.id
-                                            WHERE
-                                                m.id = :id");
+    m.`id` AS movimiento_id,
+    m.`id_item` AS item_id,
+    ma.nombre AS item_nombre,
+    d.id AS departamento_id,
+    d.nombre AS departamento_nombre,
+    m.`fecha` AS movimiento_fecha,
+    m.`descripcion` AS movimiento_descripcion,
+    m.`cantidad` AS movimiento_cantidad,
+    SUM(m.cantidad) OVER(
+    PARTITION BY m.id_item
+ORDER BY
+    m.fecha,
+    m.id ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+) AS movimiento_total
+FROM
+    `movimientos` m
+JOIN materiales ma ON
+    m.id_item = ma.id
+JOIN departamentos d ON
+    d.id = ma.id_departamento
+WHERE
+    m.id = :id");
 
         $stmt->execute(['id' => $id]);
         $row = $stmt->fetch();
@@ -88,28 +92,32 @@ class MovimientosDAO
     public function listar($id_item)
     {
         $stmt = $this->db->prepare("SELECT
-                                    m.`id` as movimiento_id,
-                                    m.`id_item` as item_id,
-                                    ma.nombre as item_nombre,
-                                    m.`fecha` as movimiento_fecha,
-                                    m.`descripcion` as movimiento_descripcion,
-                                    m.`cantidad` as movimiento_cantidad,
-                                    SUM(m.cantidad) 
-                                    OVER (
-                                        PARTITION BY m.id_item 
-                                        ORDER BY m.fecha, m.id 
-                                        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
-                                    ) AS movimiento_total
-                                FROM
-                                    `movimientos` m
-                                JOIN materiales ma ON
-                                    m.id_item = ma.id
-                                WHERE
-                                    m.id_item=:id_item
-                                ORDER BY
-                                    m.fecha DESC, 
-                                    m.id DESC
-                                    ");
+    m.`id` AS movimiento_id,
+    m.`id_item` AS item_id,
+    ma.nombre AS item_nombre,
+    d.id AS departamento_id,
+    d.nombre AS departamento_nombre,
+    m.`fecha` AS movimiento_fecha,
+    m.`descripcion` AS movimiento_descripcion,
+    m.`cantidad` AS movimiento_cantidad,
+    SUM(m.cantidad) OVER(
+    PARTITION BY m.id_item
+ORDER BY
+    m.fecha,
+    m.id ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+) AS movimiento_total
+FROM
+    `movimientos` m
+JOIN materiales ma ON
+    m.id_item = ma.id
+JOIN departamentos d ON
+    d.id = ma.id_departamento
+WHERE
+    m.id_item=:id_item
+ORDER BY
+    m.fecha DESC, 
+    m.id DESC
+    ");
 
         $stmt->execute(['id_item' => $id_item]);
 

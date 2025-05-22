@@ -15,12 +15,18 @@ class ItemsDAO
 
     public function obtener($id): Item
     {
-        $stmt = $this->db->prepare( "SELECT 
-                                            `id` as item_id, 
-                                            `nombre` as item_nombre,
-                                            `cantidad` as item_cantidad
-                                        FROM `vista_resumen_movimientos` 
-                                        WHERE `id`=:id");
+        $stmt = $this->db->prepare("SELECT
+    v.`id` AS item_id,
+    v.departamento_id AS departamento_id,
+    d.nombre AS departamento_nombre,
+    v.`nombre` AS item_nombre,
+    v.`cantidad` AS item_cantidad
+FROM
+    `vista_resumen_movimientos` v
+JOIN
+	departamentos d ON d.id=v.departamento_id
+WHERE
+    v.`id` = :id");
 
         $stmt->execute(['id' => $id]);
         $row = $stmt->fetch();
@@ -51,10 +57,11 @@ class ItemsDAO
         return $stmt->fetchColumn() > 0;
     }
 
-    public function crear($nombre)
+    public function crear($nombre, $departamento)
     {
-        $stmt = $this->db->prepare("INSERT INTO `materiales`(`nombre`) VALUES (:nombre)");
+        $stmt = $this->db->prepare("INSERT INTO `materiales`(`id_departamento`, `nombre`) VALUES (:departamento,:nombre)");
         $ok = $stmt->execute([
+            'departamento' => $departamento,
             'nombre' => $nombre
         ]);
 
@@ -66,25 +73,58 @@ class ItemsDAO
         return false;
     }
 
-    public function editar($id, $nombre)
+    public function editar($id, $nombre, $departamento)
     {
-        $stmt = $this->db->prepare("UPDATE materiales SET nombre = :nombre WHERE id = :id");
+        $stmt = $this->db->prepare("UPDATE materiales SET nombre = :nombre, `id_departamento`=:departamento WHERE id = :id");
         return $stmt->execute([
             'id' => $id,
-            'nombre' => $nombre
+            'nombre' => $nombre,
+            'departamento' => $departamento
         ]);
     }
 
     public function listar()
     {
-        $stmt = $this->db->query("SELECT 
-            `id` as item_id, 
-            `nombre` as item_nombre,  
-            `cantidad` as item_cantidad
-        FROM `vista_resumen_movimientos`
-        WHERE 1
-        ORDER BY `nombre` ASC");
+        $stmt = $this->db->query("SELECT
+    v.`id` AS item_id,
+    v.departamento_id,
+    d.nombre as departamento_nombre,
+    v.`nombre` AS item_nombre,
+    v.`cantidad` AS item_cantidad
+FROM
+    `vista_resumen_movimientos` v
+JOIN
+	departamentos d ON d.id=v.departamento_id
+WHERE 1
+        ORDER BY v.`nombre` ASC");
 
+        $result = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $result[] = Item::fromArray($row);
+        }
+
+        return $result;
+    }
+
+    public function listar_departamento($departamento)
+    {
+        $stmt = $this->db->prepare("SELECT
+    v.`id` AS item_id,
+    v.departamento_id,
+    d.nombre AS departamento_nombre,
+    v.`nombre` AS item_nombre,
+    v.`cantidad` AS item_cantidad
+FROM
+    `vista_resumen_movimientos` v
+JOIN departamentos d ON
+    d.id = v.departamento_id
+WHERE
+    `departamento_id` = :departamento
+ORDER BY
+    v.`nombre` ASC");
+        $stmt->execute([
+            "departamento" => $departamento
+        ]);
         $result = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $result[] = Item::fromArray($row);

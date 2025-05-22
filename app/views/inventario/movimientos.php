@@ -5,7 +5,11 @@
 <?php $tab = 11; ?>
 <?php require HOMEDIR . '/../app/views/partials/container.php' ?>
 <?php require HOMEDIR . '/../app/views/partials/alert.php' ?>
-
+<?php 
+/**
+ * @var Movimiento $movimiento
+ */
+?>
 <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
@@ -55,7 +59,7 @@
                     </div>
                 </div>
 
-                <a href="<?= BASE_URL ?>Inventario" class="btn btn-secondary mt-2">Volver</a>
+                <a href="<?= BASE_URL ?>Inventario/historial?id=<?= $movimiento->item->id ?>" class="btn btn-secondary mt-2">Volver</a>
 
                 <button type="submit" class="btn btn-primary mt-2"><?= $movimiento->id == 0 ? 'Crear' : 'Editar' ?></button>
 

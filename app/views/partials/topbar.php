@@ -5,7 +5,8 @@
             <div class="nav-logo">
                 <div class="nav-item theme-logo">
                     <a href="<?= BASE_URL ?>">
-                        <img src="<?= BASE_URL ?>static/assets/img/logo/EEM-logo-color.svg" class="navbar-logo" alt="logo">
+                        <img src="<?= BASE_URL ?>static/assets/img/logo/EEM-logo-color.svg" class="navbar-logo"
+                            alt="logo">
                     </a>
                 </div>
                 <div class="nav-item theme-text">
@@ -45,11 +46,23 @@
                     </div>
                 </a>
             </li>
-            <?php if ($usuario->tipo == 0): ?>
-            <?php endif; ?>
+            <li class="menu <?= $tab == 11 ? 'active' : '' ?>">
+                <a href="<?= BASE_URL ?>Inventario" aria-expanded="false" class="dropdown-toggle">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-grid">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        <span>Inventario</span>
+                    </div>
+                </a>
+            </li>
 
-
-            <?php if ($usuario->tipo == 1): ?>
+            <?php if ($usuario->tipo == ADMIN): ?>
                 <li class="menu <?= $tab == 12 ? 'active' : '' ?>">
                     <a href="<?= BASE_URL ?>Estados" aria-expanded="false" class="dropdown-toggle">
                         <div class="">
@@ -94,7 +107,8 @@
                     </a>
                 </li>
                 <li class="menu <?= $tab == 2 ? 'active' : '' ?>">
-                    <a href="<?= BASE_URL ?>Usuarios" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
+                    <a href="<?= BASE_URL ?>Usuarios" data-bs-toggle="dropdown" aria-expanded="false"
+                        class="dropdown-toggle">
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -117,7 +131,8 @@
                     </ul>
                 </li>
                 <li class="menu <?= $tab == 4 ? 'active' : '' ?>">
-                    <a href="<?= BASE_URL ?>Proveedores" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
+                    <a href="<?= BASE_URL ?>Proveedores" data-bs-toggle="dropdown" aria-expanded="false"
+                        class="dropdown-toggle">
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -138,21 +153,6 @@
                             <a href="<?= BASE_URL ?>TiposServicio"> Tipos de servicio </a>
                         </li>
                     </ul>
-                </li>
-                <li class="menu <?= $tab == 11 ? 'active' : '' ?>">
-                    <a href="<?= BASE_URL ?>Inventario" aria-expanded="false" class="dropdown-toggle">
-                        <div class="">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                class="feather feather-grid">
-                                <rect x="3" y="3" width="7" height="7"></rect>
-                                <rect x="14" y="3" width="7" height="7"></rect>
-                                <rect x="14" y="14" width="7" height="7"></rect>
-                                <rect x="3" y="14" width="7" height="7"></rect>
-                            </svg>
-                            <span>Inventario</span>
-                        </div>
-                    </a>
                 </li>
                 <li class="menu <?= $tab == 6 ? 'active' : '' ?>">
                     <a href="<?= BASE_URL ?>Reportes" aria-expanded="false" class="dropdown-toggle">
