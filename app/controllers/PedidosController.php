@@ -204,25 +204,24 @@ class PedidosController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($_POST['action'] == "siguiente") {
                 switch ($pedido->estado->id) {
-                    //TODO cambiar numeros por constantes o enum que reflejen que son esos valores
-                    case 1:
+                    case BORRADOR:
                         $_SESSION['alert'] = $this->guardarPresupuestos($pedidosDAO, $pedido);
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
-                    case 2:
+                    case PEN_VALI:
                         $pedidosDAO->cambiarEstado($pedido->id, 3);
                         $pedidosDAO->rellenarEstado(3, $pedido->id, "Se ha enviado el pedido al proveedor");
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
-                    case 3:
+                    case PEN_PROV:
                         $_SESSION['alert'] = $this->guardarAlbaran($pedidosDAO);
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
-                    case 4:
+                    case PEN_FACT:
                         $_SESSION['alert'] = $this->guardarFactura($pedidosDAO);
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
-                    case 5:
+                    case PEN_ARCH:
                         $transaccionesDAO = $this->dao("Transacciones");
                         $this->archivar($pedidosDAO, $transaccionesDAO);
                         $pedidosDAO->rellenarEstado(6, $pedido->id, "Se ha confirmado el pago");

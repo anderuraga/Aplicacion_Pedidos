@@ -32,7 +32,7 @@
                     foreach ($estados as $e) { ?>
                         <div class="tab-pane fade show <?= $e->id == 1 ? 'active' : '' ?>" id="pills-estado<?= $e->id ?>"
                             role="tabpanel" aria-labelledby="pills-estado<?= $e->id ?>-tab" tabindex="0">
-                            <?php if ($usuario->tipo == 1 && $e->id == 5) { ?>
+                            <?php if ($usuario->tipo == ADMIN && $e->id == PEN_ARCH) { ?>
                                 <form method="post">
                                     <button type="submit" class="btn btn-primary mb-2 ms-2 me-4">Archivar</button>
                                 <?php } ?>
@@ -42,7 +42,7 @@
                                         <tr>
                                             <th>id</th>
                                             <th>Referencia</th>
-                                            <?php if ($usuario->tipo == 1 && $e->id == 5) { ?>
+                                            <?php if ($usuario->tipo == ADMIN && $e->id == PEN_ARCH) { ?>
                                                 <th></th>
                                             <?php } ?>
                                             <th>Fecha</th>
@@ -62,7 +62,7 @@
                                             <tr>
                                                 <td><?= $p->id ?></td>
                                                 <td><?= $p->referencia ?></td>
-                                                <?php if ($usuario->tipo == 1 && $e->id == 5) { ?>
+                                                <?php if ($usuario->tipo == ADMIN && $e->id == PEN_ARCH) { ?>
                                                     <td>
                                                         <div class="form-check form-check-primary form-check-inline">
                                                             <input class="form-check-input proveedorRadio" type="checkbox"
@@ -88,7 +88,7 @@
 
                                     </tbody>
                                 </table>
-                                <?php if ($usuario->tipo == 1 && $e->id == 5) { ?>
+                                <?php if ($usuario->tipo == ADMIN && $e->id == PEN_ARCH) { ?>
                                 </form>
                             <?php } ?>
                         </div>

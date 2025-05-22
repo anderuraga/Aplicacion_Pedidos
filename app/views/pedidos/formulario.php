@@ -193,7 +193,7 @@ if (count($incidenciasActivas) > 0) { ?>
             <div class="row mb-2">
                 <div class="col-12 ">
                     <?php switch ($pedido->estado->id) {
-                        case 1: ?>
+                        case BORRADOR: ?>
                             <?php if ($pedido->comprobacion_presupuestos()): ?>
                                 <div class="col-12 mb-3" id="subirfacturadiv">
                                     <h5>Subir facturas:</h5>
@@ -228,7 +228,7 @@ if (count($incidenciasActivas) > 0) { ?>
                                 </div>
                             <?php endif; ?>
                             <?php break;
-                        case 2: ?>
+                        case PEN_VALI: ?>
                             <?php if ($usuario->tipo == 1) { ?>
                                 <form class="mb-2" id="seguir" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>">
                                     <input type="hidden" name="action" value="siguiente">
@@ -236,7 +236,7 @@ if (count($incidenciasActivas) > 0) { ?>
                                 </form>
                             <?php } ?>
                             <?php break;
-                        case 3: ?>
+                        case PEN_PROV: ?>
                             <h5>Subir albarán:</h5>
                             <form class="mb-2" id="subirFacturas" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>"
                                 enctype="multipart/form-data">
@@ -246,7 +246,7 @@ if (count($incidenciasActivas) > 0) { ?>
                                 <button class="btn btn-success float-end">Subir Albarán</button><br>
                             </form>
                             <?php break;
-                        case 4: ?>
+                        case PEN_FACT: ?>
                             <h5>Subir factura:</h5>
                             <form class="mb-2" id="subirFacturas" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>"
                                 enctype="multipart/form-data">
@@ -256,7 +256,7 @@ if (count($incidenciasActivas) > 0) { ?>
                                 <button class="btn btn-success float-end">Subir factura</button><br>
                             </form>
                             <?php break;
-                        case 5: ?>
+                        case PEN_ARCH: ?>
                             <?php if ($usuario->tipo == 1) { ?>
                                 <form class="mb-2" id="seguir" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>">
                                     <input type="hidden" name="action" value="siguiente">
@@ -266,7 +266,6 @@ if (count($incidenciasActivas) > 0) { ?>
                             <?php } ?>
                             <?php break;
                         default:
-                            # code...
                             break;
                     } ?>
                     <a class="btn btn-warning"
@@ -284,7 +283,7 @@ if (count($incidenciasActivas) > 0) { ?>
                 </div>
             </div>
             <?php
-            if ($pedido->estado->id == 1) {
+            if ($pedido->estado->id == BORRADOR) {
                 echo "<h5>Todavía no hay documentos subidos</h5>";
             } else {
                 ?>
@@ -307,13 +306,13 @@ if (count($incidenciasActivas) > 0) { ?>
                         Anexos</a>
 
                 <?php } ?>
-                <?php if ($pedido->estado->id >= 4) { ?>
+                <?php if ($pedido->estado->id >= PEN_FACT) { ?>
                     <h5 class="mb-0 mt-2">Albarán</h5>
                     <a target="_blank"
                         href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pedido->albaran ?>">Ver
                         Albarán</a>
                 <?php } ?>
-                <?php if ($pedido->estado->id >= 5) { ?>
+                <?php if ($pedido->estado->id >= PEN_ARCH) { ?>
                     <h5 class="mb-0 mt-2">Factura</h5>
                     <a target="_blank"
                         href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pedido->factura ?>">Ver
