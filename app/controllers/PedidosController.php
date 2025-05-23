@@ -38,7 +38,7 @@ class PedidosController extends Controller
 
         $pedidos = [];
         foreach ($estados as $e) {
-            if ($usuario->tipo == 1) {
+            if ($usuario->tipo == ADMIN) {
                 $pedidos[$e->id] = $pedidosDAO->listar_estado($e->id);
             } else {
                 $pedidos[$e->id] = $pedidosDAO->listar_estado_departamento($e->id, $usuario->departamento->id);
@@ -126,7 +126,7 @@ class PedidosController extends Controller
         ];
 
         global $usuario;
-        if ($usuario->tipo == 1) {
+        if ($usuario->tipo == ADMIN) {
             /**
              * @var DepartamentosDAO
              */
@@ -190,6 +190,7 @@ class PedidosController extends Controller
 
     public function vereditar()
     {
+        global $usuario;
         /**
          * @var PedidosDAO
          */
@@ -232,17 +233,25 @@ class PedidosController extends Controller
                 }
             } else if ($_POST['action'] == "incidencia") {
                 if ($incidenciasDAO->marcar_solucionada($_POST['id'])) {
-                    $pedidosDAO->rellenarEstado($pedido->estado->id,$pedido->id,"Incidencia marcada como solucionada");
+                    $pedidosDAO->rellenarEstado($pedido->estado->id, $pedido->id, "Incidencia marcada como solucionada");
                     $_SESSION['alert'] = [
                         'tipo' => 'success',
                         'mensaje' => 'Incidencia marcada como resuelta correctamente.'
                     ];
-                }else{
+                } else {
                     $_SESSION['alert'] = [
                         'tipo' => 'warning',
                         'mensaje' => 'Error al marcar como resuelta la incidencia.'
                     ];
                 }
+            } else if ($_POST['action'] == "editar") {
+                /**
+                 * @var AreasGastosDAO
+                 */
+                $areasGastosDAO = $this->dao("AreasGastos");
+
+                $_SESSION['alert'] = $this->editar($pedidosDAO, $areasGastosDAO);
+                $pedido = $pedidosDAO->obtener($_POST['id']);
             }
         }
 
@@ -258,6 +267,16 @@ class PedidosController extends Controller
             'incidenciasActivas' => $incidenciasActivas,
             'incidenciasResueltas' => $incidenciasResueltas,
         ];
+
+        if ($usuario->tipo == ADMIN) {
+            /**
+             * @var AreasGastosDAO
+             */
+            $areasGastosDAO = $this->dao("AreasGastos");
+            $areasGastos = $areasGastosDAO->listar();
+            $data['areasGastos'] = $areasGastos;
+        }
+
 
         if ($pedido->estado->id > 0) {
             $presupuestos = $pedidosDAO->obtener_presupuestos($pedido->id);
@@ -324,6 +343,43 @@ class PedidosController extends Controller
                 'tipo' => 'danger',
                 'mensaje' => 'Error al crear el pedido.'
             ];
+        }
+    }
+
+    private function editar(PedidosDAO $pedidosDAO, AreasGastosDAO $areasGastosDAO)
+    {
+        global $usuario;
+        $id = $_POST['id'];
+        $importe = (float) getCantidadMysql($_POST['cantidad'] ?? 0);
+
+        $pedido = $pedidosDAO->obtener($id);
+
+        if ($usuario->tipo == ADMIN) {
+
+            $areaGasto = $_POST['areagasto'];
+
+            if ($pedido->areaGastos->id != $areaGasto) {
+                $areaGastos = $areasGastosDAO->obtener($areaGasto);
+                $total = floatval($areaGastos->diferencia);
+                if ($importe > $total) {
+                    return [
+                        'tipo' => 'danger',
+                        'mensaje' => 'No es posible cambiar el pedido al area de gasto ya que el importe supera el saldo del area de gasto.'
+                    ];
+                } else {
+                    if ($pedidosDAO->cambiarAreaGasto($id, $areaGasto, $pedido->referencia)) {
+                        return [
+                            'tipo' => 'success',
+                            'mensaje' => 'Editado correctamente.'
+                        ];
+                    } else {
+                        return [
+                            'tipo' => 'danger',
+                            'mensaje' => 'Error al cambiar el area de gasto.'
+                        ];
+                    }
+                }
+            }
         }
     }
 

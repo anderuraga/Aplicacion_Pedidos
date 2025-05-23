@@ -51,7 +51,7 @@ class IncidenciasController extends Controller
         }
 
         global $usuario;
-        if ($usuario->tipo != 1) {
+        if ($usuario->tipo != ADMIN) {
             if ($usuario->departamento->id != $pedido->departamento->id) {
                 $_SESSION['alert'] = [
                     'tipo' => 'danger',

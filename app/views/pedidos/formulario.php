@@ -24,115 +24,138 @@ if (count($incidenciasActivas) > 0) { ?>
         margin-right: 10px !important;
     }
 </style>
-<div id="tableSimple" class="col-lg-8 col-12 layout-spacing">
+<div id="tableSimple" class="col-lg-8 col-12 layout-spacing formulario_pedidos">
     <div class="statbox widget box box-shadow">
-        <div class="widget-content widget-content-area p-3">
-            <div class="row">
-                <div class="col-xl-12 col-md-12 col-sm-12 col-12 ">
-                    <h1>Resumen del pedido: <?= $pedido->referencia ?></h1>
-                    <a href="<?= BASE_URL ?>Pedidos" class="btn btn-danger">Volver</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-4">
-                    <h5>Importe:</h5>
-                    <div class="input-group mb-2">
-                        <input class="form-control" placeholder="Cantidad" aria-label="cantidad"
-                            aria-describedby="basic-addon2" name="cantidad" id="cantidad"
-                            value="<?= $pedido->cantidad_formato() ?>">
-                        <span class="input-group-text" id="basic-addon2">€</span>
+        <form id="editarForm" method="post">
+            <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
+            <input type="hidden" name="action" value="editar">
+            <div class="widget-content widget-content-area p-3">
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12 ">
+                        <h1>Resumen del pedido: <?= $pedido->referencia ?></h1>
+                        <a href="<?= BASE_URL ?>Pedidos" class="btn btn-danger">Volver</a>
                     </div>
                 </div>
-                <div class="col-4">
-                    <h5>Referencia:</h5>
-                    <input type="text" class="form-control mb-2" value="<?= $pedido->referencia ?>" disabled>
+                <div class="row">
+                    <div class="col-4">
+                        <h5>Importe:</h5>
+                        <div class="input-group mb-2">
+                            <input class="form-control" placeholder="Cantidad" aria-label="cantidad"
+                                aria-describedby="basic-addon2" name="cantidad" id="cantidad"
+                                value="<?= $pedido->cantidad_formato() ?>">
+                            <span class="input-group-text" id="basic-addon2">€</span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <h5>Referencia:</h5>
+                        <input type="text" class="form-control mb-2" value="<?= $pedido->referencia ?>" disabled>
+                    </div>
+                    <div class="col-4">
+                        <h5>Fecha creación:</h5>
+                        <input type="text" class="form-control mb-2" value="<?= $pedido->getFechaCreadaVisible() ?>"
+                            disabled>
+                    </div>
                 </div>
-                <div class="col-4">
-                    <h5>Fecha creación:</h5>
-                    <input type="text" class="form-control mb-2" value="<?= $pedido->getFechaCreadaVisible() ?>"
-                        disabled>
+                <div class="row">
+                    <div class="col-4">
+                        <h5>Departamento:</h5>
+                        <input type="text" class="form-control mb-2" value="<?= $pedido->departamento->nombre ?>"
+                            disabled>
+                    </div>
+                    <div class="col-4">
+                        <h5>Usuario:</h5>
+                        <input type="text" class="form-control mb-2" value="<?= $pedido->usuario->nombre ?>" disabled>
+                    </div>
+                    <div class="col-4">
+                        <h5>Area Gasto:</h5>
+                        <?php if ($usuario->tipo == ADMIN) { ?>
+                            <select class="form-control" id="areagasto" name="areagasto">
+                                <option value="0" data-depart="0" disabled selected hidden>Selecciona una opción</option>
+                                <?php
+                                /** @var AreaGastos $a */
+                                foreach ($areasGastos as $a) { ?>
+                                    <option value="<?= $a->id ?>" data-disponible="<?= $a->diferencia_formato() ?>€"
+                                        data-depart="<?= $a->departamento->id ?>"
+                                        <?= $a->id == $pedido->areaGastos->id ? 'selected' : '' ?>><?= $a->nombre ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        <?php } else { ?>
+                            <input type="text" class="form-control mb-2" value="<?= $pedido->areaGastos->nombre ?>"
+                                disabled>
+                        <?php } ?>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-4">
-                    <h5>Departamento:</h5>
-                    <input type="text" class="form-control mb-2" value="<?= $pedido->departamento->nombre ?>" disabled>
+                <h4 class="mt-2">Proveedor: <?= $pedido->proveedor->nombre ?></h4>
+                <a id="detallesLink" onclick="toggleDetalles()">+ Mostrar Detalles</a>
+                <div id="detallesProveedor" class="row p-3" style="display: none;">
+                    <div class="col-4">
+                        <h5>CIF:</h5>
+                        <input type="text" class="form-control mb-2" value="<?= $pedido->proveedor->cif ?>" disabled>
+                    </div>
+                    <div class="col-4">
+                        <h5>Dirección:</h5>
+                        <input type="text" class="form-control mb-2"
+                            value="<?= $pedido->proveedor->direccion_completa() ?>" disabled>
+                    </div>
+                    <div class="col-4">
+                        <h5>Teléfono:</h5>
+                        <input type="text" class="form-control mb-2" value="<?= $pedido->proveedor->telefono ?>"
+                            disabled>
+                    </div>
+                    <div class="col-4">
+                        <h5>Correo Electrónico:</h5>
+                        <input type="text" class="form-control mb-2" value="<?= $pedido->proveedor->correo ?>" disabled>
+                    </div>
+                    <div class="col-4">
+                        <h5>Contacto:</h5>
+                        <input type="text" class="form-control mb-2" value="<?= $pedido->proveedor->contacto ?>"
+                            disabled>
+                    </div>
+                    <div class="col-4">
+                        <h5>Servicio:</h5>
+                        <input type="text" class="form-control mb-2"
+                            value="<?= $pedido->proveedor->tipo_servicio->nombre ?>" disabled>
+                    </div>
+                    <div class="col-4">
+                        <h5>Factura electrónica:</h5>
+                        <input type="text" class="form-control mb-2"
+                            value="<?= $pedido->proveedor->factura_electronica ? 'Si' : 'No' ?>" disabled>
+                    </div>
                 </div>
-                <div class="col-4">
-                    <h5>Usuario:</h5>
-                    <input type="text" class="form-control mb-2" value="<?= $pedido->usuario->nombre ?>" disabled>
+                <h4 class="mt-2">Detalles:</h4>
+                <div class="row">
+                    <div class="col-4">
+                        <h5>Subconcepto:</h5>
+                        <input type="text" class="form-control mb-2" value="<?= $pedido->subconcepto->nombre ?>"
+                            disabled>
+                    </div>
+
                 </div>
-                <div class="col-4">
-                    <h5>Area Gasto:</h5>
-                    <input type="text" class="form-control mb-2" value="<?= $pedido->areaGastos->nombre ?>" disabled>
-                </div>
-            </div>
-            <h4 class="mt-2">Proveedor: <?= $pedido->proveedor->nombre ?></h4>
-            <a id="detallesLink" onclick="toggleDetalles()">+ Mostrar Detalles</a>
-            <div id="detallesProveedor" class="row p-3" style="display: none;">
-                <div class="col-4">
-                    <h5>CIF:</h5>
-                    <input type="text" class="form-control mb-2" value="<?= $pedido->proveedor->cif ?>" disabled>
-                </div>
-                <div class="col-4">
-                    <h5>Dirección:</h5>
-                    <input type="text" class="form-control mb-2" value="<?= $pedido->proveedor->direccion_completa() ?>"
-                        disabled>
-                </div>
-                <div class="col-4">
-                    <h5>Teléfono:</h5>
-                    <input type="text" class="form-control mb-2" value="<?= $pedido->proveedor->telefono ?>" disabled>
-                </div>
-                <div class="col-4">
-                    <h5>Correo Electrónico:</h5>
-                    <input type="text" class="form-control mb-2" value="<?= $pedido->proveedor->correo ?>" disabled>
-                </div>
-                <div class="col-4">
-                    <h5>Contacto:</h5>
-                    <input type="text" class="form-control mb-2" value="<?= $pedido->proveedor->contacto ?>" disabled>
-                </div>
-                <div class="col-4">
-                    <h5>Servicio:</h5>
-                    <input type="text" class="form-control mb-2"
-                        value="<?= $pedido->proveedor->tipo_servicio->nombre ?>" disabled>
-                </div>
-                <div class="col-4">
-                    <h5>Factura electrónica:</h5>
-                    <input type="text" class="form-control mb-2"
-                        value="<?= $pedido->proveedor->factura_electronica ? 'Si' : 'No' ?>" disabled>
-                </div>
-            </div>
-            <h4 class="mt-2">Detalles:</h4>
-            <div class="row">
-                <div class="col-4">
-                    <h5>Subconcepto:</h5>
-                    <input type="text" class="form-control mb-2" value="<?= $pedido->subconcepto->nombre ?>" disabled>
+                <div class="row">
+                    <div class="col-6">
+                        <h5>Descripción de la solicitud:</h5>
+                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3"
+                            disabled><?= $pedido->descripcion ?></textarea>
+                    </div>
                 </div>
 
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <h5>Descripción de la solicitud:</h5>
-                    <textarea class="form-control" id="descripcion" name="descripcion" rows="3"
-                        disabled><?= $pedido->descripcion ?></textarea>
+                <div id="incidenciasDiv" style="display:none;">
+                    <h4 class="mt-2">Incidencias:</h4>
+                    <h5>Incidencia registrada el 07/03/2025:</h5>
+                    <textarea class="form-control" name="descripcion" rows="3"
+                        disabled>Los paquetes han venido dañados y la empresa dice que no se hace cargo</textarea>
                 </div>
-            </div>
+                <div class="row mx-4 my-3">
+                    <div class="col-6">
+                    </div>
+                    <div class="col-6">
+                        <button id="botoncontinuar" class="btn btn-success float-end">Guardar</button>
+                    </div>
 
-            <div id="incidenciasDiv" style="display:none;">
-                <h4 class="mt-2">Incidencias:</h4>
-                <h5>Incidencia registrada el 07/03/2025:</h5>
-                <textarea class="form-control" name="descripcion" rows="3"
-                    disabled>Los paquetes han venido dañados y la empresa dice que no se hace cargo</textarea>
-            </div>
-            <div class="row mx-4 my-3">
-                <div class="col-6">
                 </div>
-                <div class="col-6">
-                    <button id="botoncontinuar" class="btn btn-success float-end">Guardar</button>
-                </div>
-
             </div>
-        </div>
+        </form>
         <?php if (count($incidenciasActivas) > 0) { ?>
             <div class="widget-content widget-content-area mt-2 p-3">
                 <div class="row">
@@ -147,7 +170,7 @@ if (count($incidenciasActivas) > 0) { ?>
                                 <h4>Fecha: <?= $incidencia->getFechaVisible() ?></h4>
                                 <h5><?= $incidencia->descripcion ?></h5>
                                 <button class="btn btn-success">Marcar como solucionada</button>
-                                <?php if ($usuario->tipo == 1) { ?>
+                                <?php if ($usuario->tipo == ADMIN) { ?>
                                     <a href="Incidencias/vereditar?id=<?= $incidencia->id ?>&pedido=<?= $pedido->id ?>"
                                         class="btn btn-primary">Editar</a>
                                 <?php } ?>
@@ -229,7 +252,7 @@ if (count($incidenciasActivas) > 0) { ?>
                             <?php endif; ?>
                             <?php break;
                         case PEN_VALI: ?>
-                            <?php if ($usuario->tipo == 1) { ?>
+                            <?php if ($usuario->tipo == ADMIN) { ?>
                                 <form class="mb-2" id="seguir" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>">
                                     <input type="hidden" name="action" value="siguiente">
                                     <button class="btn btn-success float-end">Enviar Proveedor</button><br>
@@ -257,7 +280,7 @@ if (count($incidenciasActivas) > 0) { ?>
                             </form>
                             <?php break;
                         case PEN_ARCH: ?>
-                            <?php if ($usuario->tipo == 1) { ?>
+                            <?php if ($usuario->tipo == ADMIN) { ?>
                                 <form class="mb-2" id="seguir" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>">
                                     <input type="hidden" name="action" value="siguiente">
                                     <input type="hidden" name="id" value="<?= $pedido->id ?>">
@@ -270,7 +293,7 @@ if (count($incidenciasActivas) > 0) { ?>
                     } ?>
                     <a class="btn btn-warning"
                         href="<?= BASE_URL ?>Incidencias/vereditar?id=0&pedido=<?= $pedido->id ?>">Nueva Incidencia</a>
-                    <button class="btn btn-light-success mr-a">Guardar</button>
+                    <button type="submit" form="editarForm" class="btn btn-light-success mr-a">Guardar</button>
                 </div>
             </div>
         </div>

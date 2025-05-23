@@ -306,6 +306,38 @@ VALUES(
         return "{$id_area_gasto}-{$fecha}-{$aleatorio}";
     }
 
+    public function cambiarAreaGasto(int $id_pedido, int $id_area_gasto, string $referencia)
+    {
+        $nuevaref = $this->actualizarReferencia($referencia, $id_area_gasto);
+        $sql = "UPDATE
+    `pedidos`
+SET
+    `referencia` = :referencia,
+    `id_area_gasto` = :id_area
+WHERE
+    `id` = :id_pedido";
+
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([
+            'id_pedido' => $id_pedido,
+            'referencia' => $nuevaref,
+            'id_area' => $id_area_gasto
+        ]);
+
+    }
+
+    private function actualizarReferencia(string $referencia, int $nuevoAreaId): string
+    {
+        $referenciaAct = preg_replace(
+            '/^[^-]+(?=-)/',
+            (string) $nuevoAreaId,
+            $referencia
+        );
+
+        return $referenciaAct;
+    }
+
     public function insertar_presupuestos($datos)
     {
         $stmt = $this->db->prepare("INSERT INTO presupuestos(

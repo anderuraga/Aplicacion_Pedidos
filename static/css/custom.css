@@ -81,3 +81,7 @@ body.dark .layout-px-spacing,
 .incidencia{
     border-bottom: 1px solid lightgray;
 }
+
+.formulario_pedidos .form-control:disabled{
+    color: black;
+}
