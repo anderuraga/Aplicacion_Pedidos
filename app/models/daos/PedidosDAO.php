@@ -326,6 +326,21 @@ WHERE
         ]);
 
     }
+    
+    public function cambiarImporte(int $id, string $importe){
+        $sql = "UPDATE `pedidos` 
+SET
+    `importe` = :importe
+WHERE
+    `id` = :id";
+
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([
+            'importe' => $importe,
+            'id' => $id
+        ]);
+    }
 
     private function actualizarReferencia(string $referencia, int $nuevoAreaId): string
     {

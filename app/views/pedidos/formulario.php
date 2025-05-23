@@ -18,6 +18,12 @@ if (count($incidenciasActivas) > 0) { ?>
     </div>
     <?php
 }
+
+$editable = false;
+if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
+    $editable = true;
+}
+
 ?>
 <style>
     .item-timeline>.t-time {
@@ -42,7 +48,7 @@ if (count($incidenciasActivas) > 0) { ?>
                         <div class="input-group mb-2">
                             <input class="form-control" placeholder="Cantidad" aria-label="cantidad"
                                 aria-describedby="basic-addon2" name="cantidad" id="cantidad"
-                                value="<?= $pedido->cantidad_formato() ?>">
+                                value="<?= $pedido->cantidad_formato() ?>" <?= $editable ? '' : 'disabled' ?>>
                             <span class="input-group-text" id="basic-addon2">€</span>
                         </div>
                     </div>
@@ -75,8 +81,7 @@ if (count($incidenciasActivas) > 0) { ?>
                                 /** @var AreaGastos $a */
                                 foreach ($areasGastos as $a) { ?>
                                     <option value="<?= $a->id ?>" data-disponible="<?= $a->diferencia_formato() ?>€"
-                                        data-depart="<?= $a->departamento->id ?>"
-                                        <?= $a->id == $pedido->areaGastos->id ? 'selected' : '' ?>><?= $a->nombre ?>
+                                        data-depart="<?= $a->departamento->id ?>" <?= $a->id == $pedido->areaGastos->id ? 'selected' : '' ?>><?= $a->nombre ?>
                                     </option>
                                 <?php } ?>
                             </select>
@@ -86,7 +91,33 @@ if (count($incidenciasActivas) > 0) { ?>
                         <?php } ?>
                     </div>
                 </div>
-                <h4 class="mt-2">Proveedor: <?= $pedido->proveedor->nombre ?></h4>
+                <h4 class="mt-2">Proveedor:</h4>
+                <div class="row">
+                    <div class="col-4">
+                        <h5>Tipo de servicio:</h5>
+                        <select class="form-control mb-2" id="servicio" name="servicio" <?= $editable ? '' : 'disabled' ?>>
+                            <?php
+                            /** @var TipoServicio $t */
+                            foreach ($tiposServicios as $t) {
+                                ?>
+                                <option value="<?= $t->id ?>" <?= $t->id == $pedido->proveedor->tipo_servicio->id ? 'selected' : '' ?>><?= $t->nombre ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <h5>Proveedor:</h5>
+                        <select class="form-control mb-2" id="proveedor" name="proveedor" <?= $editable ? '' : 'disabled' ?>>
+                            <?php
+                            /** @var Proveedor $p */
+                            foreach ($proveedores as $p) { ?>
+                                <option value="<?= $p->id ?>" data-ts="<?= $p->tipo_servicio->id ?>"
+                                    <?= $p->id == $pedido->proveedor->id ? 'selected' : '' ?>>
+                                <?= $p->cif." - ". $p->nombre ?>
+                                </option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
                 <a id="detallesLink" onclick="toggleDetalles()">+ Mostrar Detalles</a>
                 <div id="detallesProveedor" class="row p-3" style="display: none;">
                     <div class="col-4">
@@ -127,25 +158,26 @@ if (count($incidenciasActivas) > 0) { ?>
                 <div class="row">
                     <div class="col-4">
                         <h5>Subconcepto:</h5>
-                        <input type="text" class="form-control mb-2" value="<?= $pedido->subconcepto->nombre ?>"
-                            disabled>
+                        <select class="form-control mb-2" id="subconcepto" name="subconcepto" <?= $editable ? '' : 'disabled' ?>>
+                            <option value="" disabled hidden>Selecciona una opción</option>
+                            <?php
+                            /** @var Subconcepto $s */
+                            foreach ($subconceptos as $s) { ?>
+                                <option value="<?= $s->id ?>" <?= $pedido->subconcepto->id == $s->id ? 'selected' : '' ?>>
+                                    <?= $s->nombre ?>
+                                </option>
+                            <?php } ?>
+                        </select>
                     </div>
 
                 </div>
                 <div class="row">
                     <div class="col-6">
                         <h5>Descripción de la solicitud:</h5>
-                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3"
-                            disabled><?= $pedido->descripcion ?></textarea>
+                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3" <?= $editable ? '' : 'disabled' ?>><?= $pedido->descripcion ?></textarea>
                     </div>
                 </div>
 
-                <div id="incidenciasDiv" style="display:none;">
-                    <h4 class="mt-2">Incidencias:</h4>
-                    <h5>Incidencia registrada el 07/03/2025:</h5>
-                    <textarea class="form-control" name="descripcion" rows="3"
-                        disabled>Los paquetes han venido dañados y la empresa dice que no se hace cargo</textarea>
-                </div>
                 <div class="row mx-4 my-3">
                     <div class="col-6">
                     </div>

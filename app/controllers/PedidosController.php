@@ -261,11 +261,32 @@ class PedidosController extends Controller
         $incidenciasActivas = $incidenciasDAO->listar_estado($pedido->id, 0);
         $incidenciasResueltas = $incidenciasDAO->listar_estado($pedido->id, 1);
 
+        /**
+         * @var SubconceptosDAO
+         */
+        $subconceptosDAO = $this->dao("Subconceptos");
+        $subconceptos = $subconceptosDAO->listar();
+
+        /**
+         * @var TiposServicioDAO
+         */
+        $tiposServiciosDAO = $this->dao("TiposServicio");
+        $tiposServicios = $tiposServiciosDAO->listar();
+
+        /**
+         * @var ProveedoresDAO
+         */
+        $proveedoresDAO = $this->dao("Proveedores");
+        $proveedores = $proveedoresDAO->listar();
+
         $data = [
             'pedido' => $pedido,
             'historial' => $historial,
             'incidenciasActivas' => $incidenciasActivas,
             'incidenciasResueltas' => $incidenciasResueltas,
+            'subconceptos' => $subconceptos,
+            'tiposServicios' => $tiposServicios,
+            'proveedores' => $proveedores
         ];
 
         if ($usuario->tipo == ADMIN) {
@@ -349,30 +370,44 @@ class PedidosController extends Controller
     private function editar(PedidosDAO $pedidosDAO, AreasGastosDAO $areasGastosDAO)
     {
         global $usuario;
-        $id = $_POST['id'];
+        $id =(int) $_POST['id'];
         $importe = (float) getCantidadMysql($_POST['cantidad'] ?? 0);
 
         $pedido = $pedidosDAO->obtener($id);
+
+        $areaGastos = $areasGastosDAO->obtener($pedido->areaGastos->id);
+        $total = floatval($areaGastos->diferencia);
+
+        if ($importe != $pedido->importe) {
+            if ($importe > $total) {
+                return [
+                    'tipo' => 'danger',
+                    'mensaje' => 'No es posible cambiar el importe ya que superaria el saldo del area de gasto.'
+                ];
+            } else {
+                if (!$pedidosDAO->cambiarImporte($id, getCantidadMysql($_POST['cantidad'] ?? 0))) {
+                    return [
+                        'tipo' => 'danger',
+                        'mensaje' => 'Error al cambiar el importe.'
+                    ];
+                }
+            }
+        }
 
         if ($usuario->tipo == ADMIN) {
 
             $areaGasto = $_POST['areagasto'];
 
             if ($pedido->areaGastos->id != $areaGasto) {
-                $areaGastos = $areasGastosDAO->obtener($areaGasto);
-                $total = floatval($areaGastos->diferencia);
+                $newareaGastos = $areasGastosDAO->obtener($areaGasto);
+                $total = floatval($newareaGastos->diferencia);
                 if ($importe > $total) {
                     return [
                         'tipo' => 'danger',
                         'mensaje' => 'No es posible cambiar el pedido al area de gasto ya que el importe supera el saldo del area de gasto.'
                     ];
                 } else {
-                    if ($pedidosDAO->cambiarAreaGasto($id, $areaGasto, $pedido->referencia)) {
-                        return [
-                            'tipo' => 'success',
-                            'mensaje' => 'Editado correctamente.'
-                        ];
-                    } else {
+                    if (!$pedidosDAO->cambiarAreaGasto($id, $areaGasto, $pedido->referencia)) {
                         return [
                             'tipo' => 'danger',
                             'mensaje' => 'Error al cambiar el area de gasto.'
@@ -381,6 +416,11 @@ class PedidosController extends Controller
                 }
             }
         }
+
+        return [
+            'tipo' => 'success',
+            'mensaje' => 'Editado correctamente.'
+        ];
     }
 
     public function guardarPresupuestos(PedidosDAO $pedidosDAO, Pedido $pedido)
