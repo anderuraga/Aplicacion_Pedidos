@@ -477,6 +477,14 @@ DESC
         ]);
     }
 
+    public function cambiarProveedor($pedido, $proveedor){
+        $stmt = $this->db->prepare("UPDATE `pedidos` SET `id_proveedor`=:proveedor WHERE `id`=:pedido");
+        return $stmt->execute([
+            'proveedor' => $proveedor,
+            'pedido' => $pedido
+        ]);
+    }
+
     public function rellenarEstado($id_estado, $id_pedido, $comentario)
     {
         $stmt = $this->db->prepare("INSERT INTO `pedidos_estados`(`id_estado`, `id_pedido`, `comentario`) VALUES (:id_estado,:id_pedido,:comentario)");

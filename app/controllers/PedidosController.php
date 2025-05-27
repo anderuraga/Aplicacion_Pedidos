@@ -143,23 +143,24 @@ class PedidosController extends Controller
          * @var AreasGastosDAO
          */
         $areasGastosDAO = $this->dao("AreasGastos");
+        /**
+         * @var ProveedoresDAO
+         */
+        $proveedoresDAO = $this->dao("Proveedores");
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             /**
              * @var PedidosDAO
              */
             $pedidosDAO = $this->dao("Pedidos");
-            $_SESSION['alert'] = $this->crear($pedidosDAO, $areasGastosDAO);
+            $_SESSION['alert'] = $this->crear($pedidosDAO, $areasGastosDAO, $proveedoresDAO);
             if ($pedidosDAO->last_insert != null) {
                 session_write_close();
                 header("Location: vereditar?id=" . $pedidosDAO->last_insert);
             }
         }
 
-        /**
-         * @var ProveedoresDAO
-         */
-        $proveedoresDAO = $this->dao("Proveedores");
+
         $proveedor = $proveedoresDAO->obtener($_GET['proveedor']);
 
 
@@ -201,6 +202,11 @@ class PedidosController extends Controller
          * @var IncidenciasDAO
          */
         $incidenciasDAO = $this->dao("Incidencias");
+
+        /**
+         * @var ProveedoresDAO
+         */
+        $proveedoresDAO = $this->dao("Proveedores");
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($_POST['action'] == "siguiente") {
@@ -250,7 +256,7 @@ class PedidosController extends Controller
                  */
                 $areasGastosDAO = $this->dao("AreasGastos");
 
-                $_SESSION['alert'] = $this->editar($pedidosDAO, $areasGastosDAO);
+                $_SESSION['alert'] = $this->editar($pedidosDAO, $areasGastosDAO, $proveedoresDAO);
                 $pedido = $pedidosDAO->obtener($_POST['id']);
             }
         }
@@ -273,10 +279,7 @@ class PedidosController extends Controller
         $tiposServiciosDAO = $this->dao("TiposServicio");
         $tiposServicios = $tiposServiciosDAO->listar();
 
-        /**
-         * @var ProveedoresDAO
-         */
-        $proveedoresDAO = $this->dao("Proveedores");
+        
         $proveedores = $proveedoresDAO->listar();
 
         $data = [
@@ -307,7 +310,7 @@ class PedidosController extends Controller
         $this->view("pedidos/formulario", $data);
     }
 
-    private function crear(PedidosDAO $pedidosDAO, AreasGastosDAO $areasGastosDAO)
+    private function crear(PedidosDAO $pedidosDAO, AreasGastosDAO $areasGastosDAO, ProveedoresDAO $proveedoresDAO)
     {
         global $usuario;
         $id_usuario = $usuario->id;
@@ -331,12 +334,24 @@ class PedidosController extends Controller
             ];
         }
 
+        /**
+         * @var AreaGastos
+         */
         $areaGastos = $areasGastosDAO->obtener($id_area_gasto);
         $total = floatval($areaGastos->diferencia);
         if ($importe > $total) {
             return [
                 'tipo' => 'danger',
                 'mensaje' => 'No es posible hacer un pedido con un importe por encima del saldo del area de gasto.'
+            ];
+        }
+
+        $proveedor = $proveedoresDAO->obtener($id_proveedor);
+        $totalProveedor = $proveedor->gasto_anual;
+        if ($totalProveedor + $importe >= GASTO_FROVEEDOR) {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'El importe superaría el máximo permitido para.'
             ];
         }
 
@@ -367,13 +382,14 @@ class PedidosController extends Controller
         }
     }
 
-    private function editar(PedidosDAO $pedidosDAO, AreasGastosDAO $areasGastosDAO)
+    private function editar(PedidosDAO $pedidosDAO, AreasGastosDAO $areasGastosDAO, ProveedoresDAO $proveedoresDAO)
     {
         global $usuario;
         $id = (int) $_POST['id'];
         $importe = (float) getCantidadMysql($_POST['cantidad'] ?? 0);
         $id_subconcepto = (int) ($_POST['subconcepto'] ?? 0);
         $descripcion = trim($_POST['descripcion'] ?? '');
+        $id_proveedor = trim($_POST['proveedor'] ?? '');
 
         $pedido = $pedidosDAO->obtener($id);
 
@@ -391,6 +407,24 @@ class PedidosController extends Controller
                     return [
                         'tipo' => 'danger',
                         'mensaje' => 'Error al cambiar el importe.'
+                    ];
+                }
+            }
+        }
+
+        if ($id_proveedor != $pedido->proveedor->id) {
+            $proveedor = $proveedoresDAO->obtener($id_proveedor);
+            $totalProveedor = $proveedor->gasto_anual;
+            if ($totalProveedor + $importe >= GASTO_FROVEEDOR) {
+                return [
+                    'tipo' => 'danger',
+                    'mensaje' => 'El importe superaría el máximo permitido para.'
+                ];
+            }else{
+                if (!$pedidosDAO->cambiarProveedor($id, $id_proveedor)) {
+                    return [
+                        'tipo' => 'danger',
+                        'mensaje' => 'Error al cambiar el proveedor.'
                     ];
                 }
             }
@@ -425,6 +459,8 @@ class PedidosController extends Controller
                 }
             }
         }
+
+        $pedidosDAO->rellenarEstado($pedido->estado->id, $pedido->id, "Se han editado los datos del pedido.");
 
         return [
             'tipo' => 'success',

@@ -107,12 +107,13 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                     <div class="col-6">
                         <h5>Proveedor:</h5>
                         <select class="form-control mb-2" id="proveedor" name="proveedor" <?= $editable ? '' : 'disabled' ?>>
+                            <option value="0" disabled hidden>Elige una opción</option>
                             <?php
                             /** @var Proveedor $p */
                             foreach ($proveedores as $p) { ?>
                                 <option value="<?= $p->id ?>" data-ts="<?= $p->tipo_servicio->id ?>"
                                     <?= $p->id == $pedido->proveedor->id ? 'selected' : '' ?>>
-                                <?= $p->cif." - ". $p->nombre ?>
+                                    <?= $p->cif . " - " . $p->nombre ?>
                                 </option>
                             <?php } ?>
                         </select>
@@ -416,5 +417,31 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
     function toggleDetalles() {
         $("#detallesProveedor").toggle();
     }
+
+    var inicial = true;
+    function filtrarProveedores() {
+        var seleccionado = $('#servicio').val();
+
+        $('#proveedor option').each(function () {
+            var ts = $(this).data('ts');
+
+            if (ts == seleccionado) {
+                $(this).show().prop('disabled', false);
+            } else {
+                $(this).hide().prop('disabled', true);
+            }
+        });
+
+        if (!inicial) {
+            $('#proveedor').val(0);
+        }
+
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        $('#servicio').on('change', filtrarProveedores)
+        filtrarProveedores();
+        inicial = false;
+    });
 </script>
 <?php require HOMEDIR . '/../app/views/partials/footer.php' ?>
