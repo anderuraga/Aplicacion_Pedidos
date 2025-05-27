@@ -411,6 +411,16 @@ VALUES(
         ]);
     }
 
+    public function editar($id, $subconcepto, $descripcion){
+        $stmt = $this->db->prepare("UPDATE `pedidos` SET `id_subconcepto`=:subconcepto, `descripcion`=:descripcion WHERE `id`=:id");
+
+        return $stmt->execute([
+            'subconcepto' => $subconcepto,
+            'descripcion' => $descripcion,
+            'id' => $id
+        ]);
+    }
+
     public function obtener_presupuestos($id)
     {
         $stmt = $this->db->prepare("SELECT

@@ -370,8 +370,10 @@ class PedidosController extends Controller
     private function editar(PedidosDAO $pedidosDAO, AreasGastosDAO $areasGastosDAO)
     {
         global $usuario;
-        $id =(int) $_POST['id'];
+        $id = (int) $_POST['id'];
         $importe = (float) getCantidadMysql($_POST['cantidad'] ?? 0);
+        $id_subconcepto = (int) ($_POST['subconcepto'] ?? 0);
+        $descripcion = trim($_POST['descripcion'] ?? '');
 
         $pedido = $pedidosDAO->obtener($id);
 
@@ -392,6 +394,13 @@ class PedidosController extends Controller
                     ];
                 }
             }
+        }
+
+        if (!$pedidosDAO->editar($id, $id_subconcepto, $descripcion)) {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Error al cambiar los datos.'
+            ];
         }
 
         if ($usuario->tipo == ADMIN) {
