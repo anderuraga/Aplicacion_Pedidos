@@ -5,13 +5,16 @@
 <?php $tab = 4; ?>
 <?php require HOMEDIR . '/../app/views/partials/container.php' ?>
 <?php require HOMEDIR . '/../app/views/partials/alert.php' ?>
-
+<?php 
+/**
+ * @var Proveedor $proveedor
+ */ ?>
 <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
             <h1>Proveedor: <?= $proveedor->id == 0 ? 'Nuevo' : 'Editar' ?></h1>
             <form id="nuevoProveedor" class="mt-0" action="Proveedores/vereditar?id=<?= $proveedor->id ?>"
-                method="post">
+                method="post" enctype="multipart/form-data">
                 <input type="hidden" name="id" value="<?= $proveedor->id ?>">
                 <div class="row">
                     <div class="col-6">
@@ -90,11 +93,23 @@
                 <h5><a>Descargar documentos</a></h5>
                 <div class="row">
                     <div class="col-6">
-                        <h5>Alta terceros</h5>
+                        <h5>Alta terceros:</h5>
+                        <?php if($proveedor->terceros){ ?>
+                            <a target="_blank" href="<?= BASE_URL ?>public/uploads/proveedor/<?= $proveedor->id ?>/terceros/<?= $proveedor->terceros ?>">Ver documento</a>
+                            <p>Sustituir:</p>
+                        <?php }else{ ?>
+                            <p>No hay documento subido. Subir:</p>
+                        <?php } ?>
                         <input type="file" id="alta_terceros" name="alta_terceros" accept="application/pdf">
                     </div>
                     <div class="col-6">
                         <h5>Proveedor y profesor</h5>
+                        <?php if($proveedor->prov_prof){ ?>
+                            <a target="_blank" href="<?= BASE_URL ?>public/uploads/proveedor/<?= $proveedor->id ?>/proveedor_profesor/<?= $proveedor->prov_prof ?>">Ver documento</a>
+                            <p>Sustituir:</p>
+                        <?php }else{ ?>
+                            <p>No hay documento subido. Subir:</p>
+                        <?php } ?>
                         <input type="file" id="proveedor_profesor" name="proveedor_profesor" accept="application/pdf">
                     </div>
                 </div>
@@ -105,7 +120,7 @@
                     class="btn btn-primary mt-2"><?= $proveedor->id == 0 ? 'Crear' : 'Editar' ?></button>
             </form>
         </div>
-    </div>
+  /div>
 </div>
 
 

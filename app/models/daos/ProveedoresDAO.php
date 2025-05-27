@@ -29,7 +29,10 @@ class ProveedoresDAO
                                             vpg.factura_e AS proveedor_factura_e, 
                                             vpg.cuanta_bancaria AS proveedor_cuenta_bancaria, 
                                             vpg.contacto AS proveedor_contacto, 
-                                            vpg.id_servicio AS tiposervicio_id, 
+                                            vpg.id_servicio AS tiposervicio_id,
+                                            vpg.proveedor_terceros AS proveedor_terceros, 
+                                            vpg.proveedor_prov_prof AS proveedor_prov_prof, 
+                                            vpg.proveedor_fecha_baja AS proveedor_fecha_baja, 
                                             ts.nombre AS tiposervicio_nombre,
                                             vpg.anio_contable,
                                             vpg.gasto_anual
@@ -156,6 +159,9 @@ class ProveedoresDAO
                                             vpg.cuanta_bancaria AS proveedor_cuenta_bancaria, 
                                             vpg.contacto AS proveedor_contacto, 
                                             vpg.id_servicio AS tiposervicio_id, 
+                                            vpg.proveedor_terceros AS proveedor_terceros, 
+                                            vpg.proveedor_prov_prof AS proveedor_prov_prof, 
+                                            vpg.proveedor_fecha_baja AS proveedor_fecha_baja, 
                                             ts.nombre AS tiposervicio_nombre,
                                             vpg.anio_contable,
                                             vpg.gasto_anual
@@ -177,5 +183,25 @@ class ProveedoresDAO
         }
 
         return $result;
+    }
+
+    public function insertar_alta_terceros($id, $documento)
+    {
+        $stmt = $this->db->prepare("UPDATE `proveedores` SET `terceros`=:terceros WHERE `id`=:id");
+
+        return $stmt->execute([
+            'terceros' => $documento,
+            'id' => $id
+        ]);
+    }
+
+    public function insertar_proveedor_profesor($id, $documento)
+    {
+        $stmt = $this->db->prepare("UPDATE `proveedores` SET `provedoor_profesor`=:prov_prof WHERE `id`=:id");
+
+        return $stmt->execute([
+            'prov_prof' => $documento,
+            'id' => $id
+        ]);
     }
 }

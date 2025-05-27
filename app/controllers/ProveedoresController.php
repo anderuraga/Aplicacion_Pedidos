@@ -42,7 +42,7 @@ class ProveedoresController extends Controller
                 factura_electronica: false,
                 cuenta_bancaria: '',
                 contacto: '',
-                tipoServicio: new TipoServicio(0,''),
+                tipoServicio: new TipoServicio(0, ''),
                 gasto_anual: 0
             );
         }
@@ -54,7 +54,7 @@ class ProveedoresController extends Controller
 
     }
 
-    public function guardar($proveedoresDAO)
+    public function guardar(ProveedoresDAO $proveedoresDAO)
     {
         //TODO manejar archivos subidos
         $id = (int) ($_POST['id']);
@@ -111,6 +111,69 @@ class ProveedoresController extends Controller
             $ok = $proveedoresDAO->crear($data);
         } else {
             $ok = $proveedoresDAO->editar($id, $data);
+        }
+
+        if (!empty($_FILES["alta_terceros"]['tmp_name'])) {
+            $proveedorID = $id == 0 ? $proveedoresDAO->last_insert : $id;
+            $proveedor = $proveedoresDAO->obtener($proveedorID);
+            $rutaBase = __DIR__ . "/../../public/uploads/proveedor/$proveedorID/terceros";
+            if (!is_dir($rutaBase)) {
+                mkdir($rutaBase, 0777, true);
+            }
+
+            if($proveedor->terceros != null){
+                unlink($rutaBase."/".$proveedor->terceros);
+            }
+
+            $original = $_FILES["alta_terceros"]['name'];
+            $nombreLimpio = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $original);
+            $rutaFinal = "$rutaBase/$nombreLimpio";
+
+            if (move_uploaded_file($_FILES["alta_terceros"]['tmp_name'], $rutaFinal)) {
+                $ok = $proveedoresDAO->insertar_alta_terceros($proveedorID, $nombreLimpio);
+                if (!$ok) {
+                    return [
+                        'tipo' => 'danger',
+                        'mensaje' => 'Error al subir archivo'
+                    ];
+                }
+            } else {
+                return [
+                    'tipo' => 'danger',
+                    'mensaje' => 'Error al subir archivos'
+                ];
+            }
+        }
+
+        if (!empty($_FILES["proveedor_profesor"]['tmp_name'])) {
+            $proveedorID = $id == 0 ? $proveedoresDAO->last_insert : $id;
+            $rutaBase = __DIR__ . "/../../public/uploads/proveedor/$proveedorID/proveedor_profesor";
+            if (!is_dir($rutaBase)) {
+                mkdir($rutaBase, 0777, true);
+            }
+
+            if($proveedor->prov_prof != null){
+                unlink($rutaBase."/".$proveedor->prov_prof);
+            }
+
+            $original = $_FILES["proveedor_profesor"]['name'];
+            $nombreLimpio = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $original);
+            $rutaFinal = "$rutaBase/$nombreLimpio";
+
+            if (move_uploaded_file($_FILES["proveedor_profesor"]['tmp_name'], $rutaFinal)) {
+                $ok = $proveedoresDAO->insertar_proveedor_profesor($proveedorID, $nombreLimpio);
+                if (!$ok) {
+                    return [
+                        'tipo' => 'danger',
+                        'mensaje' => 'Error al subir archivo'
+                    ];
+                }
+            } else {
+                return [
+                    'tipo' => 'danger',
+                    'mensaje' => 'Error al subir archivos'
+                ];
+            }
         }
 
         if ($ok) {

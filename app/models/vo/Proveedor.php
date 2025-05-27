@@ -18,6 +18,9 @@ class Proveedor
     public string $contacto;
     public TipoServicio $tipo_servicio;
     public float $gasto_anual;
+    public string | null $terceros;
+    public string | null $prov_prof;
+    public string | null $fecha_baja;
 
     public function __construct(
         int $id,
@@ -35,6 +38,9 @@ class Proveedor
         string $contacto,
         TipoServicio $tipoServicio,
         float $gasto_anual,
+        string | null $terceros,
+        string | null $prov_prof,
+        string | null $fecha_baja
     ) {
         $this->id = $id;
         $this->cif = $cif;
@@ -51,6 +57,8 @@ class Proveedor
         $this->contacto = $contacto;
         $this->tipo_servicio = $tipoServicio;
         $this->gasto_anual = $gasto_anual;
+        $this->terceros = $terceros;
+        $this->prov_prof = $prov_prof;
     }
 
     public static function fromArray(array $row): Proveedor
@@ -70,7 +78,10 @@ class Proveedor
             $row['proveedor_cuenta_bancaria'],
             $row['proveedor_contacto'],
             TipoServicio::fromArray($row),
-            $row['gasto_anual']
+            $row['gasto_anual'],
+            $row['proveedor_terceros'],
+            $row['proveedor_prov_prof'],
+            $row['proveedor_fecha_baja']
         );
     }
 
@@ -82,5 +93,11 @@ class Proveedor
     public function direccion_completa()
     {
         return $this->direccion.", ".$this->cod_postal.", ".$this->poblacion.", ".$this->provincia.", ".$this->pais;
+    }
+
+    public function getFechaVisible()
+    {
+        $date = new DateTime($this->fecha);
+        return $date->format('d/m/Y');
     }
 }

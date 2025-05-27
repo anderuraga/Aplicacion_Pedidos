@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-05-2025 a las 18:18:26
+-- Tiempo de generación: 27-05-2025 a las 12:35:49
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -33,19 +33,6 @@ CREATE TABLE `areas_gastos` (
   `nombre` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
---
--- Volcado de datos para la tabla `areas_gastos`
---
-
-INSERT INTO `areas_gastos` (`id`, `id_departamento`, `nombre`) VALUES
-(1, 2, 'Gastos Generales'),
-(4, 3, 'Materiales de fabricación'),
-(5, 2, 'Elorrieta Prueba 2'),
-(7, 4, 'test 2 22'),
-(8, 5, 'Prueba nueva'),
-(9, 4, 'Super prueba'),
-(10, 3, 'Segunda area gasto');
-
 -- --------------------------------------------------------
 
 --
@@ -56,18 +43,6 @@ CREATE TABLE `departamentos` (
   `id` int(11) NOT NULL,
   `nombre` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
-
---
--- Volcado de datos para la tabla `departamentos`
---
-
-INSERT INTO `departamentos` (`id`, `nombre`) VALUES
-(1, 'Borrado2r prueba'),
-(2, 'Conserjería'),
-(5, 'Electricidad'),
-(3, 'Fabricación Mecánica'),
-(6, 'Nuevo departamento'),
-(4, 'Química');
 
 -- --------------------------------------------------------
 
@@ -80,18 +55,6 @@ CREATE TABLE `estado` (
   `nombre` varchar(45) NOT NULL,
   `icono` mediumtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
-
---
--- Volcado de datos para la tabla `estado`
---
-
-INSERT INTO `estado` (`id`, `nombre`, `icono`) VALUES
-(1, 'Borrador', '<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-paperclip\"><path d=\"M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48\"></path></svg>'),
-(2, 'Pendiente de validación', '<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\"\r\n                                    fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"\r\n                                    stroke-linejoin=\"round\" class=\"feather feather-clock\">\r\n                                    <circle cx=\"12\" cy=\"12\" r=\"10\"></circle>\r\n                                    <polyline points=\"12 6 12 12 16 14\"></polyline>\r\n                                </svg>'),
-(3, 'Pendiente proveedor', '<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-send\"><line x1=\"22\" y1=\"2\" x2=\"11\" y2=\"13\"></line><polygon points=\"22 2 15 22 11 13 2 9 22 2\"></polygon></svg>'),
-(4, 'Pendiente factura', '<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-file-text\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"></path><polyline points=\"14 2 14 8 20 8\"></polyline><line x1=\"16\" y1=\"13\" x2=\"8\" y2=\"13\"></line><line x1=\"16\" y1=\"17\" x2=\"8\" y2=\"17\"></line><polyline points=\"10 9 9 9 8 9\"></polyline></svg>'),
-(5, 'Pendiente archivado', '<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-inbox\"><polyline points=\"22 12 16 12 14 15 10 15 8 12 2 12\"></polyline><path d=\"M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z\"></path></svg>'),
-(6, 'Archivado', '<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-package\"><line x1=\"16.5\" y1=\"9.4\" x2=\"7.5\" y2=\"4.21\"></line><path d=\"M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z\"></path><polyline points=\"3.27 6.96 12 12.01 20.73 6.96\"></polyline><line x1=\"12\" y1=\"22.08\" x2=\"12\" y2=\"12\"></line></svg>');
 
 -- --------------------------------------------------------
 
@@ -118,10 +81,11 @@ CREATE TABLE `facturas` (
 
 CREATE TABLE `incidencias` (
   `id` int(11) NOT NULL,
-  `id_pedido` varchar(20) NOT NULL,
-  `fecha` date NOT NULL,
-  `descipcion` mediumtext NOT NULL,
-  `estado` int(1) NOT NULL
+  `id_pedido` int(11) NOT NULL,
+  `fecha` date NOT NULL DEFAULT current_timestamp(),
+  `descripcion` mediumtext NOT NULL,
+  `estado` int(1) NOT NULL DEFAULT 0,
+  `fecha_solucionada` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 -- --------------------------------------------------------
@@ -132,16 +96,9 @@ CREATE TABLE `incidencias` (
 
 CREATE TABLE `materiales` (
   `id` int(11) NOT NULL,
+  `id_departamento` int(11) NOT NULL,
   `nombre` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
-
---
--- Volcado de datos para la tabla `materiales`
---
-
-INSERT INTO `materiales` (`id`, `nombre`) VALUES
-(1, 'Bombillas led'),
-(2, 'Teclados K120');
 
 -- --------------------------------------------------------
 
@@ -156,14 +113,6 @@ CREATE TABLE `movimientos` (
   `descripcion` varchar(255) NOT NULL,
   `cantidad` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
-
---
--- Volcado de datos para la tabla `movimientos`
---
-
-INSERT INTO `movimientos` (`id`, `id_item`, `fecha`, `descripcion`, `cantidad`) VALUES
-(1, 2, '2025-05-04 12:00:00', 'Entrada teclados', 6),
-(2, 2, '2025-05-05 12:00:00', 'Entregados 2 teclados en la clase 101', -2);
 
 -- --------------------------------------------------------
 
@@ -191,18 +140,6 @@ CREATE TABLE `pedidos` (
   `factura` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
---
--- Volcado de datos para la tabla `pedidos`
---
-
-INSERT INTO `pedidos` (`id`, `referencia`, `id_estado`, `id_usuario`, `id_departamento`, `id_subconcepto`, `id_area_gasto`, `id_proveedor`, `fecha_creada`, `fecha_enviada`, `descripcion`, `importe`, `id_factura`, `anio_contable`, `anexo`, `albaran`, `factura`) VALUES
-(5, '1-20250512-122', 6, 1, 2, 1, 1, 1, '2025-05-12 23:04:59', NULL, 'Prueba menos mil euros', 500.00, NULL, '2025', NULL, 'Albaran.pdf', 'Factura.pdf'),
-(6, '1-20250512-283', 2, 1, 2, 1, 1, 1, '2025-05-12 23:54:08', NULL, 'Prueba pedido 5000', 5000.00, NULL, '2025', 'Anexo.pdf', NULL, ''),
-(7, '1-20250514-499', 6, 1, 2, 1, 1, 1, '2025-05-14 10:30:52', NULL, 'adsasfasda', 200.00, NULL, '2025', NULL, 'Pedidos.pdf', 'DataTables_example_-_File_export.pdf'),
-(8, '1-20250514-902', 2, 1, 2, 1, 1, 1, '2025-05-14 10:52:12', NULL, 'asdasdads', 1000.00, NULL, '2025', 'Anexos_que_hay_que_rellenar.pdf', NULL, ''),
-(9, '9-20250514-946', 1, 1, 4, 2, 9, 1, '2025-05-14 11:13:27', NULL, 'asdasgfsadasdas', 500.00, NULL, '2025', NULL, NULL, ''),
-(10, '1-20250514-579', 1, 1, 2, 1, 1, 1, '2025-05-14 11:13:54', NULL, 'adsasdasdas', 500.00, NULL, '2025', NULL, NULL, '');
-
 -- --------------------------------------------------------
 
 --
@@ -217,30 +154,6 @@ CREATE TABLE `pedidos_estados` (
   `comentario` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
---
--- Volcado de datos para la tabla `pedidos_estados`
---
-
-INSERT INTO `pedidos_estados` (`id`, `id_estado`, `id_pedido`, `fecha`, `comentario`) VALUES
-(1, 1, 5, '2025-05-12 23:04:59', 'Se ha creado el pedido'),
-(2, 2, 5, '2025-05-12 23:16:44', 'Se han subido los presupuestos'),
-(3, 3, 5, '2025-05-12 23:17:32', 'Se ha enviado el pedido al proveedor'),
-(4, 4, 5, '2025-05-12 23:18:32', 'Se ha subido el albarán'),
-(5, 5, 5, '2025-05-12 23:24:13', 'Se ha subido la factura'),
-(6, 6, 5, '2025-05-12 23:25:00', 'Se ha sconfirmado el pago'),
-(7, 1, 6, '2025-05-12 23:54:08', 'Se ha creado el pedido'),
-(8, 2, 6, '2025-05-12 23:54:53', 'Se han subido los presupuestos'),
-(9, 1, 7, '2025-05-14 10:30:52', 'Se ha creado el pedido'),
-(10, 2, 7, '2025-05-14 10:43:15', 'Se han subido los presupuestos'),
-(11, 3, 7, '2025-05-14 10:43:33', 'Se ha enviado el pedido al proveedor'),
-(12, 1, 8, '2025-05-14 10:52:12', 'Se ha creado el pedido'),
-(13, 2, 8, '2025-05-14 10:53:46', 'Se han subido los presupuestos'),
-(14, 1, 9, '2025-05-14 11:13:27', 'Se ha creado el pedido'),
-(15, 1, 10, '2025-05-14 11:13:54', 'Se ha creado el pedido'),
-(16, 6, 5, '2025-05-14 12:24:09', 'Se ha confirmado el pago'),
-(17, 4, 7, '2025-05-19 17:21:08', 'Se ha subido el albarán'),
-(18, 5, 7, '2025-05-19 17:21:24', 'Se ha subido la factura');
-
 -- --------------------------------------------------------
 
 --
@@ -254,21 +167,6 @@ CREATE TABLE `presupuestos` (
   `fecha` datetime NOT NULL DEFAULT current_timestamp(),
   `seleccionado` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
-
---
--- Volcado de datos para la tabla `presupuestos`
---
-
-INSERT INTO `presupuestos` (`id`, `id_pedido`, `documento`, `fecha`, `seleccionado`) VALUES
-(13, 5, 'Presupuesto1.pdf', '2025-05-12 23:15:44', 1),
-(14, 5, 'Presupuesto1.pdf', '2025-05-12 23:16:44', 1),
-(15, 6, 'Presupuesto1.pdf', '2025-05-12 23:54:53', 1),
-(16, 6, 'Presupuesto2.pdf', '2025-05-12 23:54:53', 0),
-(17, 6, 'Presupuesto3.pdf', '2025-05-12 23:54:53', 0),
-(18, 7, 'Presupuesto1.pdf', '2025-05-14 10:43:15', 1),
-(19, 8, 'Presupuesto1.pdf', '2025-05-14 10:53:46', 1),
-(20, 8, 'Presupuesto2.pdf', '2025-05-14 10:53:46', 0),
-(21, 8, 'Presupuesto3.pdf', '2025-05-14 10:53:46', 0);
 
 -- --------------------------------------------------------
 
@@ -290,15 +188,11 @@ CREATE TABLE `proveedores` (
   `factura_e` tinyint(4) NOT NULL,
   `cuanta_bancaria` varchar(35) NOT NULL,
   `contacto` varchar(45) NOT NULL,
-  `id_servicio` int(11) NOT NULL
+  `id_servicio` int(11) NOT NULL,
+  `terceros` varchar(255) DEFAULT NULL,
+  `provedoor_profesor` varchar(255) DEFAULT NULL,
+  `fecha_baja` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
-
---
--- Volcado de datos para la tabla `proveedores`
---
-
-INSERT INTO `proveedores` (`id`, `cif`, `nombre`, `direccion`, `cod_postal`, `poblacion`, `provincia`, `pais`, `telefono`, `correo`, `factura_e`, `cuanta_bancaria`, `contacto`, `id_servicio`) VALUES
-(1, 'P8536976G', 'Javier SL', 'Calle 122', '48901', 'Barakaldos', 'Bizkaia', 'España', '681260860', 'javier@sl.com', 0, '123456789123456789', 'Artetxe', 1);
 
 -- --------------------------------------------------------
 
@@ -311,15 +205,6 @@ CREATE TABLE `subconceptos` (
   `nombre` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
---
--- Volcado de datos para la tabla `subconceptos`
---
-
-INSERT INTO `subconceptos` (`id`, `nombre`) VALUES
-(1, 'Subconcepto 1'),
-(2, 'Subconcepto 2'),
-(3, 'Subconcepto 3');
-
 -- --------------------------------------------------------
 
 --
@@ -330,14 +215,6 @@ CREATE TABLE `tipos_servicio` (
   `id` int(11) NOT NULL,
   `nombre` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
-
---
--- Volcado de datos para la tabla `tipos_servicio`
---
-
-INSERT INTO `tipos_servicio` (`id`, `nombre`) VALUES
-(1, 'Materiales de fabricación'),
-(2, 'Equipos Informáticos');
 
 -- --------------------------------------------------------
 
@@ -352,21 +229,6 @@ CREATE TABLE `transacciones` (
   `descripcion` varchar(255) NOT NULL,
   `cantidad` float(15,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
-
---
--- Volcado de datos para la tabla `transacciones`
---
-
-INSERT INTO `transacciones` (`id`, `id_area`, `fecha`, `descripcion`, `cantidad`) VALUES
-(1, 4, '2025-04-01 12:00:00', 'Ingreso para área materiales', 10001.50),
-(2, 1, '2025-04-02 14:00:00', 'Ingreso para gastos generales', 9000.02),
-(3, 5, '2025-04-02 12:00:00', 'Nuevo ingreos', 10000.00),
-(4, 4, '2025-04-29 12:00:00', 'Nuevo ingreos prueba', 599.99),
-(5, 1, '2025-04-29 11:00:00', 'Otra prueba', 200.50),
-(6, 9, '0000-00-00 00:00:00', 'Nuevo ingreos prueba', 10000.00),
-(7, 1, '2025-05-14 12:24:09', 'Pedido 1-20250512-122 archivado', -500.00),
-(8, 1, '2025-05-19 17:26:15', 'Pedido 1-20250512-122 archivado', -500.00),
-(9, 1, '2025-05-19 17:26:15', 'Pedido 1-20250514-499 archivado', -200.00);
 
 -- --------------------------------------------------------
 
@@ -383,15 +245,6 @@ CREATE TABLE `usuarios` (
   `id_departamento` int(11) NOT NULL,
   `baja` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
-
---
--- Volcado de datos para la tabla `usuarios`
---
-
-INSERT INTO `usuarios` (`id`, `tipo`, `nombre`, `correo`, `contrasena`, `id_departamento`, `baja`) VALUES
-(1, 1, 'Javier Gómez', 'javier.gomez@emaginarte.com', '$2y$10$2iDisbSnjUv3qWM4fb0v9OC1zCXt6wmdyLp0NKjsjLILSspxPUkzO', 2, NULL),
-(3, 0, 'Prueba', 'prueba@prueba.com', '$2y$10$Jg.WK7IC84L3b1gWFnxLlujGbsZFpshoS9B4RikMQotltdr5kmSiW', 2, NULL),
-(4, 0, 'Imanol2', 'imanol@prueba.com', '$2y$10$/zW6rVVkr1ck5/UeXVGWDOAMNFu9m80IgFKxXbZPT.X4uhA/.whGO', 4, NULL);
 
 -- --------------------------------------------------------
 
@@ -414,6 +267,9 @@ CREATE TABLE `vista_proveedores_gastos` (
 ,`cuanta_bancaria` varchar(35)
 ,`contacto` varchar(45)
 ,`id_servicio` int(11)
+,`proveedor_terceros` varchar(255)
+,`proveedor_prov_prof` varchar(255)
+,`proveedor_fecha_baja` datetime
 ,`anio_contable` decimal(4,0)
 ,`gasto_anual` decimal(37,2)
 );
@@ -443,6 +299,7 @@ CREATE TABLE `vista_resumen_areas` (
 --
 CREATE TABLE `vista_resumen_movimientos` (
 `id` int(11)
+,`departamento_id` int(11)
 ,`nombre` varchar(45)
 ,`cantidad` decimal(32,0)
 );
@@ -454,7 +311,7 @@ CREATE TABLE `vista_resumen_movimientos` (
 --
 DROP TABLE IF EXISTS `vista_proveedores_gastos`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_proveedores_gastos`  AS SELECT `pr`.`id` AS `id`, `pr`.`cif` AS `cif`, `pr`.`nombre` AS `nombre`, `pr`.`direccion` AS `direccion`, `pr`.`cod_postal` AS `cod_postal`, `pr`.`poblacion` AS `poblacion`, `pr`.`provincia` AS `provincia`, `pr`.`pais` AS `pais`, `pr`.`telefono` AS `telefono`, `pr`.`correo` AS `correo`, `pr`.`factura_e` AS `factura_e`, `pr`.`cuanta_bancaria` AS `cuanta_bancaria`, `pr`.`contacto` AS `contacto`, `pr`.`id_servicio` AS `id_servicio`, coalesce(`pe`.`anio_contable`,year(curdate())) AS `anio_contable`, coalesce(sum(case when `pe`.`id_estado` > 1 then `pe`.`importe` else 0 end),0) AS `gasto_anual` FROM (`proveedores` `pr` left join `pedidos` `pe` on(`pr`.`id` = `pe`.`id_proveedor`)) GROUP BY `pr`.`id`, `pr`.`cif`, `pr`.`nombre`, `pr`.`direccion`, `pr`.`cod_postal`, `pr`.`poblacion`, `pr`.`provincia`, `pr`.`pais`, `pr`.`telefono`, `pr`.`correo`, `pr`.`factura_e`, `pr`.`cuanta_bancaria`, `pr`.`contacto`, `pr`.`id_servicio`, `pe`.`anio_contable` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_proveedores_gastos`  AS SELECT `pr`.`id` AS `id`, `pr`.`cif` AS `cif`, `pr`.`nombre` AS `nombre`, `pr`.`direccion` AS `direccion`, `pr`.`cod_postal` AS `cod_postal`, `pr`.`poblacion` AS `poblacion`, `pr`.`provincia` AS `provincia`, `pr`.`pais` AS `pais`, `pr`.`telefono` AS `telefono`, `pr`.`correo` AS `correo`, `pr`.`factura_e` AS `factura_e`, `pr`.`cuanta_bancaria` AS `cuanta_bancaria`, `pr`.`contacto` AS `contacto`, `pr`.`id_servicio` AS `id_servicio`, `pr`.`terceros` AS `proveedor_terceros`, `pr`.`provedoor_profesor` AS `proveedor_prov_prof`, `pr`.`fecha_baja` AS `proveedor_fecha_baja`, coalesce(`pe`.`anio_contable`,year(curdate())) AS `anio_contable`, coalesce(sum(case when `pe`.`id_estado` > 1 then `pe`.`importe` else 0 end),0) AS `gasto_anual` FROM (`proveedores` `pr` left join `pedidos` `pe` on(`pr`.`id` = `pe`.`id_proveedor`)) GROUP BY `pr`.`id`, `pr`.`cif`, `pr`.`nombre`, `pr`.`direccion`, `pr`.`cod_postal`, `pr`.`poblacion`, `pr`.`provincia`, `pr`.`pais`, `pr`.`telefono`, `pr`.`correo`, `pr`.`factura_e`, `pr`.`cuanta_bancaria`, `pr`.`contacto`, `pr`.`id_servicio`, `pe`.`anio_contable` ;
 
 -- --------------------------------------------------------
 
@@ -463,7 +320,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `vista_resumen_areas`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_resumen_areas`  AS SELECT `ag`.`id` AS `id_area`, `ag`.`nombre` AS `nombre_area`, `ag`.`id_departamento` AS `id_departamento`, `d`.`nombre` AS `nombre_departamento`, ifnull(sum(case when `t`.`cantidad` > 0 then `t`.`cantidad` else 0 end),0) AS `ingresos`, ifnull(sum(case when `t`.`cantidad` < 0 then abs(`t`.`cantidad`) else 0 end),0) AS `gastos`, ifnull((select sum(`p`.`importe`) from `pedidos` `p` where `p`.`id_area_gasto` = `ag`.`id` and `p`.`id_estado` between 2 and 5),0) AS `gasto_pendiente`, ifnull(sum(case when `t`.`cantidad` > 0 then `t`.`cantidad` else 0 end),0) - (ifnull(sum(case when `t`.`cantidad` < 0 then abs(`t`.`cantidad`) else 0 end),0) + ifnull((select sum(`p`.`importe`) from `pedidos` `p` where `p`.`id_area_gasto` = `ag`.`id` and `p`.`id_estado` between 2 and 5),0)) AS `total` FROM ((`areas_gastos` `ag` left join `departamentos` `d` on(`ag`.`id_departamento` = `d`.`id`)) left join `transacciones` `t` on(`ag`.`id` = `t`.`id_area`)) GROUP BY `ag`.`id`, `ag`.`nombre`, `ag`.`id_departamento`, `d`.`nombre` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_resumen_areas`  AS SELECT `ag`.`id` AS `id_area`, `ag`.`nombre` AS `nombre_area`, `ag`.`id_departamento` AS `id_departamento`, `d`.`nombre` AS `nombre_departamento`, ifnull(sum(case when `t`.`cantidad` > 0 then `t`.`cantidad` else 0 end),0) AS `ingresos`, ifnull(sum(case when `t`.`cantidad` < 0 then abs(`t`.`cantidad`) else 0 end),0) AS `gastos`, ifnull((select sum(`p`.`importe`) from `pedidos` `p` where `p`.`id_area_gasto` = `ag`.`id` and `p`.`id_estado` between 0 and 5),0) AS `gasto_pendiente`, ifnull(sum(case when `t`.`cantidad` > 0 then `t`.`cantidad` else 0 end),0) - (ifnull(sum(case when `t`.`cantidad` < 0 then abs(`t`.`cantidad`) else 0 end),0) + ifnull((select sum(`p`.`importe`) from `pedidos` `p` where `p`.`id_area_gasto` = `ag`.`id` and `p`.`id_estado` between 0 and 5),0)) AS `total` FROM ((`areas_gastos` `ag` left join `departamentos` `d` on(`ag`.`id_departamento` = `d`.`id`)) left join `transacciones` `t` on(`ag`.`id` = `t`.`id_area`)) GROUP BY `ag`.`id`, `ag`.`nombre`, `ag`.`id_departamento`, `d`.`nombre` ;
 
 -- --------------------------------------------------------
 
@@ -472,7 +329,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `vista_resumen_movimientos`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_resumen_movimientos`  AS SELECT `m`.`id` AS `id`, `m`.`nombre` AS `nombre`, ifnull(sum(`mv`.`cantidad`),0) AS `cantidad` FROM (`materiales` `m` left join `movimientos` `mv` on(`m`.`id` = `mv`.`id_item`)) WHERE 1 GROUP BY `m`.`id` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_resumen_movimientos`  AS SELECT `m`.`id` AS `id`, `m`.`id_departamento` AS `departamento_id`, `m`.`nombre` AS `nombre`, ifnull(sum(`mv`.`cantidad`),0) AS `cantidad` FROM (`materiales` `m` left join `movimientos` `mv` on(`m`.`id` = `mv`.`id_item`)) WHERE 1 GROUP BY `m`.`id` ;
 
 --
 -- Índices para tablas volcadas
@@ -522,7 +379,8 @@ ALTER TABLE `incidencias`
 --
 ALTER TABLE `materiales`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id_UNIQUE` (`id`);
+  ADD UNIQUE KEY `id_UNIQUE` (`id`),
+  ADD KEY `item_departamento` (`id_departamento`);
 
 --
 -- Indices de la tabla `movimientos`
@@ -608,19 +466,19 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `areas_gastos`
 --
 ALTER TABLE `areas_gastos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `departamentos`
 --
 ALTER TABLE `departamentos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `estado`
 --
 ALTER TABLE `estado`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `facturas`
@@ -638,61 +496,61 @@ ALTER TABLE `incidencias`
 -- AUTO_INCREMENT de la tabla `materiales`
 --
 ALTER TABLE `materiales`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `movimientos`
 --
 ALTER TABLE `movimientos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos_estados`
 --
 ALTER TABLE `pedidos_estados`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `presupuestos`
 --
 ALTER TABLE `presupuestos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `proveedores`
 --
 ALTER TABLE `proveedores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `subconceptos`
 --
 ALTER TABLE `subconceptos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tipos_servicio`
 --
 ALTER TABLE `tipos_servicio`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `transacciones`
 --
 ALTER TABLE `transacciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Restricciones para tablas volcadas
@@ -708,7 +566,13 @@ ALTER TABLE `areas_gastos`
 -- Filtros para la tabla `incidencias`
 --
 ALTER TABLE `incidencias`
-  ADD CONSTRAINT `incidencia_pedido` FOREIGN KEY (`id_pedido`) REFERENCES `pedidos` (`referencia`);
+  ADD CONSTRAINT `incidencia_pedido` FOREIGN KEY (`id_pedido`) REFERENCES `pedidos` (`id`);
+
+--
+-- Filtros para la tabla `materiales`
+--
+ALTER TABLE `materiales`
+  ADD CONSTRAINT `item_departamento` FOREIGN KEY (`id_departamento`) REFERENCES `departamentos` (`id`);
 
 --
 -- Filtros para la tabla `movimientos`
