@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../helpers/auth.php';
+require_once __DIR__ . '/../helpers/Mailer.php';
 
 class PedidosController extends Controller
 {
@@ -208,11 +209,16 @@ class PedidosController extends Controller
          */
         $proveedoresDAO = $this->dao("Proveedores");
 
+        /**
+         * @var UsuariosDAO
+         */
+        $usuariosDAO = $this->dao("Usuarios");
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($_POST['action'] == "siguiente") {
                 switch ($pedido->estado->id) {
                     case BORRADOR:
-                        $_SESSION['alert'] = $this->guardarPresupuestos($pedidosDAO, $pedido);
+                        $_SESSION['alert'] = $this->guardarPresupuestos($pedidosDAO, $pedido,$usuariosDAO);
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
                     case PEN_VALI:
@@ -279,7 +285,7 @@ class PedidosController extends Controller
         $tiposServiciosDAO = $this->dao("TiposServicio");
         $tiposServicios = $tiposServiciosDAO->listar();
 
-        
+
         $proveedores = $proveedoresDAO->listar();
 
         $data = [
@@ -420,7 +426,7 @@ class PedidosController extends Controller
                     'tipo' => 'danger',
                     'mensaje' => 'El importe superaría el máximo permitido para.'
                 ];
-            }else{
+            } else {
                 if (!$pedidosDAO->cambiarProveedor($id, $id_proveedor)) {
                     return [
                         'tipo' => 'danger',
@@ -468,7 +474,7 @@ class PedidosController extends Controller
         ];
     }
 
-    public function guardarPresupuestos(PedidosDAO $pedidosDAO, Pedido $pedido)
+    public function guardarPresupuestos(PedidosDAO $pedidosDAO, Pedido $pedido, UsuariosDAO $usuariosDAO)
     {
         $pedidoId = $_POST['id'] ?? null;
 
@@ -555,6 +561,18 @@ class PedidosController extends Controller
 
         $pedidosDAO->cambiarEstado($pedidoId, 2);
         $pedidosDAO->rellenarEstado(2, $pedidoId, "Se han subido los presupuestos");
+
+        $correos = $usuariosDAO->obtenerCorreosAdmin();
+        $mailer = new Mailer();
+        $mailer->enviarCorreo(
+            $correos,
+            "Nuevo pedido pendiente de revisión",
+            "PendienteRevision",
+            [
+                'referencia' => $pedido->referencia
+            ]
+        );
+
         return [
             'tipo' => 'success',
             'mensaje' => 'Archivos subidos correctamente.'

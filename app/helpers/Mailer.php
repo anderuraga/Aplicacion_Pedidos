@@ -21,6 +21,8 @@ class Mailer
         $this->mail->Port = EMAIL_PORT;
         $this->mail->setFrom(EMAIL_CORREO, EMAIL_FROM_NAME);
         $this->mail->isHTML(true);
+        $this->mail->CharSet = 'UTF-8';
+        $this->mail->Encoding = 'base64';
     }
 
     protected function renderPlantilla(string $templateName, array $data): string
@@ -36,15 +38,20 @@ class Mailer
         return $html;
     }
 
-    public function enviarCorreo(string $to, string $subject, string $template, array $data = []): void
+    public function enviarCorreo($to, string $subject, string $template, array $data = []): void
     {
         try {
             $body = $this->renderPlantilla($template, $data);
-            $this->mail->addAddress($to);
+
+            $tos = (array) $to;
+            foreach ($tos as $recipient) {
+                $this->mail->addAddress($recipient);
+            }
+
             $this->mail->Subject = $subject;
             $this->mail->Body = $body;
 
-            $logopath = __DIR__. "/../../static/assets/img/logo/logo.png";
+            $logopath = __DIR__ . "/../../static/assets/img/logo/logo.png";
             $this->mail->addEmbeddedImage(
                 $logopath,          // ruta al archivo
                 'logo_cid',         // Content ID (debe ser único)

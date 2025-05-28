@@ -147,4 +147,15 @@ class UsuariosDAO
         return false;
     }
 
+    public function obtenerCorreosAdmin(): array{
+        $stmt = $this->db->query("SELECT `correo` FROM `usuarios` WHERE `tipo`=1;");
+
+        $result = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $result[] = $row['correo'];
+        }
+
+        return $result;
+    }
+
 }
