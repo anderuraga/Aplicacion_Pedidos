@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../helpers/auth.php';
+require_once __DIR__ . '/../helpers/Mailer.php';
 
 class UsuariosController extends Controller
 {
@@ -33,13 +34,13 @@ class UsuariosController extends Controller
             require_once __DIR__ . "/../models/vo/AreaGastos.php";
             $usuario = new Usuario(0, 0, '', '', new Departamento(0, ''));
         }
-        
+
 
         $this->view("usuarios/formulario", ['usuario_form' => $usuario, 'departamentos' => $departamentos]);
 
     }
 
-    public function guardar($usuariosDAO, $departamentoDAO)
+    public function guardar(UsuariosDAO $usuariosDAO, DepartamentosDAO $departamentoDAO)
     {
 
         $id = $_POST['id'];
@@ -48,7 +49,7 @@ class UsuariosController extends Controller
         $departamentoID = $_POST['departamento'];
         $tipo = $_POST['tipo'];
         $contrasena = null;
-        if (isset($_POST['contrasena']) && $_POST['contrasena']!='') {
+        if (isset($_POST['contrasena']) && $_POST['contrasena'] != '') {
             $contrasena = $_POST['contrasena'];
         }
 
@@ -108,6 +109,17 @@ class UsuariosController extends Controller
         }
 
         if ($ok) {
+            if ($id == 0) {
+                $mailer = new Mailer();
+                $mailer->enviarCorreo(
+                    $correo,
+                    "Usuario dado de alta",
+                    "NuevoUsuario",
+                    [
+                        'contrasena' => $contrasena,
+                    ]
+                );
+            }
             return [
                 'tipo' => 'success',
                 'mensaje' => $id == 0 ? 'Se ha creado el usuario correctamente' : 'Se ha editado el usuario correctamente'
