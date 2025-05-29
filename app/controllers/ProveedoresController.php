@@ -43,7 +43,10 @@ class ProveedoresController extends Controller
                 cuenta_bancaria: '',
                 contacto: '',
                 tipoServicio: new TipoServicio(0, ''),
-                gasto_anual: 0
+                gasto_anual: 0,
+                terceros: null,
+                prov_prof: null,
+                fecha_baja: null
             );
         }
 

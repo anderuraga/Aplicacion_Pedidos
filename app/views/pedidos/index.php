@@ -9,7 +9,7 @@
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area">
             <h1 class="mt-2 ms-2">Pedidos</h1>
-            <a class="btn btn-primary mb-2 ms-2 me-4" href="Pedidos/proveedor">Nuevo Pedido</a>
+            <a class="btn btn-primary mb-2 ms-2 me-4" href="<?= BASE_URL ?>Pedidos/proveedor">Nuevo Pedido</a>
 
             <div class="simple-pill mt-3">
                 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">

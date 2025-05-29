@@ -43,7 +43,7 @@
                 </div>
             </div>
             <form method="post"
-                action="Pedidos/detalles?proveedor=<?= $_GET['proveedor'] ?>&areaGasto=<?= $_GET['areaGasto'] ?>&departamento=<?= $_GET['departamento'] ?>">
+                action="<?= BASE_URL ?>Pedidos/detalles?proveedor=<?= $_GET['proveedor'] ?>&areaGasto=<?= $_GET['areaGasto'] ?>&departamento=<?= $_GET['departamento'] ?>">
                 <input type="hidden" name="proveedor" value="<?= $_GET['proveedor'] ?>">
                 <input type="hidden" name="areaGasto" value="<?= $_GET['areaGasto'] ?>">
                 <input type="hidden" name="departamento" value="<?= $_GET['departamento'] ?>">

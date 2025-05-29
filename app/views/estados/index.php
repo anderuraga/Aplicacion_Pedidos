@@ -27,7 +27,7 @@
                             <td><?= $e->icono ?></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                    <a href="Estados/vereditar?id=<?= $e->id ?>" class="btn btn-primary">Editar</a>
+                                    <a href="<?= BASE_URL ?>Estados/vereditar?id=<?= $e->id ?>" class="btn btn-primary">Editar</a>
                                 </div>
                             </td>
                         </tr>

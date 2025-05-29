@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ .'\\Departamento.php';
+require_once __DIR__ .'/Departamento.php';
 class Usuario implements \Serializable
 {
     public int $id;

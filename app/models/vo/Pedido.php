@@ -1,11 +1,11 @@
 <?php
-require_once __DIR__ . '\\..\\..\\helpers\\formatos.php';
-require_once __DIR__ . '\\Estado.php';
-require_once __DIR__ . '\\Usuario.php';
-require_once __DIR__ . '\\Departamento.php';
-require_once __DIR__ . '\\Subconcepto.php';
-require_once __DIR__ . '\\AreaGastos.php';
-require_once __DIR__ . '\\Proveedor.php';
+require_once __DIR__ . '/../../helpers/formatos.php';
+require_once __DIR__ . '/Estado.php';
+require_once __DIR__ . '/Usuario.php';
+require_once __DIR__ . '/Departamento.php';
+require_once __DIR__ . '/Subconcepto.php';
+require_once __DIR__ . '/AreaGastos.php';
+require_once __DIR__ . '/Proveedor.php';
 
 class Pedido
 {

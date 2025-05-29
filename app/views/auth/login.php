@@ -14,10 +14,10 @@
                 <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-8 col-12 d-flex flex-column align-self-center mx-auto">
                     <div class="card mt-3 mb-3">
                         <div class="card-body">
-                            <form id="login" action="Login" method="post">
+                            <form id="login" method="post">
                                 <div class="row">
                                     <div id="logodiv">
-                                        <img class="d-block mx-auto" src="static/assets/img/logo/EEM-logo-color.svg">
+                                        <img class="d-block mx-auto" src="<?= BASE_URL ?>static/assets/img/logo/EEM-logo-color.svg">
                                     </div>
                                     <div class="col-md-12 mb-1 mt-2">
                                         <h2>Iniciar Sesión</h2>

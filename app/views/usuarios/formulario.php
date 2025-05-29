@@ -10,7 +10,7 @@
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
             <h1>Usuario: <?= $usuario_form->id == 0 ? 'Nuevo' : 'Editar' ?></h1>
-            <form id="editarUsuario" class="mt-0" action="Usuarios/vereditar?id=<?= $usuario_form->id ?>" method="post">
+            <form id="editarUsuario" class="mt-0" action="<?= BASE_URL ?>Usuarios/vereditar?id=<?= $usuario_form->id ?>" method="post">
                 <input type="hidden" id="idedit" name="id" value="<?= $usuario_form->id ?>">
                 <div class="row">
                     <div class="col-sm-4">

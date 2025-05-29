@@ -36,7 +36,7 @@
                 </div>
             </div>
 
-            <form id="selec_proveedor" action="Pedidos/proveedor" method="post">
+            <form id="selec_proveedor" action="<?= BASE_URL ?>Pedidos/proveedor" method="post">
                 <div class="row m-4">
                     <div class="col-4 servicioDiv">
                         <h5>Filtrar proveedor por servicio:</h5>

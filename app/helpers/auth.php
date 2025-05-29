@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "\\..\\models\\vo\\Usuario.php";
+require_once __DIR__ . "/../models/vo/Usuario.php";
 function requireLogin(): bool
 {
     return conseguirUsuario();
@@ -24,7 +24,7 @@ function requireAdmin(): bool
 {
     global $usuario;
     if (conseguirUsuario()) {
-        if ($usuario->tipo==1) {
+        if ($usuario->tipo==ADMIN) {
             return true;
         }
     }

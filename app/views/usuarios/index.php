@@ -9,7 +9,7 @@
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area">
             <h1 class="mt-2 ms-2">Usuarios</h1>
-            <a href="Usuarios/vereditar?id=0" class="btn btn-primary mb-2 ms-2 me-4">Nuevo Usuario</a>
+            <a href="<?= BASE_URL ?>Usuarios/vereditar?id=0" class="btn btn-primary mb-2 ms-2 me-4">Nuevo Usuario</a>
 
             <table id="Usuarios" class="tabla table table-striped dt-table-hover" style="width:100%">
                 <thead>
@@ -32,7 +32,7 @@
                             <td><?= $u->tipo == 1 ? 'Administrador' : 'Jefe Departamento' ?></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                    <a href="Usuarios/vereditar?id=<?= $u->id ?>" class="btn btn-primary">Editar</a>
+                                    <a href="<?= BASE_URL ?>Usuarios/vereditar?id=<?= $u->id ?>" class="btn btn-primary">Editar</a>
                                 </div>
                             </td>
                         </tr>

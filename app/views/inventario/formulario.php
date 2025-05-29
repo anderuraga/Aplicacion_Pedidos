@@ -14,7 +14,7 @@
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
             <h1>Item: <?= $item->id == 0 ? 'Nueva' : 'Editar' ?></h1>
-            <form id="editarDepartamento" class="mt-0" action="Inventario/vereditar?id=<?= $item->id ?>" method="post">
+            <form id="editarDepartamento" class="mt-0" action="<?= BASE_URL ?>Inventario/vereditar?id=<?= $item->id ?>" method="post">
                 <input type="hidden" id="idedit" name="id" value="<?= $item->id ?>">
 
                 <div class="row">
