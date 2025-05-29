@@ -9,7 +9,7 @@
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area">
             <h1 class="mt-2 ms-2">Tipos de servicio</h1>
-            <a href="TiposServicio/vereditar?id=0" class="btn btn-primary mb-2 ms-2 me-4">Nuevo Tipo de Servicio</a>
+            <a href="<?= BASE_URL ?>TiposServicio/vereditar?id=0" class="btn btn-primary mb-2 ms-2 me-4">Nuevo Tipo de Servicio</a>
 
             <table id="TiposServicio" class="tabla table table-striped dt-table-hover" style="width:100%">
                 <thead>

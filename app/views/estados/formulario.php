@@ -10,7 +10,7 @@
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
             <h1>Estados: Editar</h1>
-            <form id="editarEstado" class="mt-0" action="Estados/vereditar?id=<?= $estado->id ?>"
+            <form id="editarEstado" class="mt-0" action="<?= BASE_URL ?>Estados/vereditar?id=<?= $estado->id ?>"
                 method="post">
                 <input type="hidden" id="idedit" name="id" value="<?= $estado->id ?>">
                 <div class="row">

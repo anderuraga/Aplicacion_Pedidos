@@ -37,14 +37,14 @@
             </div>
 
 
-            <form id="selec_area_gasto" action="Pedidos/areagastos?proveedor=<?= $_GET['proveedor'] ?>" method="post">
+            <form id="selec_area_gasto" action="<?= BASE_URL ?>Pedidos/areagastos?proveedor=<?= $_GET['proveedor'] ?>" method="post">
                 <input type="hidden" id="proveedor" name="proveedor" value="<?= $_GET['proveedor'] ?>">
                 <div class="row m-4">
                     <div class="col-4 departamento">
                         <h5>Departamento:</h5>
                         <?php
                         /** @var Usuario $usuario */
-                        if ($usuario->tipo == 1) { ?>
+                        if ($usuario->tipo == ADMIN) { ?>
                             <select class="form-control" id="departamento" name="departamento">
                                 <option value="" disabled selected hidden>Selecciona una opción</option>
                                 <?php
@@ -116,7 +116,7 @@
             }
         });
 
-        <?php if ($usuario->tipo == 0) { ?>
+        <?php if ($usuario->tipo == JEFE_DEP) { ?>
             filtrarAreasGastos($("#departamento").val())
             $(".areagastoDiv").show();
             <?php

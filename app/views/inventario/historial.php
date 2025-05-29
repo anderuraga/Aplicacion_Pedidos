@@ -39,7 +39,7 @@
                                 <td><?= $m->total ?></td>
                                 <td>
                                     <div class="btn-group" role="group" aria-label="Opciones">
-                                        <a type="button" href="Inventario/movimiento?id=<?= $m->id ?>&item=<?= $item->id ?>"
+                                        <a type="button" href="<?= BASE_URL ?>Inventario/movimiento?id=<?= $m->id ?>&item=<?= $item->id ?>"
                                             class="btn btn-primary">Editar</a>
                                     </div>
                                 </td>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-05-2025 a las 12:35:49
+-- Tiempo de generación: 29-05-2025 a las 10:19:41
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -82,7 +82,7 @@ CREATE TABLE `facturas` (
 CREATE TABLE `incidencias` (
   `id` int(11) NOT NULL,
   `id_pedido` int(11) NOT NULL,
-  `fecha` date NOT NULL DEFAULT current_timestamp(),
+  `fecha` datetime NOT NULL DEFAULT current_timestamp(),
   `descripcion` mediumtext NOT NULL,
   `estado` int(1) NOT NULL DEFAULT 0,
   `fecha_solucionada` datetime DEFAULT NULL
@@ -137,7 +137,7 @@ CREATE TABLE `pedidos` (
   `anio_contable` year(4) NOT NULL,
   `anexo` varchar(255) DEFAULT NULL,
   `albaran` varchar(255) DEFAULT NULL,
-  `factura` varchar(255) NOT NULL
+  `factura` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 -- --------------------------------------------------------
@@ -311,7 +311,7 @@ CREATE TABLE `vista_resumen_movimientos` (
 --
 DROP TABLE IF EXISTS `vista_proveedores_gastos`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_proveedores_gastos`  AS SELECT `pr`.`id` AS `id`, `pr`.`cif` AS `cif`, `pr`.`nombre` AS `nombre`, `pr`.`direccion` AS `direccion`, `pr`.`cod_postal` AS `cod_postal`, `pr`.`poblacion` AS `poblacion`, `pr`.`provincia` AS `provincia`, `pr`.`pais` AS `pais`, `pr`.`telefono` AS `telefono`, `pr`.`correo` AS `correo`, `pr`.`factura_e` AS `factura_e`, `pr`.`cuanta_bancaria` AS `cuanta_bancaria`, `pr`.`contacto` AS `contacto`, `pr`.`id_servicio` AS `id_servicio`, `pr`.`terceros` AS `proveedor_terceros`, `pr`.`provedoor_profesor` AS `proveedor_prov_prof`, `pr`.`fecha_baja` AS `proveedor_fecha_baja`, coalesce(`pe`.`anio_contable`,year(curdate())) AS `anio_contable`, coalesce(sum(case when `pe`.`id_estado` > 1 then `pe`.`importe` else 0 end),0) AS `gasto_anual` FROM (`proveedores` `pr` left join `pedidos` `pe` on(`pr`.`id` = `pe`.`id_proveedor`)) GROUP BY `pr`.`id`, `pr`.`cif`, `pr`.`nombre`, `pr`.`direccion`, `pr`.`cod_postal`, `pr`.`poblacion`, `pr`.`provincia`, `pr`.`pais`, `pr`.`telefono`, `pr`.`correo`, `pr`.`factura_e`, `pr`.`cuanta_bancaria`, `pr`.`contacto`, `pr`.`id_servicio`, `pe`.`anio_contable` ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vista_proveedores_gastos`  AS SELECT `pr`.`id` AS `id`, `pr`.`cif` AS `cif`, `pr`.`nombre` AS `nombre`, `pr`.`direccion` AS `direccion`, `pr`.`cod_postal` AS `cod_postal`, `pr`.`poblacion` AS `poblacion`, `pr`.`provincia` AS `provincia`, `pr`.`pais` AS `pais`, `pr`.`telefono` AS `telefono`, `pr`.`correo` AS `correo`, `pr`.`factura_e` AS `factura_e`, `pr`.`cuanta_bancaria` AS `cuanta_bancaria`, `pr`.`contacto` AS `contacto`, `pr`.`id_servicio` AS `id_servicio`, `pr`.`terceros` AS `proveedor_terceros`, `pr`.`provedoor_profesor` AS `proveedor_prov_prof`, `pr`.`fecha_baja` AS `proveedor_fecha_baja`, coalesce(`pe`.`anio_contable`,year(curdate())) AS `anio_contable`, coalesce(sum(case when `pe`.`id_estado` > 1 then `pe`.`importe` else 0 end),0) AS `gasto_anual` FROM (`proveedores` `pr` left join `pedidos` `pe` on(`pr`.`id` = `pe`.`id_proveedor`)) GROUP BY `pr`.`id`, `pr`.`cif`, `pr`.`nombre`, `pr`.`direccion`, `pr`.`cod_postal`, `pr`.`poblacion`, `pr`.`provincia`, `pr`.`pais`, `pr`.`telefono`, `pr`.`correo`, `pr`.`factura_e`, `pr`.`cuanta_bancaria`, `pr`.`contacto`, `pr`.`id_servicio`, `pe`.`anio_contable` ;
 
 -- --------------------------------------------------------
 
@@ -320,7 +320,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `vista_resumen_areas`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_resumen_areas`  AS SELECT `ag`.`id` AS `id_area`, `ag`.`nombre` AS `nombre_area`, `ag`.`id_departamento` AS `id_departamento`, `d`.`nombre` AS `nombre_departamento`, ifnull(sum(case when `t`.`cantidad` > 0 then `t`.`cantidad` else 0 end),0) AS `ingresos`, ifnull(sum(case when `t`.`cantidad` < 0 then abs(`t`.`cantidad`) else 0 end),0) AS `gastos`, ifnull((select sum(`p`.`importe`) from `pedidos` `p` where `p`.`id_area_gasto` = `ag`.`id` and `p`.`id_estado` between 0 and 5),0) AS `gasto_pendiente`, ifnull(sum(case when `t`.`cantidad` > 0 then `t`.`cantidad` else 0 end),0) - (ifnull(sum(case when `t`.`cantidad` < 0 then abs(`t`.`cantidad`) else 0 end),0) + ifnull((select sum(`p`.`importe`) from `pedidos` `p` where `p`.`id_area_gasto` = `ag`.`id` and `p`.`id_estado` between 0 and 5),0)) AS `total` FROM ((`areas_gastos` `ag` left join `departamentos` `d` on(`ag`.`id_departamento` = `d`.`id`)) left join `transacciones` `t` on(`ag`.`id` = `t`.`id_area`)) GROUP BY `ag`.`id`, `ag`.`nombre`, `ag`.`id_departamento`, `d`.`nombre` ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vista_resumen_areas`  AS SELECT `ag`.`id` AS `id_area`, `ag`.`nombre` AS `nombre_area`, `ag`.`id_departamento` AS `id_departamento`, `d`.`nombre` AS `nombre_departamento`, ifnull(sum(case when `t`.`cantidad` > 0 then `t`.`cantidad` else 0 end),0) AS `ingresos`, ifnull(sum(case when `t`.`cantidad` < 0 then abs(`t`.`cantidad`) else 0 end),0) AS `gastos`, ifnull((select sum(`p`.`importe`) from `pedidos` `p` where `p`.`id_area_gasto` = `ag`.`id` and `p`.`id_estado` between 0 and 5),0) AS `gasto_pendiente`, ifnull(sum(case when `t`.`cantidad` > 0 then `t`.`cantidad` else 0 end),0) - (ifnull(sum(case when `t`.`cantidad` < 0 then abs(`t`.`cantidad`) else 0 end),0) + ifnull((select sum(`p`.`importe`) from `pedidos` `p` where `p`.`id_area_gasto` = `ag`.`id` and `p`.`id_estado` between 0 and 5),0)) AS `total` FROM ((`areas_gastos` `ag` left join `departamentos` `d` on(`ag`.`id_departamento` = `d`.`id`)) left join `transacciones` `t` on(`ag`.`id` = `t`.`id_area`)) GROUP BY `ag`.`id`, `ag`.`nombre`, `ag`.`id_departamento`, `d`.`nombre` ;
 
 -- --------------------------------------------------------
 
@@ -329,7 +329,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `vista_resumen_movimientos`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vista_resumen_movimientos`  AS SELECT `m`.`id` AS `id`, `m`.`id_departamento` AS `departamento_id`, `m`.`nombre` AS `nombre`, ifnull(sum(`mv`.`cantidad`),0) AS `cantidad` FROM (`materiales` `m` left join `movimientos` `mv` on(`m`.`id` = `mv`.`id_item`)) WHERE 1 GROUP BY `m`.`id` ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vista_resumen_movimientos`  AS SELECT `m`.`id` AS `id`, `m`.`id_departamento` AS `departamento_id`, `m`.`nombre` AS `nombre`, ifnull(sum(`mv`.`cantidad`),0) AS `cantidad` FROM (`materiales` `m` left join `movimientos` `mv` on(`m`.`id` = `mv`.`id_item`)) WHERE 1 GROUP BY `m`.`id` ;
 
 --
 -- Índices para tablas volcadas

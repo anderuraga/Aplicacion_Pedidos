@@ -30,7 +30,7 @@ class TiposServicioController extends Controller {
             $tiposervicio = new TipoServicio(0, '');
         }
 
-        $this->view("TiposServicio/formulario", ['tiposervicio' => $tiposervicio]);
+        $this->view("tiposservicio/formulario", ['tiposervicio' => $tiposervicio]);
 
     }
 

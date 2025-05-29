@@ -4,7 +4,7 @@
 
 <head>
 
-    <base href="/elorrieta/" /> 
+    <base href="<?= BASE_URL ?>" /> 
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

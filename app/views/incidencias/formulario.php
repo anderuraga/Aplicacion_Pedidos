@@ -16,7 +16,7 @@
         <div class="widget-content widget-content-area p-3">
             <h1>Incidencia: <?= $incidencia->id == 0 ? 'Nueva' : 'Editar' ?></h1>
             <form id="editarSubconcepto" class="mt-0"
-                action="Incidencias/vereditar?id=<?= $incidencia->id ?>&pedido=<?= $pedido->id ?>" method="post">
+                action="<?= BASE_URL ?>Incidencias/vereditar?id=<?= $incidencia->id ?>&pedido=<?= $pedido->id ?>" method="post">
                 <input type="hidden" id="idedit" name="id" value="<?= $incidencia->id ?>">
                 <input type="hidden" id="idpedi" name="pedido" value="<?= $pedido->id ?>">
                 <div class="row">

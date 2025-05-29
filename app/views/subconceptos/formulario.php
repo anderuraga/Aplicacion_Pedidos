@@ -10,7 +10,7 @@
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
             <h1>Subconcepto: <?= $subconcepto->id == 0 ? 'Nuevo' : 'Editar' ?></h1>
-            <form id="editarSubconcepto" class="mt-0" action="Subconceptos/vereditar?id=<?= $subconcepto->id ?>"
+            <form id="editarSubconcepto" class="mt-0" action="<?= BASE_URL ?>Subconceptos/vereditar?id=<?= $subconcepto->id ?>"
                 method="post">
                 <input type="hidden" id="idedit" name="id" value="<?= $subconcepto->id ?>">
                 <div class="row">

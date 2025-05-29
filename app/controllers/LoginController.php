@@ -6,7 +6,8 @@ class LoginController extends Controller
         $alert = null;
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($usuario = $this->login()) {
-                header('Location: Menu');
+                
+                header('Location: '.BASE_URL.'Menu');
             } else {
                 $_SESSION['alert'] = [
                     'tipo' => 'danger',

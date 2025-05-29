@@ -11,7 +11,7 @@
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area">
             <h1 class="mt-2 ms-2">Inventario</h1>
-            <a href="Inventario/vereditar?id=0" class="btn btn-primary mb-2 ms-2 me-4">Nuevo Item</a>
+            <a href="<?= BASE_URL ?>Inventario/vereditar?id=0" class="btn btn-primary mb-2 ms-2 me-4">Nuevo Item</a>
 
             <table id="inventario" class="tabla table table-striped dt-table-hover" style="width:100%">
                 <thead>
@@ -42,8 +42,10 @@
                                 <div class="btn-group" role="group" aria-label="Opciones">
                                     <a type="button" href="Inventario/vereditar?id=<?= $i->id ?>"
                                         class="btn btn-primary">Editar</a>
-                                    <a href="Inventario/historial?id=<?= $i->id ?>" class="btn btn-info">Historial</a>
-                                    <a type="button" href="Inventario/movimiento?id=0&item=<?= $i->id ?>"
+
+                                    <a href="Inventario/historial?id=<?= $i->id ?>" class="btn btn-primary">Historial</a>
+                                    <a type="button" href="<?= BASE_URL ?>Inventario/movimiento?id=0&item=<?= $i->id ?>"
+
                                         class="btn btn-secondary">Entrada/Salida</a>
                                 </div>
                             </td>

@@ -14,7 +14,7 @@
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
             <h1>Item: Movimiento</h1>
-            <form id="editarMovimiento" class="mt-0" action="Inventario/movimiento?id=<?= $movimiento->id ?>&item=<?= $_GET['item'] ?>"
+            <form id="editarMovimiento" class="mt-0" action="<?= BASE_URL ?>Inventario/movimiento?id=<?= $movimiento->id ?>&item=<?= $_GET['item'] ?>"
                 method="post">
                 <input type="hidden" id="id" name="id" value="<?= $movimiento->id ?>">
                 <input type="hidden" id="item_id" name="item_id" value="<?= $_GET['item'] ?>">
