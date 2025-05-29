@@ -42,7 +42,7 @@
                                 <div class="btn-group" role="group" aria-label="Opciones">
                                     <a type="button" href="Inventario/vereditar?id=<?= $i->id ?>"
                                         class="btn btn-primary">Editar</a>
-                                    <a href="Inventario/historial?id=<?= $i->id ?>" class="btn btn-primary">Historial</a>
+                                    <a href="Inventario/historial?id=<?= $i->id ?>" class="btn btn-info">Historial</a>
                                     <a type="button" href="Inventario/movimiento?id=0&item=<?= $i->id ?>"
                                         class="btn btn-secondary">Entrada/Salida</a>
                                 </div>

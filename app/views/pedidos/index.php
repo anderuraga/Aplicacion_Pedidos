@@ -46,12 +46,10 @@
                                                 <th></th>
                                             <?php } ?>
                                             <th>Fecha</th>
-                                            <th>Solicitante</th>
+                                            <th>Importe</th>
                                             <th>Departamento</th>
                                             <th>Subconcepto</th>
                                             <th>Proveedor</th>
-                                            <th>Descripción</th>
-                                            <th>Cuantía</th>
                                             <th>Opciones</th>
                                         </tr>
                                     </thead>
@@ -71,12 +69,10 @@
                                                     </td>
                                                 <?php } ?>
                                                 <td data-order="<?= $p->fecha_creada ?>"><?= $p->getFechaCreadaVisible() ?></td>
-                                                <td><?= $p->usuario->nombre ?></td>
+                                                <td><?= $p->cantidad_formato() ?>€</td>
                                                 <td><?= $p->departamento->nombre ?></td>
                                                 <td><?= $p->subconcepto->nombre ?></td>
                                                 <td><?= $p->proveedor->nombre ?></td>
-                                                <td><?= $p->descripcion ?></td>
-                                                <td><?= $p->cantidad_formato() ?></td>
                                                 <td>
                                                     <div class="btn-group" role="group" aria-label="Basic example">
                                                         <a href="<?= BASE_URL . "Pedidos/vereditar?id=" . $p->id ?>"

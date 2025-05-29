@@ -22,7 +22,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-4">
-                        <h5>Departamentos:</h5>
+                        <h5>Departamento:</h5>
                         <select class="form-control" id="departamentoEdit" name="departamento">
                             <option value="" disabled <?= $areaGasto->id == 0 ? 'selected' : '' ?>>Selecciona un
                                 departamento</option>

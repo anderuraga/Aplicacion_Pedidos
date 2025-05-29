@@ -35,7 +35,7 @@
                             <p>Dejar el campo en blanco para dejar la contraseña actual</p>
                         <?php } ?>
                         <input type="text" class="form-control mb-2" placeholder="Contraseña" aria-label="contrasena"
-                            name="contrasena" id="contrasena" <?= $usuario_form->id == 1 ? 'required' : ''; ?>>
+                            name="contrasena" id="contrasena" <?= $usuario_form->id == 0 ? 'required' : ''; ?>>
                     </div>
                 </div>
                 <div class="row">

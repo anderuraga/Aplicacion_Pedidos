@@ -18,6 +18,7 @@ class Mailer
         $this->mail->Username = EMAIL_CORREO;
         $this->mail->Password = EMAIL_CONTRASENA;
         $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        //$this->mail->SMTPSecure = 'tls';
         $this->mail->Port = EMAIL_PORT;
         $this->mail->setFrom(EMAIL_CORREO, EMAIL_FROM_NAME);
         $this->mail->isHTML(true);
