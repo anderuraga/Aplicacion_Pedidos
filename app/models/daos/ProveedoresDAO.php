@@ -105,7 +105,8 @@ ORDER BY
     cuanta_bancaria,
     contacto,
     id_servicio,
-    usuario_id
+    usuario_id,
+    limite
 )
 VALUES(
     :cif,
@@ -121,7 +122,8 @@ VALUES(
     :cuenta_bancaria,
     :contacto,
     :id_servicio,
-    :usuario_id
+    :usuario_id,
+    :limite
 )";
         $stmt = $this->db->prepare($sql);
         $ok = $stmt->execute([
@@ -138,7 +140,8 @@ VALUES(
             'cuenta_bancaria' => $data['cuenta_bancaria'],
             'contacto' => $data['contacto'],
             'id_servicio' => $data['id_servicio'],
-            'usuario_id' => $data['usuario_id']
+            'usuario_id' => $data['usuario_id'],
+            'limite' => $data['limite'],
         ]);
 
         if ($ok) {
@@ -163,7 +166,9 @@ VALUES(
             factura_e      = :factura_e,
             cuanta_bancaria= :cuenta_bancaria,
             contacto       = :contacto,
-            id_servicio    = :id_servicio
+            id_servicio    = :id_servicio,
+            limite         = :limite,
+            fecha_editado  = NOW()
             WHERE id = :id";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([
@@ -180,7 +185,8 @@ VALUES(
             'factura_e' => $data['factura_e'],
             'cuenta_bancaria' => $data['cuenta_bancaria'],
             'contacto' => $data['contacto'],
-            'id_servicio' => $data['id_servicio']
+            'id_servicio' => $data['id_servicio'],
+            'limite' => $data['limite'],
         ]);
     }
 

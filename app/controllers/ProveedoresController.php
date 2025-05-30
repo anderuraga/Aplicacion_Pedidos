@@ -84,6 +84,7 @@ class ProveedoresController extends Controller
         $cuenta_bancaria = trim($_POST['cuenta_bancaria']);
         $contacto = trim($_POST['contacto']);
         $id_servicio = (int) ($_POST['tipoServicio'] ?? 0);
+        $limite = getCantidadMysql($_POST['limite'] ?? 0);
 
         $requiredFields = [
             'cif' => 'CIF',
@@ -97,7 +98,8 @@ class ProveedoresController extends Controller
             'correo' => 'Correo',
             'cuenta_bancaria' => 'Cuenta bancaria',
             'contacto' => 'Contacto',
-            'id_servicio' => 'Servicio'
+            'id_servicio' => 'Servicio',
+            'limite' => 'Límite'
         ];
 
         foreach ($requiredFields as $varName => $label) {
@@ -137,6 +139,7 @@ class ProveedoresController extends Controller
             'contacto' => $contacto,
             'id_servicio' => $id_servicio,
             'usuario_id' => $usuario->id,
+            'limite' => $limite
         ];
 
         if ($id === 0) {

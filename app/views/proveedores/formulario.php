@@ -92,7 +92,7 @@
                             value="<?= $proveedor->contacto ?>">
                     </div>
                     <div class="col-6">
-                        <h5>Limite:</h5>
+                        <h5>Límite:</h5>
                         <div class="input-group mb-2">
                             <input class="form-control" placeholder="Limite" aria-label="cantidad"
                                 aria-describedby="basic-addon2" name="limite" id="limite"
