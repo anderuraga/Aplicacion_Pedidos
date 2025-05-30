@@ -61,7 +61,30 @@
                     </div>
                 </a>
             </li>
-
+            <li class="menu <?= $tab == 4 ? 'active' : '' ?>">
+                <a href="<?= BASE_URL ?>Proveedores" data-bs-toggle="dropdown" aria-expanded="false"
+                    class="dropdown-toggle">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-truck">
+                            <rect x="1" y="3" width="15" height="13"></rect>
+                            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                        </svg>
+                        <span>Proveedores</span>
+                    </div>
+                </a>
+                <ul class="dropdown-menu submenu list-unstyled" id="dashboard" data-bs-parent="#accordionExample">
+                    <li>
+                        <a href="<?= BASE_URL ?>Proveedores"> Altas/Modificaciones </a>
+                    </li>
+                    <li>
+                        <a href="<?= BASE_URL ?>TiposServicio"> Tipos de servicio </a>
+                    </li>
+                </ul>
+            </li>
             <?php if ($usuario->tipo == ADMIN): ?>
                 <li class="menu <?= $tab == 12 ? 'active' : '' ?>">
                     <a href="<?= BASE_URL ?>Estados" aria-expanded="false" class="dropdown-toggle">
@@ -130,30 +153,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="menu <?= $tab == 4 ? 'active' : '' ?>">
-                    <a href="<?= BASE_URL ?>Proveedores" data-bs-toggle="dropdown" aria-expanded="false"
-                        class="dropdown-toggle">
-                        <div class="">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                class="feather feather-truck">
-                                <rect x="1" y="3" width="15" height="13"></rect>
-                                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-                                <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                                <circle cx="18.5" cy="18.5" r="2.5"></circle>
-                            </svg>
-                            <span>Proveedores</span>
-                        </div>
-                    </a>
-                    <ul class="dropdown-menu submenu list-unstyled" id="dashboard" data-bs-parent="#accordionExample">
-                        <li>
-                            <a href="<?= BASE_URL ?>Proveedores"> Altas/Modificaciones </a>
-                        </li>
-                        <li>
-                            <a href="<?= BASE_URL ?>TiposServicio"> Tipos de servicio </a>
-                        </li>
-                    </ul>
-                </li>
+
                 <li class="menu <?= $tab == 6 ? 'active' : '' ?>">
                     <a href="<?= BASE_URL ?>Reportes" aria-expanded="false" class="dropdown-toggle">
                         <div class="">

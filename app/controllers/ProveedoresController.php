@@ -5,8 +5,14 @@ class ProveedoresController extends Controller
 {
     public function index()
     {
+        global $usuario;
+
         $ProveedoresDAO = $this->dao("Proveedores");
-        $proveedores = $ProveedoresDAO->listar();
+        if ($usuario->tipo == ADMIN) {
+            $proveedores = $ProveedoresDAO->listar();
+        } else {
+            $proveedores = $ProveedoresDAO->listar_usuario($usuario->id);
+        }
 
         $this->view("proveedores/index", ['proveedores' => $proveedores]);
     }
@@ -46,8 +52,11 @@ class ProveedoresController extends Controller
                 gasto_anual: 0,
                 terceros: null,
                 prov_prof: null,
-                fecha_baja: null
-
+                fecha_baja: null,
+                limite: GASTO_FROVEEDOR,
+                fecha_creado: '',
+                fecha_editado: '',
+                usuario: new Usuario(0, 0, '', '', new Departamento(0, ''))
             );
         }
 
@@ -60,9 +69,9 @@ class ProveedoresController extends Controller
 
     public function guardar(ProveedoresDAO $proveedoresDAO)
     {
-        //TODO manejar archivos subidos
+        global $usuario;
         $id = (int) ($_POST['id']);
-        $cif = trim($_POST['cif']);
+        $cif = trim(string: $_POST['cif']);
         $nombre = trim($_POST['nombre']);
         $direccion = trim($_POST['direccion']);
         $cod_postal = (int) ($_POST['codpostal']);
@@ -76,16 +85,34 @@ class ProveedoresController extends Controller
         $contacto = trim($_POST['contacto']);
         $id_servicio = (int) ($_POST['tipoServicio'] ?? 0);
 
-        if (
-            $cif === '' || $nombre === '' || $direccion === '' ||
-            $cod_postal <= 0 || $poblacion === '' || $provincia === '' ||
-            $pais === '' || $telefono === '' || $correo === '' ||
-            $cuenta_bancaria === '' || $contacto === '' || $id_servicio === 0
-        ) {
-            return [
-                'tipo' => 'warning',
-                'mensaje' => 'Todos los campos obligatorios deben rellenarse correctamente.'
-            ];
+        $requiredFields = [
+            'cif' => 'CIF',
+            'nombre' => 'Nombre',
+            'direccion' => 'Dirección',
+            'cod_postal' => 'Código Postal',
+            'poblacion' => 'Población',
+            'provincia' => 'Provincia',
+            'pais' => 'País',
+            'telefono' => 'Teléfono',
+            'correo' => 'Correo',
+            'cuenta_bancaria' => 'Cuenta bancaria',
+            'contacto' => 'Contacto',
+            'id_servicio' => 'Servicio'
+        ];
+
+        foreach ($requiredFields as $varName => $label) {
+            $value = $$varName;
+
+            if (
+                ($varName === 'cod_postal' && intval($value) <= 0)
+                || ($varName === 'id_servicio' && intval($value) === 0)
+                || ($varName !== 'cod_postal' && $varName !== 'id_servicio' && trim($value) === '')
+            ) {
+                return [
+                    'tipo' => 'warning',
+                    'mensaje' => "El campo «{$label}» no ha sido rellenado correctamente."
+                ];
+            }
         }
 
         if ($proveedoresDAO->comprobrarCif($cif, $id ?: null)) {
@@ -108,7 +135,8 @@ class ProveedoresController extends Controller
             'factura_e' => $factura_electronica,
             'cuenta_bancaria' => $cuenta_bancaria,
             'contacto' => $contacto,
-            'id_servicio' => $id_servicio
+            'id_servicio' => $id_servicio,
+            'usuario_id' => $usuario->id,
         ];
 
         if ($id === 0) {
@@ -125,8 +153,8 @@ class ProveedoresController extends Controller
                 mkdir($rutaBase, 0777, true);
             }
 
-            if($proveedor->terceros != null){
-                unlink($rutaBase."/".$proveedor->terceros);
+            if ($proveedor->terceros != null) {
+                unlink($rutaBase . "/" . $proveedor->terceros);
             }
 
             $original = $_FILES["alta_terceros"]['name'];
@@ -156,8 +184,8 @@ class ProveedoresController extends Controller
                 mkdir($rutaBase, 0777, true);
             }
 
-            if($proveedor->prov_prof != null){
-                unlink($rutaBase."/".$proveedor->prov_prof);
+            if ($proveedor->prov_prof != null) {
+                unlink($rutaBase . "/" . $proveedor->prov_prof);
             }
 
             $original = $_FILES["proveedor_profesor"]['name'];
@@ -202,6 +230,6 @@ class ProveedoresController extends Controller
     #[\Override]
     public function tiene_permiso(): bool
     {
-        return requireAdmin();
+        return requireLogin();
     }
 }

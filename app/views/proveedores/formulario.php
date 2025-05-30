@@ -1,3 +1,7 @@
+<?php
+/**
+ * @var Proveedor $proveedor
+ */ ?>
 <?php require_once HOMEDIR . '/../app/helpers/url.php'; ?>
 <?php $titulo = "Proveedor - " . ($proveedor->id == 0 ? 'Crear' : 'Editar'); ?>
 <?php require HOMEDIR . '/../app/views/partials/header.php' ?>
@@ -5,15 +9,12 @@
 <?php $tab = 4; ?>
 <?php require HOMEDIR . '/../app/views/partials/container.php' ?>
 <?php require HOMEDIR . '/../app/views/partials/alert.php' ?>
-<?php
-/**
- * @var Proveedor $proveedor
- */ ?>
 <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
             <h1>Proveedor: <?= $proveedor->id == 0 ? 'Nuevo' : 'Editar' ?></h1>
-            <form id="nuevoProveedor" class="mt-0" action="<?= BASE_URL ?>Proveedores/vereditar?id=<?= $proveedor->id ?>" method="post"
+            <form id="nuevoProveedor" class="mt-0"
+                action="<?= BASE_URL ?>Proveedores/vereditar?id=<?= $proveedor->id ?>" method="post"
                 enctype="multipart/form-data">
                 <input type="hidden" name="id" value="<?= $proveedor->id ?>">
                 <div class="row">
@@ -73,7 +74,8 @@
                             </option>
                             <?php foreach ($tiposservicio as $t) { ?>
                                 <option value="<?= $t->id ?>" <?= $proveedor->tipo_servicio->id == $t->id ? 'selected' : '' ?>>
-                                    <?= $t->nombre ?></option>
+                                    <?= $t->nombre ?>
+                                </option>
                             <?php } ?>
                         </select>
                     </div>
@@ -88,6 +90,15 @@
                         <input type="text" min="0" class="form-control mb-2" placeholder="Persona contacto"
                             aria-label="contacto" name="contacto" id="contacto" required
                             value="<?= $proveedor->contacto ?>">
+                    </div>
+                    <div class="col-6">
+                        <h5>Limite:</h5>
+                        <div class="input-group mb-2">
+                            <input class="form-control" placeholder="Limite" aria-label="cantidad"
+                                aria-describedby="basic-addon2" name="limite" id="limite"
+                                value="<?= $proveedor->limite ?>" <?= $usuario->tipo != ADMIN ? 'disabled' : '' ?>>
+                            <span class="input-group-text" id="basic-addon2">€</span>
+                        </div>
                     </div>
                 </div>
 
@@ -135,6 +146,16 @@
         </div>
     </div>
 </div>
-
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        $("#limite").inputmask("currency", {
+            radixPoint: ",",
+            groupSeparator: ".",
+            digits: 2,
+            autoGroup: true,
+            prefix: ''
+        });
+    });
+</script>
 
 <?php require HOMEDIR . '/../app/views/partials/footer.php' ?>

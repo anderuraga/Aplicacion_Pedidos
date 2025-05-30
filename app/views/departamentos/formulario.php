@@ -10,7 +10,7 @@
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
             <h1>Departamento: <?= $departamento->id == 0 ? 'Nueva' : 'Editar' ?></h1>
-            <form id="editarDepartamento" class="mt-0" action="Departamentos/vereditar?id=<?= $departamento->id ?>"
+            <form id="editarDepartamento" class="mt-0" action="<?= BASE_URL ?>Departamentos/vereditar?id=<?= $departamento->id ?>"
                 method="post">
                 <input type="hidden" id="idedit" name="id" value="<?= $departamento->id ?>">
                 <div class="row">
