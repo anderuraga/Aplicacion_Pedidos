@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-05-2025 a las 10:19:41
+-- Tiempo de generación: 30-05-2025 a las 12:40:29
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `elorrieta`
 --
+CREATE DATABASE IF NOT EXISTS `elorrieta` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `elorrieta`;
 
 -- --------------------------------------------------------
 
@@ -191,7 +193,11 @@ CREATE TABLE `proveedores` (
   `id_servicio` int(11) NOT NULL,
   `terceros` varchar(255) DEFAULT NULL,
   `provedoor_profesor` varchar(255) DEFAULT NULL,
-  `fecha_baja` datetime DEFAULT NULL
+  `fecha_creado` datetime NOT NULL DEFAULT current_timestamp(),
+  `fecha_editado` datetime NOT NULL DEFAULT current_timestamp(),
+  `fecha_baja` datetime DEFAULT NULL,
+  `limite` decimal(10,2) NOT NULL DEFAULT 15000.00,
+  `usuario_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 -- --------------------------------------------------------
@@ -269,7 +275,11 @@ CREATE TABLE `vista_proveedores_gastos` (
 ,`id_servicio` int(11)
 ,`proveedor_terceros` varchar(255)
 ,`proveedor_prov_prof` varchar(255)
+,`proveedor_fecha_creado` datetime
+,`proveedor_fecha_editado` datetime
 ,`proveedor_fecha_baja` datetime
+,`proveedor_limite` decimal(10,2)
+,`usuario_id` int(11)
 ,`anio_contable` decimal(4,0)
 ,`gasto_anual` decimal(37,2)
 );
@@ -311,7 +321,7 @@ CREATE TABLE `vista_resumen_movimientos` (
 --
 DROP TABLE IF EXISTS `vista_proveedores_gastos`;
 
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vista_proveedores_gastos`  AS SELECT `pr`.`id` AS `id`, `pr`.`cif` AS `cif`, `pr`.`nombre` AS `nombre`, `pr`.`direccion` AS `direccion`, `pr`.`cod_postal` AS `cod_postal`, `pr`.`poblacion` AS `poblacion`, `pr`.`provincia` AS `provincia`, `pr`.`pais` AS `pais`, `pr`.`telefono` AS `telefono`, `pr`.`correo` AS `correo`, `pr`.`factura_e` AS `factura_e`, `pr`.`cuanta_bancaria` AS `cuanta_bancaria`, `pr`.`contacto` AS `contacto`, `pr`.`id_servicio` AS `id_servicio`, `pr`.`terceros` AS `proveedor_terceros`, `pr`.`provedoor_profesor` AS `proveedor_prov_prof`, `pr`.`fecha_baja` AS `proveedor_fecha_baja`, coalesce(`pe`.`anio_contable`,year(curdate())) AS `anio_contable`, coalesce(sum(case when `pe`.`id_estado` > 1 then `pe`.`importe` else 0 end),0) AS `gasto_anual` FROM (`proveedores` `pr` left join `pedidos` `pe` on(`pr`.`id` = `pe`.`id_proveedor`)) GROUP BY `pr`.`id`, `pr`.`cif`, `pr`.`nombre`, `pr`.`direccion`, `pr`.`cod_postal`, `pr`.`poblacion`, `pr`.`provincia`, `pr`.`pais`, `pr`.`telefono`, `pr`.`correo`, `pr`.`factura_e`, `pr`.`cuanta_bancaria`, `pr`.`contacto`, `pr`.`id_servicio`, `pe`.`anio_contable` ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vista_proveedores_gastos`  AS SELECT `pr`.`id` AS `id`, `pr`.`cif` AS `cif`, `pr`.`nombre` AS `nombre`, `pr`.`direccion` AS `direccion`, `pr`.`cod_postal` AS `cod_postal`, `pr`.`poblacion` AS `poblacion`, `pr`.`provincia` AS `provincia`, `pr`.`pais` AS `pais`, `pr`.`telefono` AS `telefono`, `pr`.`correo` AS `correo`, `pr`.`factura_e` AS `factura_e`, `pr`.`cuanta_bancaria` AS `cuanta_bancaria`, `pr`.`contacto` AS `contacto`, `pr`.`id_servicio` AS `id_servicio`, `pr`.`terceros` AS `proveedor_terceros`, `pr`.`provedoor_profesor` AS `proveedor_prov_prof`, `pr`.`fecha_creado` AS `proveedor_fecha_creado`, `pr`.`fecha_editado` AS `proveedor_fecha_editado`, `pr`.`fecha_baja` AS `proveedor_fecha_baja`, `pr`.`limite` AS `proveedor_limite`, `pr`.`usuario_id` AS `usuario_id`, coalesce(`pe`.`anio_contable`,year(curdate())) AS `anio_contable`, coalesce(sum(case when `pe`.`id_estado` > 1 then `pe`.`importe` else 0 end),0) AS `gasto_anual` FROM (`proveedores` `pr` left join `pedidos` `pe` on(`pr`.`id` = `pe`.`id_proveedor`)) GROUP BY `pr`.`id`, `pr`.`cif`, `pr`.`nombre`, `pr`.`direccion`, `pr`.`cod_postal`, `pr`.`poblacion`, `pr`.`provincia`, `pr`.`pais`, `pr`.`telefono`, `pr`.`correo`, `pr`.`factura_e`, `pr`.`cuanta_bancaria`, `pr`.`contacto`, `pr`.`id_servicio`, `pe`.`anio_contable` ;
 
 -- --------------------------------------------------------
 
@@ -425,7 +435,8 @@ ALTER TABLE `proveedores`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id_UNIQUE` (`id`),
   ADD UNIQUE KEY `cif_UNIQUE` (`cif`),
-  ADD KEY `proveedor_servicio_idx` (`id_servicio`);
+  ADD KEY `proveedor_servicio_idx` (`id_servicio`),
+  ADD KEY `proveedor_creador` (`usuario_id`);
 
 --
 -- Indices de la tabla `subconceptos`
@@ -601,6 +612,7 @@ ALTER TABLE `presupuestos`
 -- Filtros para la tabla `proveedores`
 --
 ALTER TABLE `proveedores`
+  ADD CONSTRAINT `proveedor_creador` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`),
   ADD CONSTRAINT `proveedor_servicio` FOREIGN KEY (`id_servicio`) REFERENCES `tipos_servicio` (`id`);
 
 --
