@@ -82,6 +82,8 @@ body.dark .layout-px-spacing,
     border-bottom: 1px solid lightgray;
 }
 
-.formulario_pedidos .form-control:disabled{
+.formulario_pedidos .form-control:disabled,
+.proveedor_formulario .form-control:disabled
+{
     color: black;
 }

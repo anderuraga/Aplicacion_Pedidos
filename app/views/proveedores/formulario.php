@@ -9,23 +9,26 @@
 <?php $tab = 4; ?>
 <?php require HOMEDIR . '/../app/views/partials/container.php' ?>
 <?php require HOMEDIR . '/../app/views/partials/alert.php' ?>
-<div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
+<div id="tableSimple" class="col-lg-12 col-12 layout-spacing proveedor_formulario">
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
             <h1>Proveedor: <?= $proveedor->id == 0 ? 'Nuevo' : 'Editar' ?></h1>
-            <h4>Estado: <?= $proveedor->getEstado() ?></h4>
+            <h5>Estado: <?= $proveedor->getEstado() ?></h5>
+
             <form id="nuevoProveedor" class="mt-0"
                 action="<?= BASE_URL ?>Proveedores/vereditar?id=<?= $proveedor->id ?>" method="post"
                 enctype="multipart/form-data">
                 <input type="hidden" name="id" value="<?= $proveedor->id ?>">
                 <div class="row">
-                    <div class="col-6">
-                        <h5>Creado:</h5>
-                        <h5><?= $proveedor->getFechaCreadoVisible() ?></h5>
+                    <div class="col-4">
+                        <h5>Usuario: <?= $proveedor->usuario->nombre ?></h5>
                     </div>
-                    <div class="col-6">
-                        <h5>Editado:</h5>
-                        <h5><?= $proveedor->getFechaEditadoVisible() ?></h5>
+                    <div class="col-4">
+                        <h5>Creado: <?= $proveedor->getFechaCreadoVisible() ?></h5>
+                    </div>
+
+                    <div class="col-4">
+                        <h5>Editado: <?= $proveedor->getFechaEditadoVisible() ?></h5>
                     </div>
                 </div>
                 <div class="row">
