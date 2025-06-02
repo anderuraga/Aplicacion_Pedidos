@@ -190,50 +190,55 @@ VALUES(
         ]);
     }
 
-    public function listar($anio = null)
+    public function listar($activos = false, $anio = null)
     {
-        $stmt = $this->db->prepare("SELECT
-    vpg.id AS proveedor_id,
-    vpg.cif AS proveedor_cif,
-    vpg.nombre AS proveedor_nombre,
-    vpg.direccion AS proveedor_direccion,
-    vpg.cod_postal AS proveedor_cod_postal,
-    vpg.poblacion AS proveedor_poblacion,
-    vpg.provincia AS proveedor_provincia,
-    vpg.pais AS proveedor_pais,
-    vpg.telefono AS proveedor_telefono,
-    vpg.correo AS proveedor_correo,
-    vpg.factura_e AS proveedor_factura_e,
-    vpg.cuanta_bancaria AS proveedor_cuenta_bancaria,
-    vpg.contacto AS proveedor_contacto,
-    vpg.id_servicio AS tiposervicio_id,
-    vpg.proveedor_terceros AS proveedor_terceros,
-    vpg.proveedor_prov_prof AS proveedor_prov_prof,
-    vpg.proveedor_fecha_creado AS proveedor_fecha_creado,
-    vpg.proveedor_fecha_editado AS proveedor_fecha_editado,
-    vpg.proveedor_fecha_baja AS proveedor_fecha_baja,
-    vpg.proveedor_limite AS proveedor_limite,
-    ts.nombre AS tiposervicio_nombre,
-    vpg.anio_contable,
-    vpg.gasto_anual,
-    vpg.usuario_id AS usuario_id,
-    u.tipo AS usuario_tipo,
-    u.nombre AS usuario_nombre,
-    u.correo AS usuario_correo,
-    u.id_departamento AS departamento_id,
-    d.nombre AS departamento_nombre
-FROM
-    vista_proveedores_gastos vpg
-JOIN tipos_servicio ts ON
-    ts.id = vpg.id_servicio
-JOIN usuarios u ON
-    u.id = vpg.usuario_id
-JOIN departamentos d ON
-    u.id_departamento = d.id
-WHERE
-    vpg.anio_contable = :anio_contable
-ORDER BY
-    vpg.cif ASC;");
+        $sql = "
+        SELECT
+            vpg.id AS proveedor_id,
+            vpg.cif AS proveedor_cif,
+            vpg.nombre AS proveedor_nombre,
+            vpg.direccion AS proveedor_direccion,
+            vpg.cod_postal AS proveedor_cod_postal,
+            vpg.poblacion AS proveedor_poblacion,
+            vpg.provincia AS proveedor_provincia,
+            vpg.pais AS proveedor_pais,
+            vpg.telefono AS proveedor_telefono,
+            vpg.correo AS proveedor_correo,
+            vpg.factura_e AS proveedor_factura_e,
+            vpg.cuanta_bancaria AS proveedor_cuenta_bancaria,
+            vpg.contacto AS proveedor_contacto,
+            vpg.id_servicio AS tiposervicio_id,
+            vpg.proveedor_terceros AS proveedor_terceros,
+            vpg.proveedor_prov_prof AS proveedor_prov_prof,
+            vpg.proveedor_fecha_creado AS proveedor_fecha_creado,
+            vpg.proveedor_fecha_editado AS proveedor_fecha_editado,
+            vpg.proveedor_fecha_baja AS proveedor_fecha_baja,
+            vpg.proveedor_limite AS proveedor_limite,
+            ts.nombre AS tiposervicio_nombre,
+            vpg.anio_contable,
+            vpg.gasto_anual,
+            vpg.usuario_id AS usuario_id,
+            u.tipo AS usuario_tipo,
+            u.nombre AS usuario_nombre,
+            u.correo AS usuario_correo,
+            u.id_departamento AS departamento_id,
+            d.nombre AS departamento_nombre
+        FROM
+            vista_proveedores_gastos vpg
+        JOIN tipos_servicio ts ON ts.id = vpg.id_servicio
+        JOIN usuarios u ON u.id = vpg.usuario_id
+        JOIN departamentos d ON u.id_departamento = d.id
+        WHERE
+            vpg.anio_contable = :anio_contable
+    ";
+
+        if ($activos) {
+            $sql .= " AND vpg.proveedor_fecha_baja IS NULL";
+        }
+
+        $sql .= " ORDER BY vpg.cif ASC;";
+
+        $stmt = $this->db->prepare($sql);
 
         $anio_contable = is_null($anio) ? date('Y') : intval($anio);
         $stmt->execute(['anio_contable' => $anio_contable]);
@@ -246,51 +251,55 @@ ORDER BY
         return $result;
     }
 
-    public function listar_usuario($usuario, $anio = null)
+    public function listar_usuario($usuario, $activos = false, $anio = null)
     {
-        $stmt = $this->db->prepare("SELECT
-    vpg.id AS proveedor_id,
-    vpg.cif AS proveedor_cif,
-    vpg.nombre AS proveedor_nombre,
-    vpg.direccion AS proveedor_direccion,
-    vpg.cod_postal AS proveedor_cod_postal,
-    vpg.poblacion AS proveedor_poblacion,
-    vpg.provincia AS proveedor_provincia,
-    vpg.pais AS proveedor_pais,
-    vpg.telefono AS proveedor_telefono,
-    vpg.correo AS proveedor_correo,
-    vpg.factura_e AS proveedor_factura_e,
-    vpg.cuanta_bancaria AS proveedor_cuenta_bancaria,
-    vpg.contacto AS proveedor_contacto,
-    vpg.id_servicio AS tiposervicio_id,
-    vpg.proveedor_terceros AS proveedor_terceros,
-    vpg.proveedor_prov_prof AS proveedor_prov_prof,
-    vpg.proveedor_fecha_creado AS proveedor_fecha_creado,
-    vpg.proveedor_fecha_editado AS proveedor_fecha_editado,
-    vpg.proveedor_fecha_baja AS proveedor_fecha_baja,
-    vpg.proveedor_limite AS proveedor_limite,
-    ts.nombre AS tiposervicio_nombre,
-    vpg.anio_contable,
-    vpg.gasto_anual,
-    vpg.usuario_id AS usuario_id,
-    u.tipo AS usuario_tipo,
-    u.nombre AS usuario_nombre,
-    u.correo AS usuario_correo,
-    u.id_departamento AS departamento_id,
-    d.nombre AS departamento_nombre
-FROM
-    vista_proveedores_gastos vpg
-JOIN tipos_servicio ts ON
-    ts.id = vpg.id_servicio
-JOIN usuarios u ON
-    u.id = vpg.usuario_id
-JOIN departamentos d ON
-    u.id_departamento = d.id
-WHERE
-    vpg.anio_contable = :anio_contable AND
-    vpg.usuario_id = :usuario
-ORDER BY
-    vpg.cif ASC;");
+        $sql = "
+        SELECT
+            vpg.id AS proveedor_id,
+            vpg.cif AS proveedor_cif,
+            vpg.nombre AS proveedor_nombre,
+            vpg.direccion AS proveedor_direccion,
+            vpg.cod_postal AS proveedor_cod_postal,
+            vpg.poblacion AS proveedor_poblacion,
+            vpg.provincia AS proveedor_provincia,
+            vpg.pais AS proveedor_pais,
+            vpg.telefono AS proveedor_telefono,
+            vpg.correo AS proveedor_correo,
+            vpg.factura_e AS proveedor_factura_e,
+            vpg.cuanta_bancaria AS proveedor_cuenta_bancaria,
+            vpg.contacto AS proveedor_contacto,
+            vpg.id_servicio AS tiposervicio_id,
+            vpg.proveedor_terceros AS proveedor_terceros,
+            vpg.proveedor_prov_prof AS proveedor_prov_prof,
+            vpg.proveedor_fecha_creado AS proveedor_fecha_creado,
+            vpg.proveedor_fecha_editado AS proveedor_fecha_editado,
+            vpg.proveedor_fecha_baja AS proveedor_fecha_baja,
+            vpg.proveedor_limite AS proveedor_limite,
+            ts.nombre AS tiposervicio_nombre,
+            vpg.anio_contable,
+            vpg.gasto_anual,
+            vpg.usuario_id AS usuario_id,
+            u.tipo AS usuario_tipo,
+            u.nombre AS usuario_nombre,
+            u.correo AS usuario_correo,
+            u.id_departamento AS departamento_id,
+            d.nombre AS departamento_nombre
+        FROM
+            vista_proveedores_gastos vpg
+        JOIN tipos_servicio ts ON ts.id = vpg.id_servicio
+        JOIN usuarios u ON u.id = vpg.usuario_id
+        JOIN departamentos d ON u.id_departamento = d.id
+        WHERE
+            vpg.anio_contable = :anio_contable
+    ";
+
+        if ($activos) {
+            $sql .= " AND vpg.proveedor_fecha_baja IS NULL";
+        }
+
+        $sql .= " ORDER BY vpg.cif ASC;";
+
+        $stmt = $this->db->prepare($sql);
 
         $anio_contable = is_null($anio) ? date('Y') : intval($anio);
         $stmt->execute([
@@ -315,7 +324,8 @@ ORDER BY
         ]);
     }
 
-    public function alta($id){
+    public function alta($id)
+    {
         $stmt = $this->db->prepare("UPDATE `proveedores` SET `fecha_baja`=NULL, fecha_editado  = NOW() WHERE `id`=:id");
 
         return $stmt->execute([

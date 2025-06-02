@@ -75,7 +75,7 @@ class PedidosController extends Controller
          * @var ProveedoresDAO
          */
         $proveedoresDAO = $this->dao("Proveedores");
-        $proveedores = $proveedoresDAO->listar();
+        $proveedores = $proveedoresDAO->listar(true);
 
         /**
          * @var Usuario
@@ -286,7 +286,7 @@ class PedidosController extends Controller
         $tiposServicios = $tiposServiciosDAO->listar();
 
 
-        $proveedores = $proveedoresDAO->listar();
+        $proveedores = $proveedoresDAO->listar(true);
 
         $data = [
             'pedido' => $pedido,
