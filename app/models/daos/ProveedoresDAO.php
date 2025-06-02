@@ -306,9 +306,26 @@ ORDER BY
         return $result;
     }
 
+    public function baja($id)
+    {
+        $stmt = $this->db->prepare("UPDATE `proveedores` SET `fecha_baja`=NOW(), fecha_editado  = NOW() WHERE id=:id");
+
+        return $stmt->execute([
+            'id' => $id
+        ]);
+    }
+
+    public function alta($id){
+        $stmt = $this->db->prepare("UPDATE `proveedores` SET `fecha_baja`=NULL, fecha_editado  = NOW() WHERE `id`=:id");
+
+        return $stmt->execute([
+            'id' => $id
+        ]);
+    }
+
     public function insertar_alta_terceros($id, $documento)
     {
-        $stmt = $this->db->prepare("UPDATE `proveedores` SET `terceros`=:terceros WHERE `id`=:id");
+        $stmt = $this->db->prepare("UPDATE `proveedores` SET `terceros`=:terceros, fecha_editado  = NOW() WHERE `id`=:id");
 
         return $stmt->execute([
             'terceros' => $documento,
@@ -318,7 +335,7 @@ ORDER BY
 
     public function insertar_proveedor_profesor($id, $documento)
     {
-        $stmt = $this->db->prepare("UPDATE `proveedores` SET `provedoor_profesor`=:prov_prof WHERE `id`=:id");
+        $stmt = $this->db->prepare("UPDATE `proveedores` SET `provedoor_profesor`=:prov_prof, fecha_editado  = NOW() WHERE `id`=:id");
 
         return $stmt->execute([
             'prov_prof' => $documento,

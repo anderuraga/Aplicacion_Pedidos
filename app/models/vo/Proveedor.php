@@ -115,18 +115,22 @@ class Proveedor
     public function getFechaCreadoVisible()
     {
         $date = new DateTime($this->fecha_creado);
-        return $date->format('d/m/Y');
+        return $date->format('d/m/Y h:i');
     }
 
     public function getFechaEditadoVisible()
     {
         $date = new DateTime($this->fecha_editado);
-        return $date->format('d/m/Y');
+        return $date->format('d/m/Y h:i');
     }
 
     public function getFechaBorradoVisible()
     {
         $date = new DateTime($this->fecha_baja);
         return $date->format('d/m/Y');
+    }
+
+    public function getEstado(){
+        return is_null($this->fecha_baja) ? 'Activo' : 'Baja';
     }
 }

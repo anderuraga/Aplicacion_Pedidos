@@ -26,7 +26,7 @@
                                         <div class="mb-3">
                                             <label class="form-label">Correo electrónico</label>
                                             <input type="email" id="correo" name="correo" class="form-control"
-                                                value="admincentral@elorrieta-errekamari.com" placeholder="Correo electrónico">
+                                                value="javier.gomez@emaginarte.com" placeholder="Correo electrónico">
                                         </div>
                                     </div>
                                     <div class="col-12">

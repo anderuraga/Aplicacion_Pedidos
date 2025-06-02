@@ -21,14 +21,28 @@ class ProveedoresController extends Controller
     {
         $id = $_GET['id'];
 
+        /**
+         * @var ProveedoresDAO
+         */
         $proveedoresDAO = $this->dao("Proveedores");
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            global $usuario;
+            if ($usuario->tipo == ADMIN && isset($_POST['action']) && $_POST['action'] == "estado") {
+                $_SESSION['alert'] = $this->cambiarEstado($proveedoresDAO,$id);
+                session_write_close();
+                header("Location:" . BASE_URL . "Proveedores/vereditar?id=" . $id);
+                exit;
+            }
+
             $_SESSION['alert'] = $this->guardar($proveedoresDAO);
             if ($proveedoresDAO->last_insert !== null) {
                 session_write_close();
-                header("Location: vereditar?id=" . $proveedoresDAO->last_insert);
+                header("Location:" . BASE_URL . "Proveedores/vereditar?id=" . $proveedoresDAO->last_insert);
                 exit;
             }
+            session_write_close();
+            header("Location:" . BASE_URL . "Proveedores/vereditar?id=" . $id);
+            exit;
         }
 
         if ($id <> 0) {
@@ -228,6 +242,29 @@ class ProveedoresController extends Controller
         }
 
 
+    }
+
+    private function cambiarEstado(ProveedoresDAO $proveedoresDAO, $id)
+    {
+        if ($_POST['estado'] == 'baja') {
+            if ($proveedoresDAO->baja($id)) {
+                return [
+                    'tipo' => 'success',
+                    'mensaje' => 'Se ha dado de baja el proveedor'
+                ];
+            }
+        } else {
+            if ($proveedoresDAO->alta($id)) {
+                return [
+                    'tipo' => 'success',
+                    'mensaje' => 'Se ha dado de alta el proveedor'
+                ];
+            }
+        }
+        return [
+            'tipo' => 'danger',
+            'mensaje' => 'Error al cambiar el estado del proveedor'
+        ];
     }
 
     #[\Override]

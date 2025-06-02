@@ -16,6 +16,7 @@
                     <tr>
                         <th>id</th>
                         <th>CIF</th>
+                        <th>Estado</th>
                         <th>Razón Social</th>
                         <th>Dirección</th>
                         <th title="Código Postal">C.P.</th>
@@ -31,6 +32,7 @@
                         <tr>
                             <td><?= $p->id ?></td>
                             <td><?= $p->cif ?></td>
+                            <td><?= $p->getEstado() ?></td>
                             <td><?= $p->nombre ?></td>
                             <td><?= $p->direccion ?></td>
                             <td><?= $p->cod_postal ?></td>
