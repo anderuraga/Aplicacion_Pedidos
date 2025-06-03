@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../helpers/auth.php';
+require_once __DIR__ . '/../helpers/Mailer.php';
 
 class ProveedoresController extends Controller
 {
@@ -25,16 +26,20 @@ class ProveedoresController extends Controller
          * @var ProveedoresDAO
          */
         $proveedoresDAO = $this->dao("Proveedores");
+        /**
+         * @var UsuariosDAO
+         */
+        $usuariosDAO = $this->dao("Usuarios");
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             global $usuario;
             if ($usuario->tipo == ADMIN && isset($_POST['action']) && $_POST['action'] == "estado") {
-                $_SESSION['alert'] = $this->cambiarEstado($proveedoresDAO,$id);
+                $_SESSION['alert'] = $this->cambiarEstado($proveedoresDAO, $id);
                 session_write_close();
                 header("Location:" . BASE_URL . "Proveedores/vereditar?id=" . $id);
                 exit;
             }
 
-            $_SESSION['alert'] = $this->guardar($proveedoresDAO);
+            $_SESSION['alert'] = $this->guardar($proveedoresDAO,$usuariosDAO);
             if ($proveedoresDAO->last_insert !== null) {
                 session_write_close();
                 header("Location:" . BASE_URL . "Proveedores/vereditar?id=" . $proveedoresDAO->last_insert);
@@ -81,7 +86,7 @@ class ProveedoresController extends Controller
 
     }
 
-    public function guardar(ProveedoresDAO $proveedoresDAO)
+    public function guardar(ProveedoresDAO $proveedoresDAO, UsuariosDAO $usuariosDAO)
     {
         global $usuario;
         $id = (int) ($_POST['id']);
@@ -158,6 +163,20 @@ class ProveedoresController extends Controller
 
         if ($id === 0) {
             $ok = $proveedoresDAO->crear($data);
+            if ($ok && $usuario->tipo != ADMIN) {
+                $proveedoresDAO->baja($proveedoresDAO->last_insert);
+                $correos = $usuariosDAO->obtenerCorreosAdmin();
+                $mailer = new Mailer();
+                $mailer->enviarCorreo(
+                    $correos,
+                    "Nuevo proveedor añadido a la plataforma",
+                    "NuevoProveedor",
+                    [
+                        'CIF' => $cif
+                    ]
+                );
+            }
+            ;
         } else {
             $ok = $proveedoresDAO->editar($id, $data);
         }

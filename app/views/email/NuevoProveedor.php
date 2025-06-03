@@ -36,7 +36,7 @@
           <!-- Cuerpo del mensaje -->
           <tr>
             <td style="padding:0 20px 30px; font-family:Helvetica, Arial, sans-serif; font-size:16px; line-height:1.5; color:#555555;">
-              <p>Un nuevo pedido con referencia {{referencia}} se ha enviado a pasado a pendiente de validación.</p>
+              <p>Un nuevo proveedor con CIF {{CIF}} ha sido añadido a la lista de proveedores y está esperando aprobación.</p>
               <p>Este correo se ha generado automáticamente, no responda a este correo.</p>
             </td>
           </tr>

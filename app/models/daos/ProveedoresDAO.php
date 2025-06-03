@@ -290,7 +290,8 @@ VALUES(
         JOIN usuarios u ON u.id = vpg.usuario_id
         JOIN departamentos d ON u.id_departamento = d.id
         WHERE
-            vpg.anio_contable = :anio_contable
+            vpg.anio_contable = :anio_contable AND
+            vpg.usuario_id = :usuario
     ";
 
         if ($activos) {
