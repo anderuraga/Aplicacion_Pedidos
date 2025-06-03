@@ -354,10 +354,10 @@ class PedidosController extends Controller
 
         $proveedor = $proveedoresDAO->obtener($id_proveedor);
         $totalProveedor = $proveedor->gasto_anual;
-        if ($totalProveedor + $importe >= GASTO_FROVEEDOR) {
+        if ($totalProveedor + $importe >= $proveedor->limite) {
             return [
                 'tipo' => 'danger',
-                'mensaje' => 'El importe superaría el máximo permitido para.'
+                'mensaje' => 'El importe superaría el máximo permitido para el proveedor.'
             ];
         }
 
@@ -421,7 +421,7 @@ class PedidosController extends Controller
         if ($id_proveedor != $pedido->proveedor->id) {
             $proveedor = $proveedoresDAO->obtener($id_proveedor);
             $totalProveedor = $proveedor->gasto_anual;
-            if ($totalProveedor + $importe >= GASTO_FROVEEDOR) {
+            if ($totalProveedor + $importe >= $proveedor->limite) {
                 return [
                     'tipo' => 'danger',
                     'mensaje' => 'El importe superaría el máximo permitido para.'

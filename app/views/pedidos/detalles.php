@@ -62,7 +62,7 @@
                         <h4>Proveedor:</h4>
                         <h5><?= $proveedor->nombre ?></h5>
                         <h4>Gasto en año contable:</h4>
-                        <h5><?= $proveedor->cantidad_formato() ?>€ / 18.000€</h5>
+                        <h5><?= $proveedor->cantidad_formato() ?>€ / <?= $proveedor->limite_formato() ?>€</h5>
                     </div>
                     <div class="col-4">
                         <h4>Area gasto:</h4>

@@ -67,7 +67,7 @@ class ProveedoresController extends Controller
                 terceros: null,
                 prov_prof: null,
                 fecha_baja: null,
-                limite: GASTO_FROVEEDOR,
+                limite: GASTO_PROVEEDOR,
                 fecha_creado: '',
                 fecha_editado: '',
                 usuario: new Usuario(0, 0, '', '', new Departamento(0, ''))

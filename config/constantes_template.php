@@ -11,7 +11,7 @@ define('PEN_FACT', 4);
 define('PEN_ARCH', 5);
 define('ARCHIVADO', 6);
 // Gasto maximo Proveedor
-define('GASTO_FROVEEDOR', 18000.00);
+define('GASTO_PROVEEDOR', 18000.00);
 // Email
 define('EMAIL_HOST', '');
 define('EMAIL_CORREO', '');
