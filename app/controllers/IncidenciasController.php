@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../helpers/auth.php';
+require_once __DIR__ . '/../helpers/Mailer.php';
 
 class IncidenciasController extends Controller
 {
@@ -42,7 +43,7 @@ class IncidenciasController extends Controller
         $pedido = $pedidosDAO->obtener($_GET['pedido']);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $_SESSION['alert'] = $this->guardar($incidenciasDAO);
+            $_SESSION['alert'] = $this->guardar($incidenciasDAO,$pedidosDAO);
             if ($incidenciasDAO->last_insert != null) {
                 $pedidosDAO->rellenarEstado($pedido->estado->id,$pedido->id,"Nueva incidencia registrada");
                 session_write_close();
@@ -75,7 +76,7 @@ class IncidenciasController extends Controller
 
     }
 
-    public function guardar(IncidenciasDAO $incidenciasDAO)
+    public function guardar(IncidenciasDAO $incidenciasDAO,PedidosDAO $pedidosDAO)
     {
 
         $id = $_POST['id'];
@@ -100,6 +101,20 @@ class IncidenciasController extends Controller
 
         if ($id == 0) {
             $ok = $incidenciasDAO->crear($pedido, $descripcion);
+            if($ok){
+                $pedido = $pedidosDAO->obtener($pedido);
+                $correo = $pedido->usuario->correo;
+                $mailer = new Mailer();
+                $mailer->enviarCorreo(
+                    $correo,
+                    "Nueva Incidencia",
+                    "NuevaIncidencia",
+                    [
+                        'referencia' => $pedido->referencia,
+                        'descripcion' => $descripcion
+                    ]
+                );
+            }
         } else {
             $ok = $incidenciasDAO->editar($id, $descripcion);
         }

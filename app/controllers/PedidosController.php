@@ -218,7 +218,7 @@ class PedidosController extends Controller
             if ($_POST['action'] == "siguiente") {
                 switch ($pedido->estado->id) {
                     case BORRADOR:
-                        $_SESSION['alert'] = $this->guardarPresupuestos($pedidosDAO, $pedido,$usuariosDAO);
+                        $_SESSION['alert'] = $this->guardarPresupuestos($pedidosDAO, $pedido, $usuariosDAO);
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
                     case PEN_VALI:
@@ -250,6 +250,16 @@ class PedidosController extends Controller
                         'tipo' => 'success',
                         'mensaje' => 'Incidencia marcada como resuelta correctamente.'
                     ];
+                    $correos = $usuariosDAO->obtenerCorreosAdmin();
+                    $mailer = new Mailer();
+                    $mailer->enviarCorreo(
+                        $correos,
+                        "Incidencia Resuelta",
+                        "IncidenciaResuelta",
+                        [
+                            'referencia' => $pedido->referencia
+                        ]
+                    );
                 } else {
                     $_SESSION['alert'] = [
                         'tipo' => 'warning',

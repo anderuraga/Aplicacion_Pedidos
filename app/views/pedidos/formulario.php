@@ -324,9 +324,11 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                         default:
                             break;
                     } ?>
-                    <a class="btn btn-warning"
-                        href="<?= BASE_URL ?>Incidencias/vereditar?id=0&pedido=<?= $pedido->id ?>">Nueva Incidencia</a>
-                    <button type="submit" form="editarForm" class="btn btn-light-success mr-a">Guardar</button>
+                    <?php if ($usuario->tipo == ADMIN): ?>
+                        <a class="btn btn-warning"
+                            href="<?= BASE_URL ?>Incidencias/vereditar?id=0&pedido=<?= $pedido->id ?>">Nueva Incidencia</a>
+                        <button type="submit" form="editarForm" class="btn btn-light-success mr-a">Guardar</button>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
