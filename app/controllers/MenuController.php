@@ -1,9 +1,11 @@
-<?php 
-require_once __DIR__.'/../helpers/auth.php';
+<?php
+require_once __DIR__ . '/../helpers/auth.php';
 
-class MenuController extends Controller {
-    
-    public function index() {
+class MenuController extends Controller
+{
+
+    public function index()
+    {
         global $usuario;
         /**
          * @var PedidosDAO
@@ -11,13 +13,21 @@ class MenuController extends Controller {
         $pedidosDAO = $this->dao("Pedidos");
 
         $data = [];
-        if($usuario->tipo == ADMIN){
+        if ($usuario->tipo == ADMIN) {
             $data["pedidosRevisar"] = $pedidosDAO->listar_estado(PEN_VALI);
             $data["pedidosArchivar"] = $pedidosDAO->listar_estado(PEN_ARCH);
+        } else {
+            $pedidosincidencias = $pedidosDAO->pedidos_incidencias_abiertas($usuario->id);
+            $data["pedidosIncidencias"] = [];
+            foreach ($pedidosincidencias as $pedIncid) {
+                $data["pedidosIncidencias"][] = [$pedidosDAO->obtener($pedIncid['id_pedido']),$pedIncid['num_incidencias_abiertas']];
+            }
+            $data["pedidosProveedor"] = $pedidosDAO->listar_estado(PEN_PROV);
+            $data["pedidosFactura"] = $pedidosDAO->listar_estado(PEN_FACT);
         }
 
 
-        $this->view("menu/index",$data);
+        $this->view("menu/index", $data);
     }
 
     #[\Override]

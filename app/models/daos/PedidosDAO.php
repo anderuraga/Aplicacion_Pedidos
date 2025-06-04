@@ -500,4 +500,30 @@ DESC
             'comentario' => $comentario
         ]);
     }
+
+    public function pedidos_incidencias_abiertas($usuario){
+        $query = "SELECT
+                    p.id AS id_pedido,
+                    COUNT(i.id) AS num_incidencias_abiertas
+                    FROM pedidos p
+                    JOIN incidencias i
+                        ON i.id_pedido = p.id
+                    AND i.estado = 0    -- asumimos que estado=0 significa “abierta”
+                    WHERE p.id_departamento = (
+                        SELECT u.id_departamento
+                        FROM usuarios u
+                        WHERE u.id = :usuario
+                    )
+                    GROUP BY p.id;
+                    ";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([
+            'usuario' => $usuario
+        ]);
+        $result = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $result[] = $row;
+        }
+        return $result;
+    }
 }
