@@ -67,10 +67,9 @@
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         let datepickers = $('.flatTime').flatpickr({
-            enableTime: true,
             altInput: true,
-            altFormat: "d-m-Y H:i",
-            dateFormat: "Y-m-d H:i",
+            altFormat: "d-m-Y",
+            dateFormat: "Y-m-d",
         })
 
         $("#cantidad").inputmask("currency", {

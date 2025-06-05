@@ -59,7 +59,7 @@
                     </div>
                 </div>
 
-                <a href="<?= BASE_URL ?>Inventario/historial?id=<?= $movimiento->item->id ?>" class="btn btn-secondary mt-2">Volver</a>
+                <a href="<?= BASE_URL ?>Inventario/historial?id=<?= $_GET['item'] ?>" class="btn btn-secondary mt-2">Volver</a>
 
                 <button type="submit" class="btn btn-primary mt-2"><?= $movimiento->id == 0 ? 'Crear' : 'Editar' ?></button>
 
@@ -70,10 +70,9 @@
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         let datepickers = $('.flatTime').flatpickr({
-            enableTime: true,
             altInput: true,
-            altFormat: "d-m-Y H:i",
-            dateFormat: "Y-m-d H:i",
+            altFormat: "d-m-Y",
+            dateFormat: "Y-m-d",
         })
     });
 </script>

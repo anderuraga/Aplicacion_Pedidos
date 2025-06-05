@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Pedido pendiente de Proveedor</title>
+  <title>Pedido Pendiente de Proveedor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
@@ -29,7 +29,7 @@
           <!-- Título -->
           <tr>
             <td style="padding:30px 20px 10px; font-family:Helvetica, Arial, sans-serif; font-size:22px; color:#333333; text-align:center;">
-                Pedido pendiente de Proveedor
+                Pedido Pendiente de Proveedor
             </td>
           </tr>
 
