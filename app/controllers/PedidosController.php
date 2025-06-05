@@ -225,13 +225,22 @@ class PedidosController extends Controller
                         $pedidosDAO->cambiarEstado($pedido->id, 3);
                         $pedidosDAO->rellenarEstado(3, $pedido->id, "Se ha enviado el pedido al proveedor");
                         $pedido = $pedidosDAO->obtener($_GET['id']);
+                        $mailer = new Mailer();
+                        $mailer->enviarCorreo(
+                            $pedido->usuario->correo,
+                            "Pedido Pendiente de Proveedo",
+                            "PendienteProveedor",
+                            [
+                                'referencia' => $pedido->referencia
+                            ]
+                        );
                         break;
                     case PEN_PROV:
                         $_SESSION['alert'] = $this->guardarAlbaran($pedidosDAO);
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
                     case PEN_FACT:
-                        $_SESSION['alert'] = $this->guardarFactura($pedidosDAO);
+                        $_SESSION['alert'] = $this->guardarFactura($pedidosDAO, $usuariosDAO);
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
                     case PEN_ARCH:
@@ -639,7 +648,7 @@ class PedidosController extends Controller
         ];
     }
 
-    public function guardarFactura(PedidosDAO $pedidosDAO)
+    public function guardarFactura(PedidosDAO $pedidosDAO, UsuariosDAO $usuariosDAO)
     {
         $pedidoId = $_POST['id'] ?? null;
 
@@ -681,6 +690,17 @@ class PedidosController extends Controller
             ];
         }
 
+        $pedido = $pedidosDAO->obtener($pedidoId);
+        $correos = $usuariosDAO->obtenerCorreosAdmin();
+        $mailer = new Mailer();
+        $mailer->enviarCorreo(
+            $correos,
+            "Pedido pendiente de archivar",
+            "PendienteArchivado",
+            [
+                'referencia' => $pedido->referencia
+            ]
+        );
         $pedidosDAO->cambiarEstado($pedidoId, 5);
         $pedidosDAO->rellenarEstado(5, $pedidoId, "Se ha subido la factura");
         return [
