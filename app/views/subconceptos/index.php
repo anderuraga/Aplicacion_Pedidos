@@ -9,7 +9,6 @@
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area">
             <h1 class="mt-2 ms-2">Subconceptos</h1>
-            <a href="<?= BASE_URL ?>Subconceptos/vereditar?id=0" class="btn btn-primary mb-2 ms-2 me-4">Nuevo Subconcepto</a>
 
             <table id="Subconceptos" class="tabla table table-striped dt-table-hover" style="width:100%">
                 <thead>

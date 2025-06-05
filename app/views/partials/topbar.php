@@ -47,7 +47,8 @@
                 </a>
             </li>
             <li class="menu <?= $tab == 11 ? 'active' : '' ?>">
-                <a href="<?= BASE_URL ?>Inventario" aria-expanded="false" class="dropdown-toggle">
+                <a href="<?= BASE_URL ?>Inventario" data-bs-toggle="dropdown" aria-expanded="false"
+                    class="dropdown-toggle">
                     <div class="">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -60,10 +61,19 @@
                         <span>Inventario</span>
                     </div>
                 </a>
+                <ul class="dropdown-menu submenu list-unstyled" id="dashboard" data-bs-parent="#accordionExample">
+                    <li>
+                        <a href="<?= BASE_URL ?>Inventario"> Modificaciones </a>
+                    </li>
+                    <li>
+                        <a href="<?= BASE_URL ?>Inventario/vereditar?id=0"> Nuevo </a>
+                    </li>
+                </ul>
             </li>
             <?php if ($usuario->tipo == JEFE_DEP): ?>
                 <li class="menu <?= $tab == 4 ? 'active' : '' ?>">
-                    <a href="<?= BASE_URL ?>Proveedores" aria-expanded="false" class="dropdown-toggle">
+                    <a href="<?= BASE_URL ?>Proveedores" data-bs-toggle="dropdown" aria-expanded="false"
+                        class="dropdown-toggle">
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -76,11 +86,19 @@
                             <span>Proveedores</span>
                         </div>
                     </a>
+                    <ul class="dropdown-menu submenu list-unstyled" id="dashboard" data-bs-parent="#accordionExample">
+                        <li>
+                            <a href="<?= BASE_URL ?>Proveedores"> Modificaciones </a>
+                        </li>
+                        <li>
+                            <a href="<?= BASE_URL ?>Proveedores/vereditar?id=0"> Alta </a>
+                        </li>
+                    </ul>
                 </li>
             <?php endif; ?>
             <?php if ($usuario->tipo == ADMIN): ?>
                 <li class="menu <?= $tab == 4 ? 'active' : '' ?>">
-                    <a href="<?= BASE_URL ?>Proveedores" data-bs-toggle="dropdown" aria-expanded="false"
+                    <a href="<?= BASE_URL ?>Proveedores" data-bs-toggle="dropdown" data-bs-toggle="dropdown" aria-expanded="false"
                         class="dropdown-toggle">
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -99,7 +117,13 @@
                             <a href="<?= BASE_URL ?>Proveedores"> Altas/Modificaciones </a>
                         </li>
                         <li>
+                            <a href="<?= BASE_URL ?>Proveedores/vereditar?id=0"> Alta </a>
+                        </li>
+                        <li>
                             <a href="<?= BASE_URL ?>TiposServicio"> Tipos de servicio </a>
+                        </li>
+                        <li>
+                            <a href="<?= BASE_URL ?>TiposServicio/vereditar?id=0"> Nuevo tipo de servicio </a>
                         </li>
                     </ul>
                 </li>
@@ -118,7 +142,8 @@
                     </a>
                 </li>
                 <li class="menu <?= $tab == 8 || $tab == 9 ? 'active' : '' ?>">
-                    <a href="<?= BASE_URL ?>AreasGastos" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
+                    <a href="<?= BASE_URL ?>AreasGastos" data-bs-toggle="dropdown" aria-expanded="false"
+                        class="dropdown-toggle">
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -136,12 +161,18 @@
                             <a href="<?= BASE_URL ?>AreasGastos"> Modificaciones </a>
                         </li>
                         <li>
+                            <a href="<?= BASE_URL ?>AreasGastos/vereditar?id=0"> Alta </a>
+                        </li>
+                        <li>
                             <a href="<?= BASE_URL ?>Ingresos"> Ingresos </a>
+                        </li>
+                        <li>
+                            <a href="<?= BASE_URL ?>Ingresos/vereditar?id=0"> Nuevo Ingresos </a>
                         </li>
                     </ul>
                 </li>
                 <li class="menu <?= $tab == 7 ? 'active' : '' ?>">
-                    <a href="<?= BASE_URL ?>Subconceptos" aria-expanded="false" class="dropdown-toggle">
+                    <a href="<?= BASE_URL ?>Subconceptos" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -154,6 +185,14 @@
                             <span>Subconceptos</span>
                         </div>
                     </a>
+                    <ul class="dropdown-menu submenu list-unstyled" id="dashboard" data-bs-parent="#accordionExample">
+                        <li>
+                            <a href="<?= BASE_URL ?>Subconceptos"> Modificaciones </a>
+                        </li>
+                        <li>
+                            <a href="<?= BASE_URL ?>Subconceptos/vereditar?id=0"> Alta </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="menu <?= $tab == 2 ? 'active' : '' ?>">
                     <a href="<?= BASE_URL ?>Usuarios" data-bs-toggle="dropdown" aria-expanded="false"
@@ -172,10 +211,16 @@
                     </a>
                     <ul class="dropdown-menu submenu list-unstyled" id="dashboard" data-bs-parent="#accordionExample">
                         <li>
-                            <a href="<?= BASE_URL ?>Usuarios"> Altas/Modificaciones </a>
+                            <a href="<?= BASE_URL ?>Usuarios"> Modificaciones </a>
+                        </li>
+                        <li>
+                            <a href="<?= BASE_URL ?>Usuarios/vereditar?id=0"> Alta </a>
                         </li>
                         <li>
                             <a href="<?= BASE_URL ?>Departamentos"> Departamentos </a>
+                        </li>
+                        <li>
+                            <a href="<?= BASE_URL ?>Departamentos/vereditar?id=0"> Nuevo Departamento </a>
                         </li>
                     </ul>
                 </li>
