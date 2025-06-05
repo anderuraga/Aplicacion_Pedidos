@@ -117,8 +117,8 @@
                         </div>
                     </a>
                 </li>
-                <li class="menu <?= $tab == 8 ? 'active' : '' ?>">
-                    <a href="<?= BASE_URL ?>AreasGastos" aria-expanded="false" class="dropdown-toggle">
+                <li class="menu <?= $tab == 8 || $tab == 9 ? 'active' : '' ?>">
+                    <a href="<?= BASE_URL ?>AreasGastos" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -129,7 +129,16 @@
                             </svg>
                             <span>Areas de Gastos</span>
                         </div>
+
                     </a>
+                    <ul class="dropdown-menu submenu list-unstyled" id="dashboard" data-bs-parent="#accordionExample">
+                        <li>
+                            <a href="<?= BASE_URL ?>AreasGastos"> Modificaciones </a>
+                        </li>
+                        <li>
+                            <a href="<?= BASE_URL ?>Ingresos"> Ingresos </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="menu <?= $tab == 7 ? 'active' : '' ?>">
                     <a href="<?= BASE_URL ?>Subconceptos" aria-expanded="false" class="dropdown-toggle">
@@ -185,19 +194,7 @@
                         </div>
                     </a>
                 </li>
-                <li class="menu <?= $tab == 9 ? 'active' : '' ?>">
-                    <a href="<?= BASE_URL ?>Ingresos" aria-expanded="false" class="dropdown-toggle">
-                        <div class="">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                class="feather feather-corner-right-down">
-                                <polyline points="10 15 15 20 20 15"></polyline>
-                                <path d="M4 4h7a4 4 0 0 1 4 4v12"></path>
-                            </svg>
-                            <span>Ingresos</span>
-                        </div>
-                    </a>
-                </li>
+
             <?php endif; ?>
         </ul>
 
