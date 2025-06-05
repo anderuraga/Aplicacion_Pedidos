@@ -1,3 +1,8 @@
+<?php
+/**
+ * @var AreaGastos $area
+ */
+?>
 <?php require_once HOMEDIR . '/../app/helpers/url.php'; ?>
 <?php $titulo = "Area de Gastos - Historial" ?>
 <?php require HOMEDIR . '/../app/views/partials/header.php' ?>

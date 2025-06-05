@@ -1,3 +1,8 @@
+<?php 
+/**
+ * @var Subconcepto $subconcepto
+ */
+?>
 <?php require_once HOMEDIR . '/../app/helpers/url.php'; ?>
 <?php $titulo = "Subconcepto - " . ($subconcepto->id == 0 ? 'Crear' : 'Editar'); ?>
 <?php require HOMEDIR . '/../app/views/partials/header.php' ?>

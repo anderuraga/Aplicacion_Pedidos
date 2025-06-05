@@ -1,3 +1,8 @@
+<?php
+/**
+ *  @var TipoServicio $tiposervicio
+ */
+?>
 <?php require_once HOMEDIR . '/../app/helpers/url.php'; ?>
 <?php $titulo = "Tipo de Servicio - ".($tiposervicio->id == 0 ? 'Crear' : 'Editar'); ?>
 <?php require HOMEDIR . '/../app/views/partials/header.php' ?>

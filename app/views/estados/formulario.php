@@ -1,3 +1,8 @@
+<?php 
+/**
+ * @var Estado $estado
+ */
+?>
 <?php require_once HOMEDIR . '/../app/helpers/url.php'; ?>
 <?php $titulo = "Estados - Editar" ?>
 <?php require HOMEDIR . '/../app/views/partials/header.php' ?>

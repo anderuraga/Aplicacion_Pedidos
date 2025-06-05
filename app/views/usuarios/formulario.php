@@ -1,3 +1,8 @@
+<?php 
+/**
+ * @var Usuario $usuario_form
+ */
+?>
 <?php require_once HOMEDIR . '/../app/helpers/url.php'; ?>
 <?php $titulo = "Usuarios - " . ($usuario_form->id == 0 ? 'Crear' : 'Editar'); ?>
 <?php require HOMEDIR . '/../app/views/partials/header.php' ?>

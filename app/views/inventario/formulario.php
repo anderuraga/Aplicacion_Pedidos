@@ -13,7 +13,7 @@
 <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
-            <h1>Item: <?= $item->id == 0 ? 'Nueva' : 'Editar' ?></h1>
+            <h1>Item: <?= $item->id == 0 ? 'Nuevo' : 'Editar' ?></h1>
             <form id="editarDepartamento" class="mt-0" action="<?= BASE_URL ?>Inventario/vereditar?id=<?= $item->id ?>" method="post">
                 <input type="hidden" id="idedit" name="id" value="<?= $item->id ?>">
 

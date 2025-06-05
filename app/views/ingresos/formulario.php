@@ -1,3 +1,8 @@
+<?php 
+/**
+ * @var Transaccion $ingreso
+ */
+?>
 <?php require_once HOMEDIR . '/../app/helpers/url.php'; ?>
 <?php $titulo = "Ingresos - " . ($ingreso->id == 0 ? 'Crear' : 'Editar'); ?>
 <?php require HOMEDIR . '/../app/views/partials/header.php' ?>

@@ -1,3 +1,8 @@
+<?php 
+/**
+ * @var AreaGastos $areaGasto
+ */
+?>
 <?php require_once HOMEDIR . '/../app/helpers/url.php'; ?>
 <?php $titulo = "Area de Gastos - ".($areaGasto->id == 0 ? 'Crear' : 'Editar'); ?>
 <?php require HOMEDIR . '/../app/views/partials/header.php' ?>
