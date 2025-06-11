@@ -119,6 +119,16 @@ class UsuariosController extends Controller
                         'contrasena' => $contrasena,
                     ]
                 );
+            }else if($contrasena!=null){
+                $mailer = new Mailer();
+                $mailer->enviarCorreo(
+                    $correo,
+                    "Contraseña Actualizada",
+                    "NuevaContrasena",
+                    [
+                        'contrasena' => $contrasena,
+                    ]
+                );
             }
             return [
                 'tipo' => 'success',
