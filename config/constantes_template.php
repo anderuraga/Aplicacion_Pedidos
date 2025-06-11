@@ -1,5 +1,6 @@
 <?php 
 define('BASE_URL', '/elorrieta/');
+define('HOST', 'localhost');
 // Usuarios
 define('JEFE_DEP', 0);
 define('ADMIN', 1);

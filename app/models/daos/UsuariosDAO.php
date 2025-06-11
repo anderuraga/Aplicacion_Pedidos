@@ -147,7 +147,8 @@ class UsuariosDAO
         return false;
     }
 
-    public function obtenerCorreosAdmin(): array{
+    public function obtenerCorreosAdmin(): array
+    {
         $stmt = $this->db->query("SELECT `correo` FROM `usuarios` WHERE `tipo`=1;");
 
         $result = [];
@@ -156,6 +157,68 @@ class UsuariosDAO
         }
 
         return $result;
+    }
+
+    public function nuevoTokenRecuperacion($correo, $token): bool
+    {
+        $sql = "INSERT INTO `recuperaciones`(`id_usuario`, `token`)
+                VALUES(
+                    (
+                    SELECT
+                        u.id
+                    FROM
+                        usuarios u
+                    WHERE
+                        u.correo = :correo
+                ),
+                :token
+                )";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'correo' => $correo,
+            'token' => $token
+        ]);
+
+    }
+
+    public function comprobarToken($token)
+    {
+        $sql = "SELECT
+                    `id`,
+                    `id_usuario`
+                FROM
+                    `recuperaciones`
+                WHERE
+                    `token` = :token AND `utilizada` IS NULL AND `fecha` >(NOW() - INTERVAL 30 MINUTE)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'token' => $token
+        ]);
+        if ($stmt->rowCount() > 0) {
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } else {
+            return false;
+        }
+    }
+
+    public function cambiarContrasena($recuperacion, $usuario, $contrasena)
+    {
+        $sql = "UPDATE `usuarios` SET `contrasena`=:contrasena WHERE `id`=:usuario";
+        $stmt = $this->db->prepare($sql);
+        $ok = $stmt->execute([
+            'usuario' => $usuario,
+            'contrasena' => $contrasena
+        ]);
+
+        if ($ok) {
+            $sql = "UPDATE `recuperaciones` SET `utilizada`= NOW() WHERE `id`=:recuperacion";
+            $stmt = $this->db->prepare($sql);
+            $ok = $stmt->execute([
+                'recuperacion' => $recuperacion
+            ]);
+            return $ok;
+        }
+        return false;
     }
 
 }

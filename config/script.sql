@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-05-2025 a las 12:40:29
+-- Tiempo de generación: 11-06-2025 a las 12:53:16
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `elorrieta`
 --
-CREATE DATABASE IF NOT EXISTS `elorrieta` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `elorrieta`;
 
 -- --------------------------------------------------------
 
@@ -199,6 +197,20 @@ CREATE TABLE `proveedores` (
   `limite` decimal(10,2) NOT NULL DEFAULT 15000.00,
   `usuario_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `recuperaciones`
+--
+
+CREATE TABLE `recuperaciones` (
+  `id` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `token` char(64) NOT NULL,
+  `fecha` datetime NOT NULL DEFAULT current_timestamp(),
+  `utilizada` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -439,6 +451,13 @@ ALTER TABLE `proveedores`
   ADD KEY `proveedor_creador` (`usuario_id`);
 
 --
+-- Indices de la tabla `recuperaciones`
+--
+ALTER TABLE `recuperaciones`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `recuperacion_usuario` (`id_usuario`);
+
+--
 -- Indices de la tabla `subconceptos`
 --
 ALTER TABLE `subconceptos`
@@ -540,6 +559,12 @@ ALTER TABLE `proveedores`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `recuperaciones`
+--
+ALTER TABLE `recuperaciones`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `subconceptos`
 --
 ALTER TABLE `subconceptos`
@@ -614,6 +639,12 @@ ALTER TABLE `presupuestos`
 ALTER TABLE `proveedores`
   ADD CONSTRAINT `proveedor_creador` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`),
   ADD CONSTRAINT `proveedor_servicio` FOREIGN KEY (`id_servicio`) REFERENCES `tipos_servicio` (`id`);
+
+--
+-- Filtros para la tabla `recuperaciones`
+--
+ALTER TABLE `recuperaciones`
+  ADD CONSTRAINT `recuperacion_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `transacciones`

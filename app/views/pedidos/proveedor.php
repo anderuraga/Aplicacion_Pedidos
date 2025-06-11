@@ -33,6 +33,15 @@
                             </span>
                         </button>
                     </div>
+                    <div class="line"></div>
+                    <div class="step" data-target="#defaultStep-three">
+                        <button type="button" class="step-trigger" role="tab" aria-selected="false" disabled="disabled">
+                            <span class="bs-stepper-circle">4</span>
+                            <span class="bs-stepper-label">
+                                <span class="bs-stepper-title">Presupuesto</span>
+                            </span>
+                        </button>
+                    </div>
                 </div>
             </div>
 

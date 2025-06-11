@@ -1,5 +1,5 @@
 <?php require_once HOMEDIR . '/../app/helpers/url.php'; ?>
-<?php $titulo = "Elorrieta" ?>
+<?php $titulo = "Elorrieta - Recuperar Contraseña" ?>
 <?php require HOMEDIR . '/../app/views/partials/header.php' ?>
 
 <body class="form">
@@ -14,27 +14,21 @@
                 <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-8 col-12 d-flex flex-column align-self-center mx-auto">
                     <div class="card mt-3 mb-3">
                         <div class="card-body">
-                            <form id="login" method="post">
+                            <form id="recuperar" method="post">
                                 <div class="row">
                                     <div id="logodiv">
-                                        <img class="d-block mx-auto" src="<?= BASE_URL ?>static/assets/img/logo/EEM-logo-color.svg">
+                                        <img class="d-block mx-auto"
+                                            src="<?= BASE_URL ?>static/assets/img/logo/EEM-logo-color.svg">
                                     </div>
                                     <div class="col-md-12 mb-1 mt-2">
-                                        <h2>Iniciar Sesión</h2>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="mb-3">
-                                            <label class="form-label">Correo electrónico</label>
-                                            <input type="email" id="correo" name="correo" class="form-control"
-                                                value="javier.gomez@emaginarte.com" placeholder="Correo electrónico">
-                                        </div>
+                                        <h2>Nueva contraseña</h2>
                                     </div>
                                     <div class="col-12">
                                         <div class="mb-4">
                                             <label class="form-label">Contraseña</label>
                                             <div class="input-group mb-3">
                                                 <input type="password" class="form-control" id="contrasena"
-                                                    name="contrasena" placeholder="Contraseña" value="emaginarte!"
+                                                    name="contrasena" placeholder="Contraseña"
                                                     aria-describedby="button-addon2">
                                                 <button class="btn btn-primary" type="button" id="button-addon2"
                                                     onclick="switch_passwordfield(this)">
@@ -47,12 +41,31 @@
                                                     </svg>
                                                 </button>
                                             </div>
-                                            <p><a class="text" id="forgotlink" href="<?= BASE_URL ?>Login/recuperar">¿Contraseña
-                                                    olvidada?</a></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="mb-4">
+                                            <label class="form-label">Confirmar</label>
+                                            <div class="input-group mb-3">
+                                                <input type="password" class="form-control" id="contrasena"
+                                                    name="contrasenaconfirm" placeholder="Contraseña"
+                                                    aria-describedby="button-addon2">
+                                                <button class="btn btn-primary" type="button" id="button-addon2"
+                                                    onclick="switch_passwordfield(this)">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                        class="feather feather-eye">
+                                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                        <circle cx="12" cy="12" r="3"></circle>
+                                                    </svg>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <?php
+
                                         if (isset($_SESSION['alert'])) {
 
                                             ?>
@@ -67,7 +80,7 @@
                                             unset($_SESSION['alert']);
                                         } ?>
                                         <div class="mb-4">
-                                            <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+                                            <button type="submit" class="btn btn-primary w-100">Recuperar</button>
                                         </div>
                                     </div>
                                 </div>
