@@ -37,13 +37,18 @@ class IncidenciasController extends Controller
         $incidenciasDAO = $this->dao("Incidencias");
 
         /**
+         * @var UsuariosDAO
+         */
+        $usuariosDAO = $this->dao("Usuarios");
+
+        /**
          * @var PedidosDAO
          */
         $pedidosDAO = $this->dao("Pedidos");
         $pedido = $pedidosDAO->obtener($_GET['pedido']);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $_SESSION['alert'] = $this->guardar($incidenciasDAO,$pedidosDAO);
+            $_SESSION['alert'] = $this->guardar($incidenciasDAO,$pedidosDAO, $usuariosDAO);
             if ($incidenciasDAO->last_insert != null) {
                 $pedidosDAO->rellenarEstado($pedido->estado->id,$pedido->id,"Nueva incidencia registrada");
                 session_write_close();
@@ -76,7 +81,7 @@ class IncidenciasController extends Controller
 
     }
 
-    public function guardar(IncidenciasDAO $incidenciasDAO,PedidosDAO $pedidosDAO)
+    public function guardar(IncidenciasDAO $incidenciasDAO,PedidosDAO $pedidosDAO, UsuariosDAO $usuariosDAO)
     {
 
         $id = $_POST['id'];
@@ -104,6 +109,7 @@ class IncidenciasController extends Controller
             if($ok){
                 $pedido = $pedidosDAO->obtener($pedido);
                 $correo = $pedido->usuario->correo;
+                $correosAdmin = $usuariosDAO->obtenerCorreosAdmin();
                 $mailer = new Mailer();
                 $mailer->enviarCorreo(
                     $correo,
@@ -112,7 +118,8 @@ class IncidenciasController extends Controller
                     [
                         'referencia' => $pedido->referencia,
                         'descripcion' => $descripcion
-                    ]
+                    ],
+                    $correosAdmin
                 );
             }
         } else {
