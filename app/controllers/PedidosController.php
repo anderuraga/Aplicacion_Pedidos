@@ -222,11 +222,11 @@ class PedidosController extends Controller
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
                     case PEN_VALI:
-                        $this->pendienteProveedor($pedidosDAO,$pedido, $usuariosDAO);
+                        $this->pendienteProveedor($pedidosDAO, $pedido, $usuariosDAO);
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
                     case PEN_PROV:
-                        $_SESSION['alert'] = $this->guardarAlbaran($pedidosDAO);
+                        $_SESSION['alert'] = $this->guardarAlbaran($pedidosDAO, $usuariosDAO);
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
                     case PEN_FACT:
@@ -588,7 +588,7 @@ class PedidosController extends Controller
         ];
     }
 
-    public function guardarAlbaran(PedidosDAO $pedidosDAO)
+    public function guardarAlbaran(PedidosDAO $pedidosDAO, UsuariosDAO $usuariosDAO)
     {
         $pedidoId = $_POST['id'] ?? null;
 
@@ -629,6 +629,23 @@ class PedidosController extends Controller
                 'mensaje' => 'Error al subir archivos'
             ];
         }
+
+        $pedido = $pedidosDAO->obtener($pedidoId);
+        $correos = $usuariosDAO->obtenerCorreosAdmin();
+        $correoJD = $pedido->usuario->correo;
+        $cc= [
+            $correoJD
+        ];
+        $mailer = new Mailer();
+        $mailer->enviarCorreo(
+            $correos,
+            "Pedido pendiente de factura",
+            "PendienteFactura",
+            [
+                'referencia' => $pedido->referencia
+            ],
+            $cc
+        );
 
         $pedidosDAO->cambiarEstado($pedidoId, 4);
         $pedidosDAO->rellenarEstado(4, $pedidoId, "Se ha subido el albarán");
@@ -682,6 +699,10 @@ class PedidosController extends Controller
 
         $pedido = $pedidosDAO->obtener($pedidoId);
         $correos = $usuariosDAO->obtenerCorreosAdmin();
+        $correoJD = $pedido->usuario->correo;
+        $cc= [
+            $correoJD
+        ];
         $mailer = new Mailer();
         $mailer->enviarCorreo(
             $correos,
@@ -689,7 +710,8 @@ class PedidosController extends Controller
             "PendienteArchivado",
             [
                 'referencia' => $pedido->referencia
-            ]
+            ],
+            $cc
         );
         $pedidosDAO->cambiarEstado($pedidoId, 5);
         $pedidosDAO->rellenarEstado(5, $pedidoId, "Se ha subido la factura");
@@ -737,19 +759,19 @@ class PedidosController extends Controller
     {
         $pedidosDAO->cambiarEstado($pedido->id, 3);
         $pedidosDAO->rellenarEstado(3, $pedido->id, "Se ha enviado el pedido al proveedor");
-        
+
         $correoProv = $pedido->proveedor->correo;
         $correosAdmin = $usuariosDAO->obtenerCorreosAdmin();
         $correoJD = $pedido->usuario->correo;
         $replyto = [
-           $correoJD
+            $correoJD
         ];
 
         $presupuestoSelec = $pedidosDAO->obtener_presupuesto_seleccionado($pedido->id);
         $archivoUrl = [
-            __DIR__."/../../public/uploads/presupuestos/".$pedido->id."/".$presupuestoSelec->documento
+            __DIR__ . "/../../public/uploads/presupuestos/" . $pedido->id . "/" . $presupuestoSelec->documento
         ];
-        
+
 
         $mailer = new Mailer();
         $mailer->enviarCorreo(
