@@ -87,3 +87,7 @@ body.dark .layout-px-spacing,
 {
     color: black;
 }
+
+table td a{
+    color: #4361ee;
+}

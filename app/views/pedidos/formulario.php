@@ -317,7 +317,7 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                                 <form class="mb-2" id="seguir" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>">
                                     <input type="hidden" name="action" value="siguiente">
                                     <input type="hidden" name="id" value="<?= $pedido->id ?>">
-                                    <button class="btn btn-success float-end">Archivo</button><br>
+                                    <button class="btn btn-success float-end">Archivar</button><br>
                                 </form>
                             <?php } ?>
                             <?php break;

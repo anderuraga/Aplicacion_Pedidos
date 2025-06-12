@@ -33,7 +33,7 @@
                             <tr>
                                 <td><?= $t->id ?></td>
                                 <td data-sort="<?= $t->fecha ?>"><?= $t->getFechaVisible() ?></td>
-                                <td><?= htmlspecialchars($t->descripcion) ?></td>
+                                <td><?= $t->descripcion ?></td>
                                 <td><?= $t->getOperacion() ?></td>
                                 <td><?= $t->cantidad_formato() ?>€</td>
                                 <td><?= $t->total_formato() ?>€</td>

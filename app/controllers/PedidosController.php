@@ -734,7 +734,7 @@ class PedidosController extends Controller
         if ($pedidosDAO->cambiarEstado($pedidoId, 6)) {
             $pedido = $pedidosDAO->obtener($pedidoId);
             $fecha = date("Y-m-d H:i:s");
-            $descr = "Pedido " . $pedido->referencia . " archivado";
+            $descr = "Pedido <a target='_blank' href='".BASE_URL."Pedidos/vereditar?id=".$pedido->id."'>" . $pedido->referencia . "</a> archivado";
             $ok = $transaccionesDAO->crear($fecha, $descr, $pedido->areaGastos->id, getCantidadMysql("-" . $pedido->importe));
             if ($ok) {
                 return [

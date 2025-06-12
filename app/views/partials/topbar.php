@@ -167,7 +167,7 @@
                             <a href="<?= BASE_URL ?>Ingresos"> Ingresos </a>
                         </li>
                         <li>
-                            <a href="<?= BASE_URL ?>Ingresos/vereditar?id=0"> Nuevo Ingresos </a>
+                            <a href="<?= BASE_URL ?>Ingresos/vereditar?id=0"> Nuevo Ingreso </a>
                         </li>
                     </ul>
                 </li>
