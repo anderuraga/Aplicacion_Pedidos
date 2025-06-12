@@ -19,7 +19,6 @@ class Proveedor
     public TipoServicio $tipo_servicio;
     public float $gasto_anual;
     public string | null $terceros;
-    public string | null $prov_prof;
     public string $fecha_creado;
     public string $fecha_editado;
     public string | null $fecha_baja;
@@ -43,7 +42,6 @@ class Proveedor
         TipoServicio $tipoServicio,
         float $gasto_anual,
         string | null $terceros,
-        string | null $prov_prof,
         string | null $fecha_baja,
         float $limite,
         string $fecha_creado,
@@ -66,7 +64,6 @@ class Proveedor
         $this->tipo_servicio = $tipoServicio;
         $this->gasto_anual = $gasto_anual;
         $this->terceros = $terceros;
-        $this->prov_prof = $prov_prof;
         $this->fecha_baja = $fecha_baja;
         $this->limite = $limite;
         $this->fecha_creado = $fecha_creado;
@@ -93,7 +90,6 @@ class Proveedor
             TipoServicio::fromArray($row),
             $row['gasto_anual'],
             $row['proveedor_terceros'],
-            $row['proveedor_prov_prof'],
             $row['proveedor_fecha_baja'],
             $row['proveedor_limite'],
             $row['proveedor_fecha_creado'],

@@ -31,7 +31,6 @@ class ProveedoresDAO
     vpg.contacto AS proveedor_contacto,
     vpg.id_servicio AS tiposervicio_id,
     vpg.proveedor_terceros AS proveedor_terceros,
-    vpg.proveedor_prov_prof AS proveedor_prov_prof,
     vpg.proveedor_fecha_creado AS proveedor_fecha_creado,
     vpg.proveedor_fecha_editado AS proveedor_fecha_editado,
     vpg.proveedor_fecha_baja AS proveedor_fecha_baja,
@@ -209,7 +208,6 @@ VALUES(
             vpg.contacto AS proveedor_contacto,
             vpg.id_servicio AS tiposervicio_id,
             vpg.proveedor_terceros AS proveedor_terceros,
-            vpg.proveedor_prov_prof AS proveedor_prov_prof,
             vpg.proveedor_fecha_creado AS proveedor_fecha_creado,
             vpg.proveedor_fecha_editado AS proveedor_fecha_editado,
             vpg.proveedor_fecha_baja AS proveedor_fecha_baja,
@@ -270,7 +268,6 @@ VALUES(
             vpg.contacto AS proveedor_contacto,
             vpg.id_servicio AS tiposervicio_id,
             vpg.proveedor_terceros AS proveedor_terceros,
-            vpg.proveedor_prov_prof AS proveedor_prov_prof,
             vpg.proveedor_fecha_creado AS proveedor_fecha_creado,
             vpg.proveedor_fecha_editado AS proveedor_fecha_editado,
             vpg.proveedor_fecha_baja AS proveedor_fecha_baja,
@@ -344,13 +341,4 @@ VALUES(
         ]);
     }
 
-    public function insertar_proveedor_profesor($id, $documento)
-    {
-        $stmt = $this->db->prepare("UPDATE `proveedores` SET `provedoor_profesor`=:prov_prof, fecha_editado  = NOW() WHERE `id`=:id");
-
-        return $stmt->execute([
-            'prov_prof' => $documento,
-            'id' => $id
-        ]);
-    }
 }

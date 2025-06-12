@@ -13,24 +13,27 @@
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
             <h1>Proveedor: <?= $proveedor->id == 0 ? 'Nuevo' : 'Editar' ?></h1>
-            <h5>Estado: <?= $proveedor->getEstado() ?></h5>
+            
 
             <form id="nuevoProveedor" class="mt-0"
                 action="<?= BASE_URL ?>Proveedores/vereditar?id=<?= $proveedor->id ?>" method="post"
                 enctype="multipart/form-data">
                 <input type="hidden" name="id" value="<?= $proveedor->id ?>">
-                <div class="row">
-                    <div class="col-4">
-                        <h5>Usuario: <?= $proveedor->usuario->nombre ?></h5>
-                    </div>
-                    <div class="col-4">
-                        <h5>Creado: <?= $proveedor->getFechaCreadoVisible() ?></h5>
-                    </div>
+                <?php if ($proveedor->id != 0): ?>
+                    <h5>Estado: <?= $proveedor->getEstado() ?></h5>
+                    <div class="row">
+                        <div class="col-4">
+                            <h5>Usuario: <?= $proveedor->usuario->nombre ?></h5>
+                        </div>
+                        <div class="col-4">
+                            <h5>Creado: <?= $proveedor->getFechaCreadoVisible() ?></h5>
+                        </div>
 
-                    <div class="col-4">
-                        <h5>Editado: <?= $proveedor->getFechaEditadoVisible() ?></h5>
+                        <div class="col-4">
+                            <h5>Editado: <?= $proveedor->getFechaEditadoVisible() ?></h5>
+                        </div>
                     </div>
-                </div>
+                <?php endif; ?>
                 <div class="row">
                     <div class="col-6">
                         <h5>CIF:</h5>
@@ -124,7 +127,7 @@
                     </label>
                 </div>
                 <div class="separador mt-3 mb-3"></div>
-                <h5><a>Descargar documentos</a></h5>
+                <h5><a href="<?= BASE_URL ?>public/ALTA_TERCEROS.pdf" download="">Descargar documento</a></h5>
                 <div class="row">
                     <div class="col-6">
                         <h5>Alta terceros:</h5>
@@ -137,18 +140,6 @@
                             <p>No hay documento subido. Subir:</p>
                         <?php } ?>
                         <input type="file" id="alta_terceros" name="alta_terceros" accept="application/pdf">
-                    </div>
-                    <div class="col-6">
-                        <h5>Proveedor y profesor</h5>
-                        <?php if ($proveedor->prov_prof) { ?>
-                            <a target="_blank"
-                                href="<?= BASE_URL ?>public/uploads/proveedor/<?= $proveedor->id ?>/proveedor_profesor/<?= $proveedor->prov_prof ?>">Ver
-                                documento</a>
-                            <p>Sustituir:</p>
-                        <?php } else { ?>
-                            <p>No hay documento subido. Subir:</p>
-                        <?php } ?>
-                        <input type="file" id="proveedor_profesor" name="proveedor_profesor" accept="application/pdf">
                     </div>
                 </div>
 

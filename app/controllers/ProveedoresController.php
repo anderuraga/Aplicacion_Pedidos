@@ -70,7 +70,6 @@ class ProveedoresController extends Controller
                 tipoServicio: new TipoServicio(0, ''),
                 gasto_anual: 0,
                 terceros: null,
-                prov_prof: null,
                 fecha_baja: null,
                 limite: GASTO_PROVEEDOR,
                 fecha_creado: '',
@@ -199,37 +198,6 @@ class ProveedoresController extends Controller
 
             if (move_uploaded_file($_FILES["alta_terceros"]['tmp_name'], $rutaFinal)) {
                 $ok = $proveedoresDAO->insertar_alta_terceros($proveedorID, $nombreLimpio);
-                if (!$ok) {
-                    return [
-                        'tipo' => 'danger',
-                        'mensaje' => 'Error al subir archivo'
-                    ];
-                }
-            } else {
-                return [
-                    'tipo' => 'danger',
-                    'mensaje' => 'Error al subir archivos'
-                ];
-            }
-        }
-
-        if (!empty($_FILES["proveedor_profesor"]['tmp_name'])) {
-            $proveedorID = $id == 0 ? $proveedoresDAO->last_insert : $id;
-            $rutaBase = __DIR__ . "/../../public/uploads/proveedor/$proveedorID/proveedor_profesor";
-            if (!is_dir($rutaBase)) {
-                mkdir($rutaBase, 0777, true);
-            }
-
-            if ($proveedor->prov_prof != null) {
-                unlink($rutaBase . "/" . $proveedor->prov_prof);
-            }
-
-            $original = $_FILES["proveedor_profesor"]['name'];
-            $nombreLimpio = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $original);
-            $rutaFinal = "$rutaBase/$nombreLimpio";
-
-            if (move_uploaded_file($_FILES["proveedor_profesor"]['tmp_name'], $rutaFinal)) {
-                $ok = $proveedoresDAO->insertar_proveedor_profesor($proveedorID, $nombreLimpio);
                 if (!$ok) {
                     return [
                         'tipo' => 'danger',

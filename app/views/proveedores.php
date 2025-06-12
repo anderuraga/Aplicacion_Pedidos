@@ -361,10 +361,6 @@
                                         <h5>Alta terceros</h5>
                                         <input type="file" id="alta_terceros" name="alta_terceros" accept="application/pdf">
                                     </div>
-                                    <div class="col-6">
-                                        <h5>Proveedor y profesor</h5>
-                                        <input type="file" id="proveedor_profesor" name="proveedor_profesor" accept="application/pdf">
-                                    </div>
                                 </div>
                             </form>
 
