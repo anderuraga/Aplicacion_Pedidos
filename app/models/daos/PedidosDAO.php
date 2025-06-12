@@ -454,6 +454,28 @@ ORDER BY
         return $result;
     }
 
+    public function obtener_presupuesto_seleccionado($id): Presupuesto
+    {
+        $stmt = $this->db->prepare("SELECT
+    `id` as presupuesto_id,
+    `documento` as presupuesto_documento,
+    `fecha` as presupuesto_fecha,
+    `seleccionado` as presupuesto_seleccionado
+FROM
+    `presupuestos`
+WHERE
+    `id_pedido` = :id AND
+    `seleccionado` = 1
+ORDER BY
+    `seleccionado` DESC,
+    `id` DESC
+    ");
+
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return Presupuesto::fromArray($row);
+    }
+
     public function obtener_historial($id)
     {
         $stmt = $this->db->prepare("SELECT

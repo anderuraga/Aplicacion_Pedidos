@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Pedido Pendiente de Proveedor</title>
+  <title>Envío de presupuesto</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
@@ -29,14 +29,15 @@
           <!-- Título -->
           <tr>
             <td style="padding:30px 20px 10px; font-family:Helvetica, Arial, sans-serif; font-size:22px; color:#333333; text-align:center;">
-                Pedido Pendiente de Proveedor
+                Envio de presupuesto
             </td>
           </tr>
 
           <!-- Cuerpo del mensaje -->
           <tr>
             <td style="padding:0 20px 30px; font-family:Helvetica, Arial, sans-serif; font-size:16px; line-height:1.5; color:#555555;">
-              <p>El pedido con referencia {{referencia}} se ha validado y ahora está pendiente de subir un albarán.</p>
+              <p>En este correo se le adjunta el presupuesto seleccionado para el pedido con referencia {{referencia}}.</p>
+              <p>Solicitamos el envío del albarán.</p>
               <p>Este correo se ha generado automáticamente, no responda a este correo.</p>
             </td>
           </tr>

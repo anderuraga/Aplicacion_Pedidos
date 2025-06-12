@@ -39,14 +39,33 @@ class Mailer
         return $html;
     }
 
-    public function enviarCorreo($to, string $subject, string $template, array $data = []): void
-    {
+    public function enviarCorreo(
+        $to,
+        string $subject,
+        string $template,
+        array $data = [],
+        array $cc = null,
+        array $attachments = null,
+        $replyTo = null
+    ): void {
         try {
             $body = $this->renderPlantilla($template, $data);
 
             $tos = (array) $to;
             foreach ($tos as $recipient) {
                 $this->mail->addAddress($recipient);
+            }
+
+            if ($cc !== null) {
+                foreach ($cc as $ccAddress) {
+                    $this->mail->addCC($ccAddress);
+                }
+            }
+
+            if ($replyTo !== null) {
+                foreach ($replyTo as $replyAddress) {
+                    $this->mail->addReplyTo($replyAddress);
+                }
             }
 
             $this->mail->Subject = $subject;
@@ -58,6 +77,14 @@ class Mailer
                 'logo_cid',         // Content ID (debe ser único)
                 'logo.png'          // nombre de archivo
             );
+
+            if ($attachments !== null) {
+                foreach ($attachments as $key => $value) {
+                    $filePath = $value;
+                    $this->mail->addAttachment($filePath);
+
+                }
+            }
 
             $this->mail->send();
         } catch (Exception $e) {

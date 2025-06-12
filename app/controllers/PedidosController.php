@@ -222,18 +222,8 @@ class PedidosController extends Controller
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
                     case PEN_VALI:
-                        $pedidosDAO->cambiarEstado($pedido->id, 3);
-                        $pedidosDAO->rellenarEstado(3, $pedido->id, "Se ha enviado el pedido al proveedor");
+                        $this->pendienteProveedor($pedidosDAO,$pedido, $usuariosDAO);
                         $pedido = $pedidosDAO->obtener($_GET['id']);
-                        $mailer = new Mailer();
-                        $mailer->enviarCorreo(
-                            $pedido->usuario->correo,
-                            "Pedido Pendiente de Proveedo",
-                            "PendienteProveedor",
-                            [
-                                'referencia' => $pedido->referencia
-                            ]
-                        );
                         break;
                     case PEN_PROV:
                         $_SESSION['alert'] = $this->guardarAlbaran($pedidosDAO);
@@ -741,6 +731,38 @@ class PedidosController extends Controller
                 'mensaje' => 'Error al cambiar el estado del pedido'
             ];
         }
+    }
+
+    private function pendienteProveedor(PedidosDAO $pedidosDAO, Pedido $pedido, UsuariosDAO $usuariosDAO)
+    {
+        $pedidosDAO->cambiarEstado($pedido->id, 3);
+        $pedidosDAO->rellenarEstado(3, $pedido->id, "Se ha enviado el pedido al proveedor");
+        
+        $correoProv = $pedido->proveedor->correo;
+        $correosAdmin = $usuariosDAO->obtenerCorreosAdmin();
+        $correoJD = $pedido->usuario->correo;
+        $replyto = [
+           $correoJD
+        ];
+
+        $presupuestoSelec = $pedidosDAO->obtener_presupuesto_seleccionado($pedido->id);
+        $archivoUrl = [
+            __DIR__."/../../public/uploads/presupuestos/".$pedido->id."/".$presupuestoSelec->documento
+        ];
+        
+
+        $mailer = new Mailer();
+        $mailer->enviarCorreo(
+            $correoProv,
+            "Envío de presupuesto",
+            "PendienteProveedor",
+            [
+                'referencia' => $pedido->referencia
+            ],
+            $correosAdmin,
+            $archivoUrl,
+            $replyto
+        );
     }
 
     #[\Override]
