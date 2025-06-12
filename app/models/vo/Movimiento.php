@@ -22,7 +22,7 @@ class Movimiento
     public function getFechaVisible()
     {
         $date = new DateTime($this->fecha);
-        return $date->format('d/m/Y H:i');
+        return $date->format('d/m/Y');
     }
     
     public static function fromArray(array $row): Movimiento

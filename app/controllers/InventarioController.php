@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../helpers/auth.php';
+require_once __DIR__ . '/../helpers/Mailer.php';
 
 class InventarioController extends Controller
 {
@@ -13,7 +14,7 @@ class InventarioController extends Controller
 
         if ($usuario->tipo == ADMIN) {
             $items = $itemsDAO->listar();
-        }else{
+        } else {
             $items = $itemsDAO->listar_departamento($usuario->departamento->id);
         }
 
@@ -49,10 +50,21 @@ class InventarioController extends Controller
     public function vereditar()
     {
         $id = $_GET['id'];
-
+        /**
+         * @var ItemsDAO
+         */
         $itemsDAO = $this->dao("Items");
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $_SESSION['alert'] = $this->guardar($itemsDAO);
+            /**
+             * @var UsuariosDAO
+             */
+            $usuariosDAO = $this->dao("Usuarios");
+            /**
+             * @var DepartamentosDAO
+             */
+            $departamentosDAO = $this->dao("Departamentos");
+            $_SESSION['alert'] = $this->guardar($itemsDAO, $usuariosDAO, $departamentosDAO);
             if ($itemsDAO->last_insert != null) {
                 session_write_close();
                 header("Location: vereditar?id=" . $itemsDAO->last_insert);
@@ -83,7 +95,7 @@ class InventarioController extends Controller
 
     }
 
-    public function guardar(ItemsDAO $itemsDAO)
+    public function guardar(ItemsDAO $itemsDAO, UsuariosDAO $usuariosDAO, DepartamentosDAO $departamentosDAO)
     {
         global $usuario;
 
@@ -120,6 +132,18 @@ class InventarioController extends Controller
 
         if ($id == 0) {
             $ok = $itemsDAO->crear($nombre, $departamento);
+            $departamentoVO = $departamentosDAO->obtener($departamento);
+            $correos = $usuariosDAO->obtenerCorreosAdmin();
+            $mailer = new Mailer();
+            $mailer->enviarCorreo(
+                $correos,
+                "Nuevo Item",
+                "NuevoItem",
+                [
+                    'item' => $nombre,
+                    'departamento' => $departamentoVO->nombre
+                ]
+            );
         } else {
             $ok = $itemsDAO->editar($id, $nombre, $departamento);
         }
@@ -143,7 +167,15 @@ class InventarioController extends Controller
 
         $movimientosDAO = $this->dao("Movimientos");
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $_SESSION['alert'] = $this->guardarMovimiento($movimientosDAO);
+            /**
+             * @var ItemsDAO
+             */
+            $itemsDAO = $this->dao("Items");
+            /**
+             * @var UsuariosDAO
+             */
+            $usuariosDAO = $this->dao("Usuarios");
+            $_SESSION['alert'] = $this->guardarMovimiento($movimientosDAO, $itemsDAO,$usuariosDAO);
             if ($movimientosDAO->last_insert != null) {
                 session_write_close();
                 header("Location: movimiento?id=" . $movimientosDAO->last_insert . "&item=" . $_POST['item_id']);
@@ -160,10 +192,10 @@ class InventarioController extends Controller
 
     }
 
-    public function guardarMovimiento($movimientosDAO)
+    public function guardarMovimiento(MovimientosDAO $movimientosDAO, ItemsDAO $itemsDAO, UsuariosDAO $usuariosDAO)
     {
         $id = (int) ($_POST['id']);
-        $tipo = $_POST['tipo'];
+        $tipo = $_POST['tipo'] ?? '';
         $cantidad = (int) ($_POST['cantidad']);
         $fecha = trim($_POST['fecha']);
         $descripcion = trim($_POST['descripcion']);
@@ -189,6 +221,23 @@ class InventarioController extends Controller
 
         if ($id === 0) {
             $ok = $movimientosDAO->crear($data);
+            $correos = $usuariosDAO->obtenerCorreosAdmin();
+
+            $item = $itemsDAO->obtener($item_id);
+
+            $mailer = new Mailer();
+            $mailer->enviarCorreo(
+                $correos,
+                "Nuevo Movimiento en Inventario",
+                "NuevoMovimiento",
+                [
+                    'item' => $item->nombre,
+                    'departamento' => $item->departamento->nombre,
+                    'cambio' => $cantidad,
+                    'total' => $item->cantidad,
+                    'descripcion' => $descripcion
+                ]
+            );
         } else {
             $ok = $movimientosDAO->editar($id, $data);
         }

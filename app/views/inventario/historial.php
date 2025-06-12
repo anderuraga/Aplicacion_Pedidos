@@ -54,5 +54,6 @@
 </div>
 
 <?php
+$target = 0;
 $order = 'desc';
 require HOMEDIR . '/../app/views/partials/footer.php' ?>
