@@ -98,8 +98,8 @@
             <?php endif; ?>
             <?php if ($usuario->tipo == ADMIN): ?>
                 <li class="menu <?= $tab == 4 ? 'active' : '' ?>">
-                    <a href="<?= BASE_URL ?>Proveedores" data-bs-toggle="dropdown" data-bs-toggle="dropdown" aria-expanded="false"
-                        class="dropdown-toggle">
+                    <a href="<?= BASE_URL ?>Proveedores" data-bs-toggle="dropdown" data-bs-toggle="dropdown"
+                        aria-expanded="false" class="dropdown-toggle">
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -172,7 +172,8 @@
                     </ul>
                 </li>
                 <li class="menu <?= $tab == 7 ? 'active' : '' ?>">
-                    <a href="<?= BASE_URL ?>Subconceptos" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
+                    <a href="<?= BASE_URL ?>Subconceptos" data-bs-toggle="dropdown" aria-expanded="false"
+                        class="dropdown-toggle">
                         <div class="">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -241,6 +242,19 @@
                 </li>
 
             <?php endif; ?>
+            <li class="menu <?= $tab == 0 ? 'active' : '' ?>">
+                <a href="<?= BASE_URL ?>Menu" aria-expanded="false" class="dropdown-toggle">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-bell">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        <span>Avisos</span>
+                    </div>
+                </a>
+            </li>
         </ul>
 
     </nav>
