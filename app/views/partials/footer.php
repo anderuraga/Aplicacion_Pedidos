@@ -37,6 +37,7 @@
 <script src="<?= BASE_URL ?>static/layouts/horizontal-light-menu/loader.js"></script>
 <script src="<?= BASE_URL ?>static/plugins/src/flatpickr/flatpickr.js"></script>
 <script src="<?= BASE_URL ?>static/plugins/src/input-mask/jquery.inputmask.bundle.min.js"></script>
+<script src="<?= BASE_URL ?>static/plugins/src/formsave/jquery.formsaver.js"></script>
 
 <script>
     var tabla = $('.tabla').DataTable({
@@ -57,7 +58,7 @@
         },
         order: [[<?= $target ?? '1' ?>, '<?= $order ?? "asc" ?>']],
         columnDefs: [
-             <?= $extraColumndef ?? '' ?>
+            <?= $extraColumndef ?? '' ?>
         ],
         "stripeClasses": [],
         "lengthMenu": [
@@ -70,6 +71,11 @@
             });
         }
     });
+
+    window.addEventListener("beforeunload", function (event) {
+        $(".formulario").saveForm();
+    });
+
 </script>
 <!-- END PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
 

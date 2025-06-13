@@ -7,12 +7,12 @@
 <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area">
-
+            <a href="<?= BASE_URL ?>Pedidos" class="btn btn-danger mx-3 mt-3 mb-3">Volver</a>
             <h1 class="mb-0 ms-2">Nuevo Pedido:</h1>
             <div class="bs-stepper stepper-form-one linear">
                 <div class="bs-stepper-header" role="tablist">
                     <div class="step active" data-target="#defaultStep-one">
-                        <button type="button" class="step-trigger" role="tab" aria-selected="true" >
+                        <button type="button" class="step-trigger" role="tab" aria-selected="true">
                             <span class="bs-stepper-circle">1</span>
                             <span class="bs-stepper-label">Seleccionar Proveedor</span>
                         </button>
@@ -30,15 +30,6 @@
                             <span class="bs-stepper-circle">3</span>
                             <span class="bs-stepper-label">
                                 <span class="bs-stepper-title">Rellenar detalles</span>
-                            </span>
-                        </button>
-                    </div>
-                    <div class="line"></div>
-                    <div class="step" data-target="#defaultStep-three">
-                        <button type="button" class="step-trigger" role="tab" aria-selected="false" disabled="disabled">
-                            <span class="bs-stepper-circle">4</span>
-                            <span class="bs-stepper-label">
-                                <span class="bs-stepper-title">Presupuesto</span>
                             </span>
                         </button>
                     </div>
@@ -102,11 +93,8 @@
                     </tbody>
                 </table>
                 <div class="row mx-4 my-1">
-                    <div class="col-6">
-                        <a href="<?= BASE_URL ?>Pedidos" class="btn btn-danger">Volver</a>
-                    </div>
-                    <div class="col-6">
-                        <button type="submit" id="botoncontinuar" class="btn btn-success float-end">Continuar</button>
+                    <div class="col-12">
+                        <button type="submit" id="botoncontinuar" class="btn btn-success float-end">Siguiente</button>
                     </div>
 
                 </div>

@@ -13,36 +13,56 @@
 <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
+            <a href="<?= BASE_URL ?>Inventario" class="btn btn-secondary mt-2 mb-3">Volver</a>
             <h1>Item: <?= $item->id == 0 ? 'Nuevo' : 'Editar' ?></h1>
-            <form id="editarDepartamento" class="mt-0" action="<?= BASE_URL ?>Inventario/vereditar?id=<?= $item->id ?>" method="post">
+            <form id="editarDepartamento" class="mt-0 formulario"
+                action="<?= BASE_URL ?>Inventario/vereditar?id=<?= $item->id ?>" method="post">
                 <input type="hidden" id="idedit" name="id" value="<?= $item->id ?>">
 
                 <div class="row">
                     <div class="col-sm-4">
                         <?php if ($usuario->tipo == ADMIN) { ?>
-                            <h5>Departamento:</h5>
-                            <select class="form-control mb-2" id="departamento" name="departamento">
-                                <option value="" disabled <?= $item->id==0?'selected':'' ?> hidden>Selecciona una opción</option>
+                            <h5>Departamento: *</h5>
+                            <select class="form-control mb-2" id="departamento" name="departamento" required>
+                                <option value="" disabled <?= $item->id == 0 ? 'selected' : '' ?> hidden>Selecciona una opción
+                                </option>
                                 <?php
                                 /** @var Departamento $d */
                                 foreach ($departamentos as $d) { ?>
-                                    <option value="<?= $d->id ?>" <?= $item->departamento->id==$d->id?'selected':'' ?>><?= $d->nombre ?></option>
+                                    <option value="<?= $d->id ?>" <?= $item->departamento->id == $d->id ? 'selected' : '' ?>>
+                                        <?= $d->nombre ?></option>
                                 <?php } ?>
                             </select>
                         <?php } ?>
-                        <h5>Nombre:</h5>
+                        <h5>Nombre: *</h5>
                         <input type="text" class="form-control mb-2" placeholder="Nombre" aria-label="nombre"
                             name="nombre" id="nombreEdit" required value="<?= $item->nombre ?>">
                     </div>
                 </div>
 
-                <a href="<?= BASE_URL ?>Inventario" class="btn btn-secondary mt-2">Volver</a>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="submit" class="btn btn-primary me-md-2">Guardar</button>
+                </div>
 
-                <button type="submit" class="btn btn-primary mt-2"><?= $item->id == 0 ? 'Crear' : 'Editar' ?></button>
+                
 
             </form>
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        $('.formulario').find('input:required').on('blur', function () {
+            if ($.trim($(this).val()) === '') {
+                $(this).addClass('required-vacio');
+            } else {
+                $(this).removeClass('required-vacio');
+            }
+        });
+
+        //$(".formulario").restoreForm();
+    });
+
+</script>
 
 <?php require HOMEDIR . '/../app/views/partials/footer.php' ?>

@@ -14,28 +14,44 @@
 <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
+            <a href="<?= BASE_URL ?>TiposServicio"
+                    class="btn btn-secondary mt-2 mb-3">Volver</a>
             <h1>Tipo de servicio: <?= $tiposervicio->id == 0 ? 'Nueva' : 'Editar' ?></h1>
-            <form id="editarTipoServicio" class="mt-0" action="<?= BASE_URL ?>TiposServicio/vereditar?id=<?= $tiposervicio->id ?>"
+            <form id="editarTipoServicio" class="mt-0 formulario" action="<?= BASE_URL ?>TiposServicio/vereditar?id=<?= $tiposervicio->id ?>"
                 method="post">
                 <input type="hidden" id="idedit" name="id" value="<?= $tiposervicio->id ?>">
                 <div class="row">
                     <div class="col-sm-4">
-                        <h5>Nombre:</h5>
+                        <h5>Nombre: *</h5>
                         <input type="text" class="form-control mb-2" placeholder="Nombre" aria-label="nombre"
                             name="nombre" id="nombreEdit" required value="<?= $tiposervicio->nombre ?>">
                     </div>
                 </div>
 
-                <a href="<?= BASE_URL ?>TiposServicio"
-                    class="btn btn-secondary mt-2">Volver</a>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="submit"
+                    class="btn btn-primary mt-2">Guardar</button>
+                </div>
 
-                <button type="submit"
-                    class="btn btn-primary mt-2"><?= $tiposervicio->id == 0 ? 'Crear' : 'Editar' ?></button>
+                
 
             </form>
         </div>
     </div>
 </div>
 
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        $('.formulario').find('input:required').on('blur', function () {
+            if ($.trim($(this).val()) === '') {
+                $(this).addClass('required-vacio');
+            } else {
+                $(this).removeClass('required-vacio');
+            }
+        });
+
+        //$(".formulario").restoreForm();
+    });
+</script>
 
 <?php require HOMEDIR . '/../app/views/partials/footer.php' ?>

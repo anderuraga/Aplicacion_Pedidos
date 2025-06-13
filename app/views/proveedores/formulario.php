@@ -12,10 +12,13 @@
 <div id="tableSimple" class="col-lg-12 col-12 layout-spacing proveedor_formulario">
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
+            <a href="<?= BASE_URL ?>Proveedores" class="btn btn-secondary mr-2 mb-3">
+                Volver
+            </a>
             <h1>Proveedor: <?= $proveedor->id == 0 ? 'Nuevo' : 'Editar' ?></h1>
-            
 
-            <form id="nuevoProveedor" class="mt-0"
+
+            <form id="nuevoProveedor" class="mt-0 formulario"
                 action="<?= BASE_URL ?>Proveedores/vereditar?id=<?= $proveedor->id ?>" method="post"
                 enctype="multipart/form-data">
                 <input type="hidden" name="id" value="<?= $proveedor->id ?>">
@@ -36,22 +39,22 @@
                 <?php endif; ?>
                 <div class="row">
                     <div class="col-6">
-                        <h5>CIF:</h5>
+                        <h5>CIF: *</h5>
                         <input type="text" class="form-control mb-2" placeholder="CIF" aria-label="cif" name="cif"
                             id="cif" required value="<?= $proveedor->cif ?>">
                     </div>
                     <div class="col-6">
-                        <h5>Razón Social:</h5>
+                        <h5>Razón Social: *</h5>
                         <input type="text" class="form-control mb-2" placeholder="Nombre" aria-label="nombre"
                             name="nombre" id="nombre" required value="<?= $proveedor->nombre ?>">
                     </div>
                     <div class="col-6">
-                        <h5>Dirección:</h5>
+                        <h5>Dirección: *</h5>
                         <input type="text" class="form-control mb-2" placeholder="Dirección" aria-label="direccion"
                             name="direccion" id="direccion" required value="<?= $proveedor->direccion ?>">
                     </div>
                     <div class="col-6">
-                        <h5>Código postal:</h5>
+                        <h5>Código postal: *</h5>
                         <input type="number" min="0" class="form-control mb-2" placeholder="Código Postal"
                             aria-label="codpostal" name="codpostal" id="codpostal" required
                             value="<?= $proveedor->cod_postal ?>">
@@ -63,7 +66,7 @@
                             value="<?= $proveedor->poblacion ?>">
                     </div>
                     <div class="col-6">
-                        <h5>Provincia:</h5>
+                        <h5>Provincia: *</h5>
                         <input type="text" min="0" class="form-control mb-2" placeholder="Provincia"
                             aria-label="provincia" name="provincia" id="provincia" required
                             value="<?= $proveedor->provincia ?>">
@@ -80,12 +83,12 @@
                             value="<?= $proveedor->telefono ?>">
                     </div>
                     <div class="col-6">
-                        <h5>Correo:</h5>
+                        <h5>Correo: *</h5>
                         <input type="email" class="form-control mb-2" placeholder="E-mail" name="mail" aria-label="mail"
                             name="mail" id="mail" required value="<?= $proveedor->correo ?>">
                     </div>
                     <div class="col-6">
-                        <h5>Tipo de servicio:</h5>
+                        <h5>Tipo de servicio: *</h5>
                         <select required id="tipoServicio" name="tipoServicio" class="form-control">
                             <option disabled="disabled" <?= $proveedor->id == 0 ? 'selected' : '' ?>>Tipo de Servicio
                             </option>
@@ -97,19 +100,19 @@
                         </select>
                     </div>
                     <div class="col-6">
-                        <h5>Cuenta bancaria:</h5>
+                        <h5>Cuenta bancaria: *</h5>
                         <input type="text" min="0" class="form-control mb-2" placeholder="Cuenta bancaria"
                             aria-label="cuenta_bancaria" name="cuenta_bancaria" id="cuenta_bancaria" required
                             value="<?= $proveedor->cuenta_bancaria ?>">
                     </div>
                     <div class="col-6">
-                        <h5>Persona de contacto:</h5>
+                        <h5>Persona de contacto: *</h5>
                         <input type="text" min="0" class="form-control mb-2" placeholder="Persona contacto"
                             aria-label="contacto" name="contacto" id="contacto" required
                             value="<?= $proveedor->contacto ?>">
                     </div>
                     <div class="col-6">
-                        <h5>Límite:</h5>
+                        <h5>Límite: *</h5>
                         <div class="input-group mb-2">
                             <input class="form-control" placeholder="Limite" aria-label="cantidad"
                                 aria-describedby="basic-addon2" name="limite" id="limite"
@@ -144,21 +147,20 @@
                 </div>
 
                 <div class="d-flex justify-content-between mt-2">
-                    <div>
-                        <a href="<?= BASE_URL ?>Proveedores" class="btn btn-secondary mr-2">
-                            Volver
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <?= $proveedor->id == 0 ? 'Crear' : 'Editar' ?>
-                        </button>
-                    </div>
-
                     <?php if ($usuario->tipo == ADMIN): ?>
                         <button type="submit" form="estadoForm"
                             class="btn btn-<?= is_null($proveedor->fecha_baja) ? 'danger' : 'success' ?>">
                             <?= is_null($proveedor->fecha_baja) ? 'Baja' : 'Alta' ?>
                         </button>
                     <?php endif; ?>
+                    <div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <?= $proveedor->id == 0 ? 'Crear' : 'Editar' ?>
+                        </button>
+                    </div>
+
+                    
                 </div>
 
             </form>
@@ -180,6 +182,16 @@
             autoGroup: true,
             prefix: ''
         });
+
+        $('.formulario').find('input:required').on('blur', function () {
+            if ($.trim($(this).val()) === '') {
+                $(this).addClass('required-vacio');
+            } else {
+                $(this).removeClass('required-vacio');
+            }
+        });
+
+        //$(".formulario").restoreForm();
     });
 </script>
 

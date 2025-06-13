@@ -14,19 +14,20 @@
 <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
+            <a href="<?= BASE_URL ?>Usuarios" class="btn btn-secondary mt-2 mb-3">Volver</a>
             <h1>Usuario: <?= $usuario_form->id == 0 ? 'Nuevo' : 'Editar' ?></h1>
-            <form id="editarUsuario" class="mt-0" action="<?= BASE_URL ?>Usuarios/vereditar?id=<?= $usuario_form->id ?>" method="post">
+            <form id="editarUsuario" class="mt-0 formulario" action="<?= BASE_URL ?>Usuarios/vereditar?id=<?= $usuario_form->id ?>" method="post">
                 <input type="hidden" id="idedit" name="id" value="<?= $usuario_form->id ?>">
                 <div class="row">
                     <div class="col-sm-4">
-                        <h5>Nombre:</h5>
+                        <h5>Nombre: *</h5>
                         <input type="text" class="form-control mb-2" placeholder="Nombre" aria-label="nombre"
                             name="nombre" id="nombre" required value="<?= $usuario_form->nombre ?>">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-4">
-                        <h5>Correo:</h5>
+                        <h5>Correo: *</h5>
                         <input type="text" class="form-control mb-2" placeholder="Correo" aria-label="correo"
                             name="correo" id="correo" required value="<?= $usuario_form->correo ?>">
                     </div>
@@ -34,7 +35,7 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <?php if ($usuario_form->id == 0) { ?>
-                            <h5>Nueva Contraseña:</h5>
+                            <h5>Contraseña: *</h5>
                         <?php } else { ?>
                             <h5>Cambiar contraseña:</h5>
                             <p>Dejar el campo en blanco para dejar la contraseña actual</p>
@@ -45,17 +46,17 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-4">
-                        <h5>Tipo</h5>
+                        <h5>Tipo: *</h5>
                         <div class="form-check form-check-primary form-check-inline">
                             <input class="form-check-input" type="radio" name="tipo" id="tipoEdit"
-                                <?= $usuario_form->tipo == 1 ? 'checked' : '' ?> value="1">
+                                <?= $usuario_form->tipo == ADMIN ? 'checked' : '' ?> value="1" required>
                             <label class="form-check-label" for="form-check-radio-default">
                                 Administrador
                             </label>
                         </div>
                         <div class="form-check form-check-primary form-check-inline">
                             <input class="form-check-input" type="radio" name="tipo" id="tipoEdit"
-                                <?= $usuario_form->tipo == 0 || $usuario_form->id == 0 ? 'checked' : '' ?> value="0">
+                                <?= $usuario_form->tipo == JEFE_DEP || $usuario_form->id == 0 ? 'checked' : '' ?> value="0" required>
                             <label class="form-check-label" for="tipo">
                                 Jefe departamento
                             </label>
@@ -64,7 +65,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-4">
-                        <h5>Departamentos:</h5>
+                        <h5>Departamentos: *</h5>
                         <select class="form-control" id="departamentoEdit" name="departamento">
                             <option value="" disabled <?= $usuario_form->id == 0 ? 'selected' : '' ?>>Selecciona un
                                 departamento</option>
@@ -78,15 +79,28 @@
                 </div>
 
 
-                <a href="<?= BASE_URL ?>Usuarios" class="btn btn-secondary mt-2">Volver</a>
+                
 
-                <button type="submit"
-                    class="btn btn-primary mt-2"><?= $usuario_form->id == 0 ? 'Crear' : 'Editar' ?></button>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="submit" class="btn btn-primary mt-2">Guardar</button>
+                </div>
 
             </form>
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        $('.formulario').find('input:required').on('blur', function () {
+            if ($.trim($(this).val()) === '') {
+                $(this).addClass('required-vacio');
+            } else {
+                $(this).removeClass('required-vacio');
+            }
+        });
 
+        //$(".formulario").restoreForm();
+    });
+</script>
 
 <?php require HOMEDIR . '/../app/views/partials/footer.php' ?>

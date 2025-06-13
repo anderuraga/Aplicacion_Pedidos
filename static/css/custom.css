@@ -91,3 +91,7 @@ body.dark .layout-px-spacing,
 table td a{
     color: #4361ee;
 }
+
+.required-vacio{
+    background-color: #ff9c9c;
+}

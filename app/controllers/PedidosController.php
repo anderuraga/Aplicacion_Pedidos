@@ -103,9 +103,9 @@ class PedidosController extends Controller
             exit;
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (isset($_POST['areagasto']) && $_POST['areagasto'] != 0 && isset($_POST['proveedor']) && isset($_POST['departamento']) && $_POST['departamento'] != 0) {
+            if (isset($_POST['areagasto']) && $_POST['areagasto'] != 0 && isset($_POST['proveedor'])) {
                 session_write_close();
-                header("Location:detalles?proveedor=$_POST[proveedor]&areaGasto=$_POST[areagasto]&departamento=$_POST[departamento]");
+                header("Location:detalles?proveedor=$_POST[proveedor]&areaGasto=$_POST[areagasto]");
                 exit;
             } else {
                 $_SESSION['alert'] = [
@@ -174,17 +174,11 @@ class PedidosController extends Controller
         $areasGastosDAO = $this->dao("Subconceptos");
         $subconceptos = $areasGastosDAO->listar();
 
-        /**
-         * @var DepartamentosDAO
-         */
-        $departamentosDAO = $this->dao("Departamentos");
-        $departamento = $departamentosDAO->obtener($_GET['departamento']);
-
         $data = [
             'proveedor' => $proveedor,
             'areaGastos' => $areaGastos,
             'subconceptos' => $subconceptos,
-            'departamento' => $departamento
+            'departamento' => $areaGastos->departamento
         ];
 
         $this->view("pedidos/detalles", $data);

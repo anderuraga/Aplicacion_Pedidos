@@ -32,23 +32,23 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
 </style>
 <div id="tableSimple" class="col-lg-8 col-12 layout-spacing formulario_pedidos">
     <div class="statbox widget box box-shadow">
-        <form id="editarForm" method="post">
+        <form id="editarForm" method="post" class="formulario">
             <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
             <input type="hidden" name="action" value="editar">
             <div class="widget-content widget-content-area p-3">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12 ">
+                        <a href="<?= BASE_URL ?>Pedidos" class="btn btn-danger mb-3">Volver</a>
                         <h1>Resumen del pedido: <?= $pedido->referencia ?></h1>
-                        <a href="<?= BASE_URL ?>Pedidos" class="btn btn-danger">Volver</a>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-4">
-                        <h5>Importe:</h5>
+                        <h5>Importe: *</h5>
                         <div class="input-group mb-2">
                             <input class="form-control" placeholder="Cantidad" aria-label="cantidad"
                                 aria-describedby="basic-addon2" name="cantidad" id="cantidad"
-                                value="<?= $pedido->cantidad_formato() ?>" <?= $editable ? '' : 'disabled' ?>>
+                                value="<?= $pedido->cantidad_formato() ?>" <?= $editable ? '' : 'disabled' ?> required>
                             <span class="input-group-text" id="basic-addon2">€</span>
                         </div>
                     </div>
@@ -73,9 +73,9 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                         <input type="text" class="form-control mb-2" value="<?= $pedido->usuario->nombre ?>" disabled>
                     </div>
                     <div class="col-4">
-                        <h5>Area Gasto:</h5>
+                        <h5>Area Gasto: *</h5>
                         <?php if ($usuario->tipo == ADMIN) { ?>
-                            <select class="form-control" id="areagasto" name="areagasto">
+                            <select class="form-control" id="areagasto" name="areagasto" required>
                                 <option value="0" data-depart="0" disabled selected hidden>Selecciona una opción</option>
                                 <?php
                                 /** @var AreaGastos $a */
@@ -105,8 +105,8 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                         </select>
                     </div>
                     <div class="col-6">
-                        <h5>Proveedor:</h5>
-                        <select class="form-control mb-2" id="proveedor" name="proveedor" <?= $editable ? '' : 'disabled' ?>>
+                        <h5>Proveedor: *</h5>
+                        <select class="form-control mb-2" id="proveedor" name="proveedor" <?= $editable ? '' : 'disabled' ?> required>
                             <option value="0" disabled hidden>Elige una opción</option>
                             <?php
                             /** @var Proveedor $p */
@@ -158,8 +158,8 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                 <h4 class="mt-2">Detalles:</h4>
                 <div class="row">
                     <div class="col-4">
-                        <h5>Subconcepto:</h5>
-                        <select class="form-control mb-2" id="subconcepto" name="subconcepto" <?= $editable ? '' : 'disabled' ?>>
+                        <h5>Subconcepto: *</h5>
+                        <select class="form-control mb-2" id="subconcepto" name="subconcepto" <?= $editable ? '' : 'disabled' ?> required>
                             <option value="" disabled hidden>Selecciona una opción</option>
                             <?php
                             /** @var Subconcepto $s */
@@ -174,8 +174,8 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                 </div>
                 <div class="row">
                     <div class="col-6">
-                        <h5>Descripción de la solicitud:</h5>
-                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3" <?= $editable ? '' : 'disabled' ?>><?= $pedido->descripcion ?></textarea>
+                        <h5>Descripción de la solicitud: *</h5>
+                        <textarea required class="form-control" id="descripcion" name="descripcion" rows="3" <?= $editable ? '' : 'disabled' ?>><?= $pedido->descripcion ?></textarea>
                     </div>
                 </div>
 
@@ -444,6 +444,14 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
         $('#servicio').on('change', filtrarProveedores)
         filtrarProveedores();
         inicial = false;
+
+        $('.formulario').find('input:required, textarea:required').on('blur', function () {
+            if ($.trim($(this).val()) === '') {
+                $(this).addClass('required-vacio');
+            } else {
+                $(this).removeClass('required-vacio');
+            }
+        });
     });
 </script>
 <?php require HOMEDIR . '/../app/views/partials/footer.php' ?>
