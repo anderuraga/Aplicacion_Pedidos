@@ -6,6 +6,7 @@ require_once __DIR__ . '/Departamento.php';
 require_once __DIR__ . '/Subconcepto.php';
 require_once __DIR__ . '/AreaGastos.php';
 require_once __DIR__ . '/Proveedor.php';
+require_once __DIR__ . '/Factura.php';
 
 class Pedido
 {
@@ -21,11 +22,10 @@ class Pedido
     public string|null $fecha_enviada;
     public string $descripcion;
     public string $importe;
-    public int $factura_id;
+    public Factura $factura;
     public int $anio_contable;
     public string | null $anexo;
     public string | null $albaran;
-    public string | null $factura;
 
     public function __construct(
         int $id,
@@ -40,11 +40,10 @@ class Pedido
         string|null $fecha_enviada,
         string $descripcion,
         string $importe,
-        int $factura_id,
+        Factura $factura,
         int $anio_contable,
         string | null $anexo,
-        string | null $albaran,
-        string | null $factura
+        string | null $albaran
     ) {
         $this->id = $id;
         $this->referencia = $referencia;
@@ -58,11 +57,10 @@ class Pedido
         $this->fecha_enviada = $fecha_enviada;
         $this->descripcion = $descripcion;
         $this->importe = $importe;
-        $this->factura_id = $factura_id;
+        $this->factura = $factura;
         $this->anio_contable = $anio_contable;
         $this->anexo = $anexo;
         $this->albaran = $albaran;
-        $this->factura = $factura;
     }
 
     public static function fromArray(array $row): Pedido
@@ -80,11 +78,10 @@ class Pedido
             fecha_enviada: $row['pedido_fecha_enviada'],
             descripcion: $row['pedido_descripcion'],
             importe: (float) $row['pedido_importe'],
-            factura_id: (int) $row['pedido_factura_id'],
+            factura: Factura::fromArray($row),
             anio_contable: (int) $row['pedido_anio_contable'],
             anexo: $row['pedido_anexo'],
-            albaran: $row['pedido_albaran'],
-            factura: $row['pedido_factura']
+            albaran: $row['pedido_albaran']
         );
     }
 
@@ -103,6 +100,11 @@ class Pedido
     public function cantidad_formato()
     {
         return getCantidadFormateada($this->importe);
+    }
+
+    public function cantidad_formato_iva()
+    {
+        return getCantidadFormateada($this->importe * 1.21);
     }
 
     public function comprobacion_presupuestos(): bool{

@@ -252,7 +252,7 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                         case BORRADOR: ?>
                             <?php if ($pedido->comprobacion_presupuestos()): ?>
                                 <div class="col-12 mb-3" id="subirfacturadiv">
-                                    <h5>Subir facturas:</h5>
+                                    <h5>Subir presupuestos:</h5>
                                     <div class="mb-2">
                                         <form id="subirFacturas" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>"
                                             enctype="multipart/form-data">
@@ -304,10 +304,14 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                             <?php break;
                         case PEN_FACT: ?>
                             <h5>Subir factura:</h5>
-                            <form class="mb-2" id="subirFacturas" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>"
+                            <form class="mb-2 formulario" id="subirFacturas" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>"
                                 enctype="multipart/form-data">
                                 <input type="hidden" name="action" value="siguiente">
                                 <input type="hidden" name="id" value="<?= $pedido->id ?>">
+                                <h5>Número factura: *</h5>
+                                <input type="text" class="form-control mb-2" id="num_fac" name="num_fac">
+                                <h5>Fecha factura: *</h5>
+                                <input type="text" class="form-control flatTime mb-2"  id="fec_fac" name="fec_fac">
                                 <input type="file" id="factura" name="factura" accept="application/pdf">
                                 <button class="btn btn-success float-end">Subir factura</button><br>
                             </form>
@@ -319,6 +323,11 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                                     <input type="hidden" name="id" value="<?= $pedido->id ?>">
                                     <button class="btn btn-success float-end">Archivar</button><br>
                                 </form>
+                            <?php } ?>
+                            <?php break;
+                        case ARCHIVADO:?>
+                            <?php if ($usuario->tipo == ADMIN) { ?>
+                                <a target="_blank" href="<?= BASE_URL ?>Pedidos/pdf/<?= $pedido->id ?>" class="btn btn-success float-end">Imprimir</button>
                             <?php } ?>
                             <?php break;
                         default:
@@ -373,8 +382,10 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                 <?php if ($pedido->estado->id >= PEN_ARCH) { ?>
                     <h5 class="mb-0 mt-2">Factura</h5>
                     <a target="_blank"
-                        href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pedido->factura ?>">Ver
+                        href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pedido->factura->documento ?>">Ver
                         Factura</a>
+                    <p>Referencia: <?= $pedido->factura->referencia ?></p>
+                    <p>Fecha: <?= $pedido->factura->fecha ?></p>
                 <?php } ?>
                 <?php
             }
@@ -452,6 +463,12 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                 $(this).removeClass('required-vacio');
             }
         });
+
+        let datepickers = $('.flatTime').flatpickr({
+            altInput: true,
+            altFormat: "d-m-Y",
+            dateFormat: "Y-m-d",
+        })
     });
 </script>
 <?php require HOMEDIR . '/../app/views/partials/footer.php' ?>

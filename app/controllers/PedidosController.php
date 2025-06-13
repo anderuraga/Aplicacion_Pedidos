@@ -2,6 +2,8 @@
 require_once __DIR__ . '/../helpers/auth.php';
 require_once __DIR__ . '/../helpers/Mailer.php';
 
+use Mpdf\Mpdf;
+
 class PedidosController extends Controller
 {
     public function index()
@@ -627,7 +629,7 @@ class PedidosController extends Controller
         $pedido = $pedidosDAO->obtener($pedidoId);
         $correos = $usuariosDAO->obtenerCorreosAdmin();
         $correoJD = $pedido->usuario->correo;
-        $cc= [
+        $cc = [
             $correoJD
         ];
         $mailer = new Mailer();
@@ -652,8 +654,10 @@ class PedidosController extends Controller
     public function guardarFactura(PedidosDAO $pedidosDAO, UsuariosDAO $usuariosDAO)
     {
         $pedidoId = $_POST['id'] ?? null;
+        $numero_factura = $_POST['num_fac'] ?? null;
+        $fecha_factura = $_POST['fec_fac'] ?? null;
 
-        if (!$pedidoId) {
+        if (!$pedidoId || !$numero_factura || !$fecha_factura) {
             return [
                 'tipo' => 'danger',
                 'mensaje' => 'Falta la id del pedido'
@@ -677,7 +681,7 @@ class PedidosController extends Controller
         $rutaFinal = "$rutaBase/$nombreLimpio";
 
         if (move_uploaded_file($_FILES["factura"]['tmp_name'], $rutaFinal)) {
-            $ok = $pedidosDAO->insertar_factura($pedidoId, $nombreLimpio);
+            $ok = $pedidosDAO->insertar_factura($pedidoId, $numero_factura, $fecha_factura, $nombreLimpio);
             if (!$ok) {
                 return [
                     'tipo' => 'danger',
@@ -694,7 +698,7 @@ class PedidosController extends Controller
         $pedido = $pedidosDAO->obtener($pedidoId);
         $correos = $usuariosDAO->obtenerCorreosAdmin();
         $correoJD = $pedido->usuario->correo;
-        $cc= [
+        $cc = [
             $correoJD
         ];
         $mailer = new Mailer();
@@ -728,7 +732,7 @@ class PedidosController extends Controller
         if ($pedidosDAO->cambiarEstado($pedidoId, 6)) {
             $pedido = $pedidosDAO->obtener($pedidoId);
             $fecha = date("Y-m-d H:i:s");
-            $descr = "Pedido <a target='_blank' href='".BASE_URL."Pedidos/vereditar?id=".$pedido->id."'>" . $pedido->referencia . "</a> archivado";
+            $descr = "Pedido <a target='_blank' href='" . BASE_URL . "Pedidos/vereditar?id=" . $pedido->id . "'>" . $pedido->referencia . "</a> archivado";
             $ok = $transaccionesDAO->crear($fecha, $descr, $pedido->areaGastos->id, getCantidadMysql("-" . $pedido->importe));
             if ($ok) {
                 return [
@@ -779,6 +783,43 @@ class PedidosController extends Controller
             $archivoUrl,
             $replyto
         );
+    }
+
+    public function pdf($id)
+    {
+        /**
+         * @var PedidosDAO
+         */
+        $pedidosDAO = $this->dao("Pedidos");
+        $pedido = $pedidosDAO->obtener($id);
+
+        $data = [
+            'pedido' => $pedido
+        ];
+
+        ob_start();
+        $this->view("pedidos/pdf", $data);
+        $html = ob_get_clean();
+
+        $mpdf = new Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'margin_top' => 15,
+            'margin_bottom' => 15,
+            'margin_left' => 10,
+            'margin_right' => 10,
+        ]);
+
+        $footerHtml = '
+  <div style="text-align: right; font-size: 10px;">
+    <img src="' . BASE_URL . 'static/assets/img/Pedido_pie.png" height="50" alt="Pie de página">
+  </div>
+';
+        $mpdf->SetHTMLFooter($footerHtml);
+
+        $mpdf->WriteHTML($html);
+        $mpdf->Output('pedido_' . $pedido->referencia . '.pdf', 'I');
+        exit;
     }
 
     #[\Override]

@@ -66,7 +66,11 @@ class PedidosDAO
                 p.anio_contable AS pedido_anio_contable,
                 p.anexo AS pedido_anexo,
                 p.albaran AS pedido_albaran,
-                p.factura AS pedido_factura
+                p.factura AS pedido_factura,
+                fs.id AS factura_id,
+                fs.identificador AS factura_referencia,
+                fs.fecha AS factura_fecha,
+                fs.documento AS factura_documento
             FROM
                 `pedidos` p
             JOIN estado e ON
@@ -83,6 +87,8 @@ class PedidosDAO
                 vpg.id = p.id_proveedor AND vpg.anio_contable = p.anio_contable
             JOIN tipos_servicio ts ON
                 ts.id = vpg.id_servicio
+            LEFT JOIN facturas fs ON
+                fs.id = p.id_factura
             WHERE
                     p.id = :id
                 ORDER BY
@@ -146,7 +152,11 @@ class PedidosDAO
                 p.anio_contable AS pedido_anio_contable,
                 p.anexo AS pedido_anexo,
                 p.albaran AS pedido_albaran,
-                p.factura AS pedido_factura
+                p.factura AS pedido_factura,
+                fs.id AS factura_id,
+                fs.identificador AS factura_referencia,
+                fs.fecha AS factura_fecha,
+                fs.documento AS factura_documento
             FROM
                 `pedidos` p
             JOIN estado e ON
@@ -163,6 +173,8 @@ class PedidosDAO
                 vpg.id = p.id_proveedor AND vpg.anio_contable = p.anio_contable
             JOIN tipos_servicio ts ON
                 ts.id = vpg.id_servicio
+            LEFT JOIN facturas fs ON
+                fs.id = p.id_factura
             WHERE
                 p.id_estado = :id_estado
             ORDER BY
@@ -229,7 +241,11 @@ class PedidosDAO
                 p.anio_contable AS pedido_anio_contable,
                 p.anexo AS pedido_anexo,
                 p.albaran AS pedido_albaran,
-                p.factura AS pedido_factura
+                p.factura AS pedido_factura,
+                fs.id AS factura_id,
+                fs.identificador AS factura_referencia,
+                fs.fecha AS factura_fecha,
+                fs.documento AS factura_documento
             FROM
                 `pedidos` p
             JOIN estado e ON
@@ -246,6 +262,8 @@ class PedidosDAO
                 vpg.id = p.id_proveedor AND vpg.anio_contable = p.anio_contable
             JOIN tipos_servicio ts ON
                 ts.id = vpg.id_servicio
+            LEFT JOIN facturas fs ON
+                fs.id = p.id_factura
             WHERE
                 p.id_estado = :id_estado AND
                 p.id_departamento = :id_departamento
@@ -341,8 +359,9 @@ WHERE
         ]);
 
     }
-    
-    public function cambiarImporte(int $id, string $importe){
+
+    public function cambiarImporte(int $id, string $importe)
+    {
         $sql = "UPDATE `pedidos` 
 SET
     `importe` = :importe
@@ -407,17 +426,29 @@ VALUES(
         ]);
     }
 
-    public function insertar_factura($id_pedido, $documento)
+    public function insertar_factura($id_pedido, $referencia, $fecha, $documento)
     {
-        $stmt = $this->db->prepare("UPDATE `pedidos` SET `factura`=:factura  WHERE `id`=:id");
-
+        $stmt = $this->db->prepare("INSERT INTO `facturas`(`identificador`, `fecha`, `documento`) VALUES (:referencia, :fecha, :documento)");
+        $stmt->execute([
+            'referencia' => $referencia,
+            'fecha' => $fecha,
+            'documento' => $documento
+        ]);
+        $facturaID = $this->db->lastInsertId();
+        $stmt = $this->db->prepare("UPDATE
+    `pedidos`
+SET
+    `id_factura` = :facturaID
+WHERE
+    `id` = :pedid");
         return $stmt->execute([
-            'factura' => $documento,
-            'id' => $id_pedido
+            'facturaID' => $facturaID,
+            'pedid' => $id_pedido
         ]);
     }
 
-    public function editar($id, $subconcepto, $descripcion){
+    public function editar($id, $subconcepto, $descripcion)
+    {
         $stmt = $this->db->prepare("UPDATE `pedidos` SET `id_subconcepto`=:subconcepto, `descripcion`=:descripcion WHERE `id`=:id");
 
         return $stmt->execute([
@@ -505,7 +536,8 @@ DESC
         ]);
     }
 
-    public function cambiarProveedor($pedido, $proveedor){
+    public function cambiarProveedor($pedido, $proveedor)
+    {
         $stmt = $this->db->prepare("UPDATE `pedidos` SET `id_proveedor`=:proveedor WHERE `id`=:pedido");
         return $stmt->execute([
             'proveedor' => $proveedor,
@@ -523,7 +555,8 @@ DESC
         ]);
     }
 
-    public function pedidos_incidencias_abiertas($usuario){
+    public function pedidos_incidencias_abiertas($usuario)
+    {
         $query = "SELECT
                     p.id AS id_pedido,
                     COUNT(i.id) AS num_incidencias_abiertas
