@@ -48,6 +48,7 @@
                                             <th>Fecha</th>
                                             <th>Importe</th>
                                             <th>Departamento</th>
+                                            <th>Area Gastos</th>
                                             <th>Subconcepto</th>
                                             <th>Proveedor</th>
                                             <th>Opciones</th>
@@ -71,6 +72,7 @@
                                                 <td data-order="<?= $p->fecha_creada ?>"><?= $p->getFechaCreadaVisible() ?></td>
                                                 <td><?= $p->cantidad_formato() ?>€</td>
                                                 <td><?= $p->departamento->nombre ?></td>
+                                                <td><?= $p->areaGastos->nombre ?></td>
                                                 <td><?= $p->subconcepto->nombre ?></td>
                                                 <td><?= $p->proveedor->nombre ?></td>
                                                 <td>
