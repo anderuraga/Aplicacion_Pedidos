@@ -14,7 +14,7 @@
             <div class="simple-pill mt-3">
                 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                     <?php foreach ($estados as $e) { ?>
-                        <li class="nav-item" role="estado<?= $e->id ?>">
+                        <li class="nav-item pestana-estado" role="estado<?= $e->id ?>">
                             <button class="nav-link <?= $e->id == 1 ? 'active' : '' ?>" id="pills-estado<?= $e->id ?>-tab"
                                 data-bs-toggle="pill" data-bs-target="#pills-estado<?= $e->id ?>" type="button" role="tab"
                                 aria-controls="pills-estado<?= $e->id ?>" aria-selected="false">
