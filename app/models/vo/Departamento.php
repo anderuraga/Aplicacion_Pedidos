@@ -1,6 +1,6 @@
 <?php
 
-class Departamento implements \Serializable
+class Departamento
 {
     public $id;
     public $nombre;
@@ -19,18 +19,17 @@ class Departamento implements \Serializable
         );
     }
 
-    public function serialize(): string
+    public function __serialize(): array
     {
-        return serialize([
+        return [
             'id' => $this->id,
             'nombre' => $this->nombre,
-        ]);
+        ];
     }
 
-    public function unserialize($data): void
+    public function __unserialize(array $data): void
     {
-        $unserialized = unserialize($data);
-        $this->id = $unserialized['id'];
-        $this->nombre = $unserialized['nombre'];
+        $this->id = $data['id'];
+        $this->nombre = $data['nombre'];
     }
 }
