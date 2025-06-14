@@ -78,34 +78,37 @@ body.dark .layout-px-spacing,
     margin-left: 10px;
 }
 
-.incidencia{
+.incidencia {
     border-bottom: 1px solid lightgray;
 }
 
 .formulario_pedidos .form-control:disabled,
-.proveedor_formulario .form-control:disabled
-{
+.proveedor_formulario .form-control:disabled {
     color: black;
 }
 
-table td a{
+table td a {
     color: #4361ee;
 }
 
-.required-vacio{
+.required-vacio {
     background-color: #ff9c9c;
 }
 
-.pestana-estado button{
+.pestana-estado button {
     margin: 5px;
     border: 2px solid gray;
 }
 
-.pestana-estado:hover button{
+.pestana-estado:hover button {
     border: 2px solid #0d6efd;
 }
 
 
-.pestana-estado button.active{
+.pestana-estado button.active {
     border: 2px solid #0d6efd;
+}
+
+.lista_archivos li a {
+    color: #4361ee;
 }

@@ -396,6 +396,27 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
         <div class="widget-content widget-content-area p-2">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                    <h2>Descargas</h2>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-12 ">
+                    <div class="mt-container mx-auto">
+                        <ul class="lista_archivos">
+                            <li><a href="<?= BASE_URL ?>public/liquidacion_gastos.pdf" download="">Liquidación de gastos</a></li>
+                            <li><a href="<?= BASE_URL ?>public/ANEXO III CONTRATO MENOR.docx" download="">Anexo III - contrato menor</a></li>
+                            <li><a href="<?= BASE_URL ?>public/anexo XV prestacion servcicios.pdf" download="">Anexo XV - prestación de servicios</a></li>
+                            <li><a href="<?= BASE_URL ?>public/ALTA_TERCEROS.pdf" download="">Alta terceros</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="statbox widget box box-shadow mt-2">
+        <div class="widget-content widget-content-area p-2">
+            <div class="row">
+                <div class="col-xl-12 col-md-12 col-sm-12 col-12">
                     <h2>Historial</h2>
                 </div>
             </div>
