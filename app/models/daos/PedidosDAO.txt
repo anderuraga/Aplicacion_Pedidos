@@ -8,7 +8,6 @@ class PedidosDAO
 {
     private $db;
     public $last_insert;
-    public $last_insert_presupuesto;
 
 
     public function __construct()
@@ -358,6 +357,7 @@ WHERE
             'referencia' => $nuevaref,
             'id_area' => $id_area_gasto
         ]);
+
     }
 
     public function cambiarImporte(int $id, string $importe)
@@ -400,17 +400,12 @@ VALUES(
     :seleccionado
 )");
 
-        $ok = $stmt->execute([
+        return $stmt->execute([
             'id_pedido' => $datos['id_pedido'],
             'documento' => $datos['documento'],
             'seleccionado' => $datos['seleccionado']
         ]);
-        $this->last_insert_presupuesto = $this->db->lastInsertId();
-        return $ok;
     }
-
-
-
     public function insertar_anexo($id_pedido, $documento)
     {
         $stmt = $this->db->prepare("UPDATE `pedidos` SET `anexo`=:anexo WHERE `id`=:id");
@@ -452,24 +447,6 @@ WHERE
         ]);
     }
 
-    public function actualizar_factura($id_pedido, $referencia, $fecha, $documento)
-    {
-        $stmt = $this->db->prepare("UPDATE
-    `facturas`
-SET
-    `identificador` = :referencia,
-    `fecha` = :fecha,
-    `documento` = :documento
-WHERE
-    `id` = :id");
-        return $stmt->execute([
-            'referencia' => $referencia,
-            'fecha' => $fecha,
-            'documento' => $documento,
-            'id' => $id_pedido
-        ]);
-    }
-
     public function editar($id, $subconcepto, $descripcion)
     {
         $stmt = $this->db->prepare("UPDATE `pedidos` SET `id_subconcepto`=:subconcepto, `descripcion`=:descripcion WHERE `id`=:id");
@@ -493,6 +470,7 @@ FROM
 WHERE
     `id_pedido` = :id
 ORDER BY
+    `seleccionado` DESC,
     `id` DESC
     ");
 
@@ -524,53 +502,6 @@ ORDER BY
         $stmt->execute(['id' => $id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return Presupuesto::fromArray($row);
-    }
-
-    public function obtener_presupuesto($id_presupuesto): Presupuesto
-    {
-        $stmt = $this->db->prepare("SELECT
-    `id` as presupuesto_id,
-    `documento` as presupuesto_documento,
-    `fecha` as presupuesto_fecha,
-    `seleccionado` as presupuesto_seleccionado
-FROM
-    `presupuestos`
-WHERE
-    `id` = :id
-    ");
-
-        $stmt->execute(['id' => $id_presupuesto]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return Presupuesto::fromArray($row);
-    }
-
-    public function deseleccionar_presupuestos($pedidoId)
-    {
-        $stmt = $this->db->prepare("UPDATE
-    `presupuestos`
-SET
-    `seleccionado` = 0
-WHERE
-    `id_pedido` = :id");
-        return $stmt->execute(['id' => $pedidoId]);
-    }
-
-    public function seleccionar_presupuesto($id_presupuesto)
-    {
-        $stmt = $this->db->prepare("UPDATE
-    `presupuestos`
-SET
-    `seleccionado` = 1
-WHERE
-    `id` = :id");
-        return $stmt->execute(['id' => $id_presupuesto]);
-    }
-
-    public function eliminar_presupuesto($id_presupuesto)
-    {
-        $stmt = $this->db->prepare("DELETE FROM `presupuestos` WHERE `id`=:id");
-
-        return $stmt->execute(['id' => $id_presupuesto]);
     }
 
     public function obtener_historial($id)

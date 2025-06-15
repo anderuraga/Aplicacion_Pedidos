@@ -46,6 +46,7 @@ class PedidosController extends Controller
             } else {
                 $pedidos[$e->id] = $pedidosDAO->listar_estado_departamento($e->id, $usuario->departamento->id);
             }
+
         }
 
         $this->view("pedidos/index", ['estados' => $estados, 'pedidos' => $pedidos]);
@@ -268,12 +269,6 @@ class PedidosController extends Controller
 
                 $_SESSION['alert'] = $this->editar($pedidosDAO, $areasGastosDAO, $proveedoresDAO);
                 $pedido = $pedidosDAO->obtener($_POST['id']);
-            } else if ($_POST['action'] == "documentos") {
-                $_SESSION['alert'] = $this->guardarDocumentos($pedidosDAO);
-                $pedido = $pedidosDAO->obtener($_POST['id']);
-            } else if ($_POST['action'] == "subir_factura") {
-                $_SESSION['alert'] = $this->subirFactura($pedidosDAO);
-                $pedido = $pedidosDAO->obtener($_POST['id']);
             }
         }
 
@@ -476,7 +471,6 @@ class PedidosController extends Controller
             }
         }
 
-
         $pedidosDAO->rellenarEstado($pedido->estado->id, $pedido->id, "Se han editado los datos del pedido.");
 
         return [
@@ -494,6 +488,80 @@ class PedidosController extends Controller
                 'tipo' => 'danger',
                 'mensaje' => 'Falta la id del pedido'
             ];
+        }
+
+        if ($pedido->comprobacion_presupuestos()) {
+            if (empty($_FILES["presupuesto1"]['tmp_name']) || empty($_FILES["presupuesto2"]['tmp_name']) || empty($_FILES["presupuesto3"]['tmp_name']) || empty($_FILES["anexo"]['tmp_name'])) {
+                return [
+                    'tipo' => 'danger',
+                    'mensaje' => 'Hay que subir todos los archivos'
+                ];
+            }
+        } else {
+            if (empty($_FILES["presupuesto1"]['tmp_name'])) {
+                return [
+                    'tipo' => 'danger',
+                    'mensaje' => 'Hay que subir todos los archivos'
+                ];
+            }
+        }
+
+        $archivos = [
+            'presupuesto1',
+            'presupuesto2',
+            'presupuesto3',
+        ];
+
+        $rutaBase = __DIR__ . "/../../public/uploads/presupuestos/$pedidoId";
+        if (!is_dir($rutaBase)) {
+            mkdir($rutaBase, 0777, true);
+        }
+
+        foreach ($archivos as $campo) {
+            if (!empty($_FILES[$campo]['tmp_name'])) {
+                $original = $_FILES[$campo]['name'];
+                $nombreLimpio = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $original);
+                $rutaFinal = "$rutaBase/$nombreLimpio";
+
+                if (move_uploaded_file($_FILES[$campo]['tmp_name'], $rutaFinal)) {
+                    $ok = $pedidosDAO->insertar_presupuestos([
+                        'id_pedido' => $pedidoId,
+                        'documento' => $nombreLimpio,
+                        'seleccionado' => $campo == "presupuesto1" ? 1 : 0
+                    ]);
+                    if (!$ok) {
+                        return [
+                            'tipo' => 'danger',
+                            'mensaje' => 'Error al subir archivo'
+                        ];
+                    }
+                } else {
+                    return [
+                        'tipo' => 'danger',
+                        'mensaje' => 'Error al subir archivos'
+                    ];
+                }
+            }
+        }
+        if ($pedido->comprobacion_presupuestos()) {
+            $original = $_FILES["anexo"]['name'];
+            $nombreLimpio = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $original);
+            $rutaFinal = "$rutaBase/$nombreLimpio";
+
+            if (move_uploaded_file($_FILES["anexo"]['tmp_name'], $rutaFinal)) {
+                $ok = $pedidosDAO->insertar_anexo($pedidoId, $nombreLimpio);
+                if (!$ok) {
+                    return [
+                        'tipo' => 'danger',
+                        'mensaje' => 'Error al subir archivo'
+                    ];
+                }
+            } else {
+                return [
+                    'tipo' => 'danger',
+                    'mensaje' => 'Error al subir archivos'
+                ];
+            }
         }
 
         $pedidosDAO->cambiarEstado($pedidoId, 2);
@@ -527,6 +595,37 @@ class PedidosController extends Controller
             ];
         }
 
+        if (empty($_FILES["albaran"]['tmp_name'])) {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Hay que subir todos los archivos'
+            ];
+        }
+
+        $rutaBase = __DIR__ . "/../../public/uploads/presupuestos/$pedidoId";
+        if (!is_dir($rutaBase)) {
+            mkdir($rutaBase, 0777, true);
+        }
+
+        $original = $_FILES["albaran"]['name'];
+        $nombreLimpio = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $original);
+        $rutaFinal = "$rutaBase/$nombreLimpio";
+
+        if (move_uploaded_file($_FILES["albaran"]['tmp_name'], $rutaFinal)) {
+            $ok = $pedidosDAO->insertar_albaran($pedidoId, $nombreLimpio);
+            if (!$ok) {
+                return [
+                    'tipo' => 'danger',
+                    'mensaje' => 'Error al subir archivo'
+                ];
+            }
+        } else {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Error al subir archivos'
+            ];
+        }
+
         $pedido = $pedidosDAO->obtener($pedidoId);
         $correos = $usuariosDAO->obtenerCorreosAdmin();
         $correoJD = $pedido->usuario->correo;
@@ -555,11 +654,44 @@ class PedidosController extends Controller
     public function guardarFactura(PedidosDAO $pedidosDAO, UsuariosDAO $usuariosDAO)
     {
         $pedidoId = $_POST['id'] ?? null;
+        $numero_factura = $_POST['num_fac'] ?? null;
+        $fecha_factura = $_POST['fec_fac'] ?? null;
 
-        if (!$pedidoId) {
+        if (!$pedidoId || !$numero_factura || !$fecha_factura) {
             return [
                 'tipo' => 'danger',
                 'mensaje' => 'Falta la id del pedido'
+            ];
+        }
+
+        if (empty($_FILES["factura"]['tmp_name'])) {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Hay que subir todos los archivos'
+            ];
+        }
+
+        $rutaBase = __DIR__ . "/../../public/uploads/presupuestos/$pedidoId";
+        if (!is_dir($rutaBase)) {
+            mkdir($rutaBase, 0777, true);
+        }
+
+        $original = $_FILES["factura"]['name'];
+        $nombreLimpio = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $original);
+        $rutaFinal = "$rutaBase/$nombreLimpio";
+
+        if (move_uploaded_file($_FILES["factura"]['tmp_name'], $rutaFinal)) {
+            $ok = $pedidosDAO->insertar_factura($pedidoId, $numero_factura, $fecha_factura, $nombreLimpio);
+            if (!$ok) {
+                return [
+                    'tipo' => 'danger',
+                    'mensaje' => 'Error al subir archivo'
+                ];
+            }
+        } else {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Error al subir archivos'
             ];
         }
 
@@ -688,146 +820,6 @@ class PedidosController extends Controller
         $mpdf->WriteHTML($html);
         $mpdf->Output('pedido_' . $pedido->referencia . '.pdf', 'I');
         exit;
-    }
-
-    private function guardarDocumentos(PedidosDAO $pedidosDAO)
-    {
-        $pedidoId = $_POST['id'] ?? null;
-        if (!$pedidoId) {
-            return [
-                'tipo' => 'danger',
-                'mensaje' => 'Falta la id del pedido.'
-            ];
-        }
-        $pedido = $pedidosDAO->obtener($pedidoId);
-        $importe = $pedido->importe;
-
-        // Directorios de uploads
-        $path = __DIR__ . "/../../public/uploads/presupuestos/$pedidoId";
-        if (!is_dir($path))
-            mkdir($path, 0777, true);
-
-        // Presupuestos: 1 o 3
-        $insertedPresuID = [];
-        $count = $importe >= 1000 ? 3 : 1;
-        for ($i = 1; $i <= $count; $i++) {
-            $field = "presupuesto$i";
-            if (!empty($_FILES[$field]['tmp_name'])) {
-                // Eliminar físicamente presupuesto existente
-                if (isset($_POST[$field . '_current'])) {
-                    $presupesto = $pedidosDAO->obtener_presupuesto($_POST[$field . '_current']);
-                    if (file_exists("$path/{$presupesto->documento}")) {
-                        @unlink("$path/{$presupesto->documento}");
-                    }
-                    $pedidosDAO->eliminar_presupuesto($presupesto->id);
-                }
-
-                // Subir nuevo archivo
-                $name = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $_FILES[$field]['name']);
-                move_uploaded_file($_FILES[$field]['tmp_name'], "$path/$name");
-                // Reemplazar registro en BD
-
-                $pedidosDAO->insertar_presupuestos([
-                    'id_pedido'   => $pedidoId,
-                    'documento'   => $name,
-                    'seleccionado' => (!empty($_POST['presupuesto_seleccionado']) && (int)$_POST['presupuesto_seleccionado'] === $i) ? 1 : 0
-                ]);
-                $insertedPresuID["pres$i"] = $pedidosDAO->last_insert_presupuesto;
-            }
-        }
-        // Cambio de selección sin subir archivo
-        if ($count > 1 && !empty($_POST['presupuesto_seleccionado'])) {
-            $sel = (int) $_POST['presupuesto_seleccionado'];
-
-            $pedidosDAO->deseleccionar_presupuestos($pedidoId);
-            if (isset($insertedPresuID["pres$sel"])) {
-                $presid = $insertedPresuID["pres$sel"];
-            } else {
-                $presid = @$_POST["presupuesto$sel" . "_current"];
-            }
-            @$pedidosDAO->seleccionar_presupuesto($presid);
-        }
-        // Anexo si importe >= 1000
-        if ($importe >= 1000 && !empty($_FILES['anexo']['tmp_name'])) {
-            // Eliminar físicamente anexo existente
-            $existingAnexo = $pedido->anexo;
-            if ($existingAnexo && file_exists("$path/$existingAnexo")) {
-                @unlink("$path/$existingAnexo");
-            }
-            // Subir nuevo anexo
-            $name = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $_FILES['anexo']['name']);
-            move_uploaded_file($_FILES['anexo']['tmp_name'], "$path/$name");
-            $pedidosDAO->insertar_anexo($pedidoId, $name);
-        }
-        // Albarán siempre
-        if (!empty($_FILES['albaran']['tmp_name'])) {
-            // Eliminar físicamente albarán existente
-            $existingAlb = $pedido->albaran;
-            if ($existingAlb && file_exists("$path/$existingAlb")) {
-                @unlink("$path/$existingAlb");
-            }
-            // Subir nuevo albarán
-            $name = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $_FILES['albaran']['name']);
-            move_uploaded_file($_FILES['albaran']['tmp_name'], "$path/$name");
-            $pedidosDAO->insertar_albaran($pedidoId, $name);
-        }
-
-        return ['tipo' => 'success', 'mensaje' => 'Documentos actualizados correctamente.'];
-    }
-
-    private function subirFactura(PedidosDAO $pedidosDAO)
-    {
-        $pedidoId = $_POST['id'] ?? null;
-        if (!$pedidoId) {
-            return ['tipo' => 'danger', 'mensaje' => 'Falta la id del pedido para la factura.'];
-        }
-        $pedido = $pedidosDAO->obtener($pedidoId);
-
-        // Validar campos obligatorios
-        $referencia   = trim($_POST['referencia'] ?? '');
-        $fechaFactura = $_POST['fecha_factura'] ?? null;
-        if ($referencia === '' || !$fechaFactura) {
-            return ['tipo' => 'warning', 'mensaje' => 'Debe indicar número y fecha de factura.'];
-        }
-
-        $pathFact = __DIR__ . "/../../public/uploads/presupuestos/$pedidoId";
-        if (!is_dir($pathFact)) {
-            mkdir($pathFact, 0777, true);
-        }
-
-        // Eliminar factura existente si se sube un nuevo archivo
-        if (!empty($_FILES['factura']['tmp_name'])) {
-            $existing = $pedido->factura;
-            if ($existing && file_exists("$pathFact/{$existing->documento}")) {
-                @unlink("$pathFact/{$existing->documento}");
-            }
-            // Subir archivo
-            $name = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $_FILES['factura']['name']);
-            move_uploaded_file($_FILES['factura']['tmp_name'], "$pathFact/$name");
-        } else {
-            // Si no se sube archivo nuevo, mantener nombre antiguo
-            $existing = $pedido->factura;
-            $name = $existing->documento ?? null;
-        }
-
-        // Insertar o actualizar en BD
-        if ($pedido->factura->id != 0) {
-            $pedidosDAO->actualizar_factura(
-                $pedido->factura->id,
-                $referencia,
-                $fechaFactura,
-                $name
-            );
-        } else {
-            $pedidosDAO->insertar_factura(
-                $pedidoId,
-                $referencia,
-                $fechaFactura,
-                $name
-            );
-        }
-
-        return ['tipo' => 'success', 'mensaje' => 'Factura actualizada correctamente.'];
     }
 
     #[\Override]

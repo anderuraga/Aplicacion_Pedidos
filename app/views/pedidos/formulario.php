@@ -16,7 +16,7 @@ if (count($incidenciasActivas) > 0) { ?>
         Hay <?= count($incidenciasActivas) ?> incidencia(s) abiertas en este pedido.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-    <?php
+<?php
 }
 
 $editable = false;
@@ -32,7 +32,7 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
 </style>
 <div id="tableSimple" class="col-lg-8 col-12 layout-spacing formulario_pedidos">
     <div class="statbox widget box box-shadow">
-        <form id="editarForm" method="post" class="formulario">
+        <form id="editarForm" method="post" class="formulario" enctype="multipart/form-data">
             <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
             <input type="hidden" name="action" value="editar">
             <div class="widget-content widget-content-area p-3">
@@ -99,7 +99,7 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                             <?php
                             /** @var TipoServicio $t */
                             foreach ($tiposServicios as $t) {
-                                ?>
+                            ?>
                                 <option value="<?= $t->id ?>" <?= $t->id == $pedido->proveedor->tipo_servicio->id ? 'selected' : '' ?>><?= $t->nombre ?></option>
                             <?php } ?>
                         </select>
@@ -250,40 +250,13 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                 <div class="col-12 ">
                     <?php switch ($pedido->estado->id) {
                         case BORRADOR: ?>
-                            <?php if ($pedido->comprobacion_presupuestos()): ?>
-                                <div class="col-12 mb-3" id="subirfacturadiv">
-                                    <h5>Subir presupuestos:</h5>
-                                    <div class="mb-2">
-                                        <form id="subirFacturas" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>"
-                                            enctype="multipart/form-data">
-                                            <input type="hidden" name="action" value="siguiente">
-                                            <input type="hidden" name="id" value="<?= $pedido->id ?>">
-                                            <h5>Presupuesto Seleccionado:</h5>
-                                            <input type="file" id="presupuesto" name="presupuesto1" accept="application/pdf">
-                                            <h5>Presupuesto alternativo 1:</h5>
-                                            <input type="file" id="presupuesto2" name="presupuesto2" accept="application/pdf">
-                                            <h5>Presupuesto alternativo 2:</h5>
-                                            <input type="file" id="presupuesto3" name="presupuesto3" accept="application/pdf">
-                                            <h5>Anexo III, Anexo XV</h5>
-                                            <p><a href="<?= BASE_URL ?>public/Anexos_Rellenar.pdf" download>Descargar</a></p>
-                                            <input type="file" id="anexo" name="anexo" accept="application/pdf">
-                                            <button class="btn btn-success float-end">Enviar</button><br>
-                                        </form>
-                                    </div>
-                                </div>
-                            <?php else: ?>
-                                <div class="col-12 mb-2" id="subirfacturadiv">
-                                    <form id="subirFactura" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>"
-                                        enctype="multipart/form-data">
-                                        <input type="hidden" name="action" value="siguiente">
-                                        <input type="hidden" name="id" value="<?= $pedido->id ?>">
-                                        <h5>Presupuesto Seleccionado:</h5>
-                                        <input type="file" id="presupuesto" name="presupuesto1" accept="application/pdf">
-                                        <button class="btn btn-success float-end">Enviar</button><br>
-                                    </form>
-                                </div>
-                            <?php endif; ?>
-                            <?php break;
+                            <form id="subirFactura" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>"
+                                enctype="multipart/form-data">
+                                <input type="hidden" name="action" value="siguiente">
+                                <input type="hidden" name="id" value="<?= $pedido->id ?>">
+                                <button class="btn btn-success float-end">Enviar</button><br>
+                            </form>
+                        <?php break;
                         case PEN_VALI: ?>
                             <?php if ($usuario->tipo == ADMIN) { ?>
                                 <form class="mb-2" id="seguir" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>">
@@ -291,31 +264,23 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                                     <button class="btn btn-success float-end">Enviar Proveedor</button><br>
                                 </form>
                             <?php } ?>
-                            <?php break;
+                        <?php break;
                         case PEN_PROV: ?>
-                            <h5>Subir albarán:</h5>
                             <form class="mb-2" id="subirFacturas" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>"
                                 enctype="multipart/form-data">
                                 <input type="hidden" name="action" value="siguiente">
                                 <input type="hidden" name="id" value="<?= $pedido->id ?>">
-                                <input type="file" id="albaran" name="albaran" accept="application/pdf">
-                                <button class="btn btn-success float-end">Subir Albarán</button><br>
+                                <button class="btn btn-success float-end">Enviar</button><br>
                             </form>
-                            <?php break;
+                        <?php break;
                         case PEN_FACT: ?>
-                            <h5>Subir factura:</h5>
                             <form class="mb-2 formulario" id="subirFacturas" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>"
                                 enctype="multipart/form-data">
                                 <input type="hidden" name="action" value="siguiente">
                                 <input type="hidden" name="id" value="<?= $pedido->id ?>">
-                                <h5>Número factura: *</h5>
-                                <input type="text" class="form-control mb-2" id="num_fac" name="num_fac">
-                                <h5>Fecha factura: *</h5>
-                                <input type="text" class="form-control flatTime mb-2"  id="fec_fac" name="fec_fac">
-                                <input type="file" id="factura" name="factura" accept="application/pdf">
-                                <button class="btn btn-success float-end">Subir factura</button><br>
+                                <button class="btn btn-success float-end">Enviar</button><br>
                             </form>
-                            <?php break;
+                        <?php break;
                         case PEN_ARCH: ?>
                             <?php if ($usuario->tipo == ADMIN) { ?>
                                 <form class="mb-2" id="seguir" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>">
@@ -324,20 +289,20 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                                     <button class="btn btn-success float-end">Archivar</button><br>
                                 </form>
                             <?php } ?>
-                            <?php break;
-                        case ARCHIVADO:?>
+                        <?php break;
+                        case ARCHIVADO: ?>
                             <?php if ($usuario->tipo == ADMIN) { ?>
                                 <a target="_blank" href="<?= BASE_URL ?>Pedidos/pdf/<?= $pedido->id ?>" class="btn btn-success float-end">Imprimir</button>
-                            <?php } ?>
-                            <?php break;
+                                <?php } ?>
+                        <?php break;
                         default:
                             break;
                     } ?>
-                    <?php if ($usuario->tipo == ADMIN): ?>
-                        <a class="btn btn-warning"
-                            href="<?= BASE_URL ?>Incidencias/vereditar?id=0&pedido=<?= $pedido->id ?>">Nueva Incidencia</a>
-                        <button type="submit" form="editarForm" class="btn btn-light-success mr-a">Guardar</button>
-                    <?php endif; ?>
+                        <?php if ($usuario->tipo == ADMIN): ?>
+                            <a class="btn btn-warning"
+                                href="<?= BASE_URL ?>Incidencias/vereditar?id=0&pedido=<?= $pedido->id ?>">Nueva Incidencia</a>
+                            <button type="submit" form="editarForm" class="btn btn-light-success mr-a">Guardar</button>
+                        <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -349,47 +314,95 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                     <h2>Documentos</h2>
                 </div>
             </div>
-            <?php
-            if ($pedido->estado->id == BORRADOR) {
-                echo "<h5>Todavía no hay documentos subidos</h5>";
-            } else {
-                ?>
-                <h5 class="mb-0">Presupuesto seleccionado</h5>
-                <a target="_blank"
-                    href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $presupuestos[0]->documento ?>">Ver
-                    Presupuesto</a>
-                <?php if ($pedido->comprobacion_presupuestos()) { ?>
-                    <h5 class="mb-0 mt-2">Presupuesto alternativo 1</h5>
-                    <a target="_blank"
-                        href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $presupuestos[1]->documento ?>">Ver
-                        Presupuesto</a>
-                    <h5 class="mb-0 mt-2">Presupuesto alternativo 2</h5>
-                    <a target="_blank"
-                        href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $presupuestos[2]->documento ?>">Ver
-                        Presupuesto</a>
-                    <h5 class="mb-0 mt-2">Anexo III, Anexo XV</h5>
-                    <a target="_blank"
-                        href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pedido->anexo ?>">Ver
-                        Anexos</a>
 
-                <?php } ?>
-                <?php if ($pedido->estado->id >= PEN_FACT) { ?>
-                    <h5 class="mb-0 mt-2">Albarán</h5>
-                    <a target="_blank"
-                        href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pedido->albaran ?>">Ver
-                        Albarán</a>
-                <?php } ?>
-                <?php if ($pedido->estado->id >= PEN_ARCH) { ?>
-                    <h5 class="mb-0 mt-2">Factura</h5>
-                    <a target="_blank"
-                        href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pedido->factura->documento ?>">Ver
-                        Factura</a>
-                    <p>Referencia: <?= $pedido->factura->referencia ?></p>
-                    <p>Fecha: <?= $pedido->factura->fecha ?></p>
-                <?php } ?>
-                <?php
-            }
-            ?>
+            <div class="row">
+                <form id="documentos" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
+                    <input type="hidden" name="action" value="documentos">
+                    <div class="col-12 mb-3" id="documentosDiv">
+                        <?php
+                        // Cargar documentos existentes
+                        $presupuestos = $presupuestos ?? [];
+                        $albaran = $pedido->albaran ?? null;
+                        $anexo = $pedido->anexo ?? null;
+
+                        // Determinar número de presupuestos
+                        $budgetCount = $pedido->importe >= 1000 ? 3 : 1;
+                        ?>
+
+                        <h4>Presupuestos:</h4>
+                        <?php for ($i = 1; $i <= $budgetCount; $i++):
+                            $pres = $presupuestos[$i - 1] ?? null;
+                        ?>
+                            <div class="mb-2">
+                                <h5>Presupuesto <?= $i ?></h5>
+                                <?php if ($pres && $pres->documento): ?>
+                                    <a href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pres->documento ?>" target="_blank" class="ms-2">Ver documento actual</a>
+                                <?php endif; ?>
+                                <?php if ($budgetCount > 1): ?>
+                                    <label class="ms-2">
+                                        <input type="radio" name="presupuesto_seleccionado" value="<?= $i ?>" <?= ($pres && $pres->seleccionado == 1) ? 'checked' : '' ?>> Seleccionado
+                                    </label>
+                                <?php endif; ?>
+                                <?php if ($pres && $pres->documento): ?>
+                                    <input type="hidden" name="presupuesto<?= $i ?>_current" value="<?= $pres->id ?>">
+                                <?php endif; ?>
+                                <input type="file" id="presupuesto<?= $i ?>" name="presupuesto<?= $i ?>" accept="application/pdf">
+                            </div>
+                        <?php endfor; ?>
+
+                        <?php if ($pedido->importe >= 1000): ?>
+                            <div class="mb-3">
+                                <h5>Anexo:</h5>
+                                <?php if ($anexo): ?>
+                                    <a href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $anexo ?>" target="_blank" class="ms-2">Ver documento actual</a>
+                                <?php endif; ?>
+                                <input type="file" id="anexo" name="anexo" accept="application/pdf">
+                            </div>
+                        <?php endif; ?>
+
+                        <div class="mb-3">
+                            <h5>Albarán:</h5>
+                            <?php if ($albaran): ?>
+                                <a href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $albaran ?>" target="_blank" class="ms-2">Ver documento actual</a>
+                            <?php endif; ?>
+                            <input type="file" id="albaran" name="albaran" accept="application/pdf">
+
+                        </div>
+
+                        <button type="submit" class="btn btn-success float-end">Guardar documentos</button>
+                    </div>
+                </form>
+
+
+                <div class="col-12 mb-3" id="facturaDiv">
+                    <h5>Factura:</h5>
+                    <form class="mb-2 formulario" id="subirFactura" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>" enctype="multipart/form-data">
+                        <input type="hidden" name="action" value="subir_factura">
+                        <input type="hidden" name="id" value="<?= $pedido->id ?>">
+                        <?php if (isset($pedido->factura) && $pedido->factura->id!=0): ?>
+                            <a href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pedido->factura->documento ?>" target="_blank" class="ms-2">Ver factura actual</a>
+                        <?php endif; ?>
+                        <div class="mb-2">
+                            <label for="referencia">Número de factura *</label>
+                            <input type="text" class="form-control" id="referencia" name="referencia" value="<?= $pedido->factura->referencia ?? '' ?>" required>
+                        </div>
+
+                        <div class="mb-2">
+                            <label for="fecha_factura">Fecha de factura *</label>
+                            <input type="date" class="form-control flatTime" id="fecha_factura" name="fecha_factura" value="<?= $pedido->factura->fecha ?? '' ?>" required>
+                        </div>
+
+                        <div class="mb-2">
+                            <label for="factura">Archivo factura <?= isset($pedido->factura) ? '(reemplazará el actual)' : '' ?> *</label>
+                            <input type="file" id="factura" name="factura" accept="application/pdf" <?= isset($pedido->factura) ? '' : 'required' ?>>
+
+                        </div>
+
+                        <button type="submit" class="btn btn-success float-end">Subir factura</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
     <div class="statbox widget box box-shadow mt-2">
@@ -429,7 +442,7 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                              * @var Historial $h
                              */
                             foreach ($historial as $h) {
-                                ?>
+                            ?>
                                 <div class="item-timeline">
                                     <p class="t-time"><?= $h->getFechaVisible() ?></p>
                                     <div class="t-dot t-dot-warning">
@@ -453,10 +466,11 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
     }
 
     var inicial = true;
+
     function filtrarProveedores() {
         var seleccionado = $('#servicio').val();
 
-        $('#proveedor option').each(function () {
+        $('#proveedor option').each(function() {
             var ts = $(this).data('ts');
 
             if (ts == seleccionado) {
@@ -472,12 +486,12 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
 
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         $('#servicio').on('change', filtrarProveedores)
         filtrarProveedores();
         inicial = false;
 
-        $('.formulario').find('input:required, textarea:required').on('blur', function () {
+        $('.formulario').find('input:required, textarea:required').on('blur', function() {
             if ($.trim($(this).val()) === '') {
                 $(this).addClass('required-vacio');
             } else {
