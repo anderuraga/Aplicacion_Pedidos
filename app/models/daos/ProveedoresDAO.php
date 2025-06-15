@@ -341,4 +341,32 @@ VALUES(
         ]);
     }
 
+    public function reportes($anio){
+        $sql = "SELECT
+                ts.id AS id_tipo_servicio,
+                ts.nombre      AS tipo_servicio,
+                pr.id          AS id_proveedor,
+                pr.nombre      AS nombre_proveedor,
+                COUNT(p.id)    AS num_pedidos,
+                SUM(p.importe) AS total_importe
+                FROM proveedores pr
+                JOIN tipos_servicio ts
+                    ON pr.id_servicio = ts.id
+                JOIN pedidos p
+                    ON p.id_proveedor = pr.id
+                    AND p.anio_contable = :anio
+                GROUP BY ts.id, pr.id, pr.nombre;";
+                $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'anio' => $anio
+        ]);
+        $result = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $row["total_importe"] = getCantidadFormateada((float)$row['total_importe']);
+            $result[] = $row;
+        }
+            
+        return $result;
+    }
+
 }

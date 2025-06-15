@@ -581,4 +581,31 @@ DESC
         }
         return $result;
     }
+
+    public function reportes($anio)
+    {
+        $sql = "SELECT
+  CASE
+    WHEN p.id_estado BETWEEN 0 AND 4 THEN 'Pedidos sin factura'
+    WHEN p.id_estado = 5          THEN 'Pendientes'
+    WHEN p.id_estado = 6          THEN 'Pagadas'
+  END AS estado,
+  COUNT(DISTINCT p.id) AS num_facturas,
+  COALESCE(SUM(p.importe), 0)     AS total_importe
+FROM pedidos p
+WHERE p.anio_contable = :anio
+GROUP BY estado
+ORDER BY
+  FIELD(estado, 'Pedidos sin factura', 'Pendientes', 'Pagadas');";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'anio' => $anio
+        ]);
+        $result = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $row['total_importe'] = getCantidadFormateada((float)$row['total_importe']);
+            $result[] = $row;
+        }
+        return $result;
+    }
 }

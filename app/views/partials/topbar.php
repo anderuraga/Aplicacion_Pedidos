@@ -1,4 +1,4 @@
-<?php global $usuario ?>
+<?php global $usuario; ?>
 <div class="sidebar-wrapper sidebar-theme">
     <nav id="sidebar">
         <div class="navbar-nav theme-brand flex-row  text-center">
