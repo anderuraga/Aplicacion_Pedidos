@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 11-06-2025 a las 12:53:16
+-- Tiempo de generación: 16-06-2025 a las 15:33:21
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -30,7 +30,8 @@ SET time_zone = "+00:00";
 CREATE TABLE `areas_gastos` (
   `id` int(11) NOT NULL,
   `id_departamento` int(11) NOT NULL,
-  `nombre` varchar(255) NOT NULL
+  `nombre` varchar(255) NOT NULL,
+  `baja` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 -- --------------------------------------------------------
@@ -41,7 +42,8 @@ CREATE TABLE `areas_gastos` (
 
 CREATE TABLE `departamentos` (
   `id` int(11) NOT NULL,
-  `nombre` varchar(255) NOT NULL
+  `nombre` varchar(255) NOT NULL,
+  `baja` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 -- --------------------------------------------------------
@@ -64,13 +66,9 @@ CREATE TABLE `estado` (
 
 CREATE TABLE `facturas` (
   `id` int(11) NOT NULL,
-  `identificador` varchar(20) NOT NULL,
-  `pedido` varchar(20) NOT NULL,
+  `identificador` varchar(255) NOT NULL,
   `fecha` date NOT NULL,
-  `vencimiento` date NOT NULL,
-  `documento` varchar(45) NOT NULL,
-  `documento_firmado` varchar(45) DEFAULT NULL,
-  `estado` tinyint(1) NOT NULL
+  `documento` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 -- --------------------------------------------------------
@@ -97,7 +95,8 @@ CREATE TABLE `incidencias` (
 CREATE TABLE `materiales` (
   `id` int(11) NOT NULL,
   `id_departamento` int(11) NOT NULL,
-  `nombre` varchar(45) NOT NULL
+  `nombre` varchar(45) NOT NULL,
+  `baja` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 -- --------------------------------------------------------
@@ -111,7 +110,8 @@ CREATE TABLE `movimientos` (
   `id_item` int(11) NOT NULL,
   `fecha` datetime NOT NULL,
   `descripcion` varchar(255) NOT NULL,
-  `cantidad` int(11) NOT NULL
+  `cantidad` int(11) NOT NULL,
+  `baja` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 -- --------------------------------------------------------
@@ -133,11 +133,12 @@ CREATE TABLE `pedidos` (
   `fecha_enviada` datetime DEFAULT NULL,
   `descripcion` mediumtext NOT NULL,
   `importe` decimal(15,2) NOT NULL,
-  `id_factura` varchar(20) DEFAULT NULL,
+  `id_factura` int(11) DEFAULT NULL,
   `anio_contable` year(4) NOT NULL,
   `anexo` varchar(255) DEFAULT NULL,
   `albaran` varchar(255) DEFAULT NULL,
-  `factura` varchar(255) DEFAULT NULL
+  `factura` varchar(255) DEFAULT NULL,
+  `baja` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 -- --------------------------------------------------------
@@ -190,12 +191,12 @@ CREATE TABLE `proveedores` (
   `contacto` varchar(45) NOT NULL,
   `id_servicio` int(11) NOT NULL,
   `terceros` varchar(255) DEFAULT NULL,
-  `provedoor_profesor` varchar(255) DEFAULT NULL,
   `fecha_creado` datetime NOT NULL DEFAULT current_timestamp(),
   `fecha_editado` datetime NOT NULL DEFAULT current_timestamp(),
   `fecha_baja` datetime DEFAULT NULL,
   `limite` decimal(10,2) NOT NULL DEFAULT 15000.00,
-  `usuario_id` int(11) NOT NULL
+  `usuario_id` int(11) NOT NULL,
+  `borrado` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 -- --------------------------------------------------------
@@ -220,7 +221,8 @@ CREATE TABLE `recuperaciones` (
 
 CREATE TABLE `subconceptos` (
   `id` int(11) NOT NULL,
-  `nombre` varchar(45) NOT NULL
+  `nombre` varchar(45) NOT NULL,
+  `baja` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 -- --------------------------------------------------------
@@ -231,7 +233,8 @@ CREATE TABLE `subconceptos` (
 
 CREATE TABLE `tipos_servicio` (
   `id` int(11) NOT NULL,
-  `nombre` varchar(45) NOT NULL
+  `nombre` varchar(45) NOT NULL,
+  `baja` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 -- --------------------------------------------------------
@@ -245,7 +248,8 @@ CREATE TABLE `transacciones` (
   `id_area` int(11) NOT NULL,
   `fecha` datetime NOT NULL,
   `descripcion` varchar(255) NOT NULL,
-  `cantidad` float(15,2) NOT NULL
+  `cantidad` float(15,2) NOT NULL,
+  `baja` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 -- --------------------------------------------------------
@@ -286,7 +290,6 @@ CREATE TABLE `vista_proveedores_gastos` (
 ,`contacto` varchar(45)
 ,`id_servicio` int(11)
 ,`proveedor_terceros` varchar(255)
-,`proveedor_prov_prof` varchar(255)
 ,`proveedor_fecha_creado` datetime
 ,`proveedor_fecha_editado` datetime
 ,`proveedor_fecha_baja` datetime
@@ -333,7 +336,7 @@ CREATE TABLE `vista_resumen_movimientos` (
 --
 DROP TABLE IF EXISTS `vista_proveedores_gastos`;
 
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vista_proveedores_gastos`  AS SELECT `pr`.`id` AS `id`, `pr`.`cif` AS `cif`, `pr`.`nombre` AS `nombre`, `pr`.`direccion` AS `direccion`, `pr`.`cod_postal` AS `cod_postal`, `pr`.`poblacion` AS `poblacion`, `pr`.`provincia` AS `provincia`, `pr`.`pais` AS `pais`, `pr`.`telefono` AS `telefono`, `pr`.`correo` AS `correo`, `pr`.`factura_e` AS `factura_e`, `pr`.`cuanta_bancaria` AS `cuanta_bancaria`, `pr`.`contacto` AS `contacto`, `pr`.`id_servicio` AS `id_servicio`, `pr`.`terceros` AS `proveedor_terceros`, `pr`.`provedoor_profesor` AS `proveedor_prov_prof`, `pr`.`fecha_creado` AS `proveedor_fecha_creado`, `pr`.`fecha_editado` AS `proveedor_fecha_editado`, `pr`.`fecha_baja` AS `proveedor_fecha_baja`, `pr`.`limite` AS `proveedor_limite`, `pr`.`usuario_id` AS `usuario_id`, coalesce(`pe`.`anio_contable`,year(curdate())) AS `anio_contable`, coalesce(sum(case when `pe`.`id_estado` > 1 then `pe`.`importe` else 0 end),0) AS `gasto_anual` FROM (`proveedores` `pr` left join `pedidos` `pe` on(`pr`.`id` = `pe`.`id_proveedor`)) GROUP BY `pr`.`id`, `pr`.`cif`, `pr`.`nombre`, `pr`.`direccion`, `pr`.`cod_postal`, `pr`.`poblacion`, `pr`.`provincia`, `pr`.`pais`, `pr`.`telefono`, `pr`.`correo`, `pr`.`factura_e`, `pr`.`cuanta_bancaria`, `pr`.`contacto`, `pr`.`id_servicio`, `pe`.`anio_contable` ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vista_proveedores_gastos`  AS SELECT `pr`.`id` AS `id`, `pr`.`cif` AS `cif`, `pr`.`nombre` AS `nombre`, `pr`.`direccion` AS `direccion`, `pr`.`cod_postal` AS `cod_postal`, `pr`.`poblacion` AS `poblacion`, `pr`.`provincia` AS `provincia`, `pr`.`pais` AS `pais`, `pr`.`telefono` AS `telefono`, `pr`.`correo` AS `correo`, `pr`.`factura_e` AS `factura_e`, `pr`.`cuanta_bancaria` AS `cuanta_bancaria`, `pr`.`contacto` AS `contacto`, `pr`.`id_servicio` AS `id_servicio`, `pr`.`terceros` AS `proveedor_terceros`, `pr`.`fecha_creado` AS `proveedor_fecha_creado`, `pr`.`fecha_editado` AS `proveedor_fecha_editado`, `pr`.`fecha_baja` AS `proveedor_fecha_baja`, `pr`.`limite` AS `proveedor_limite`, `pr`.`usuario_id` AS `usuario_id`, coalesce(`pe`.`anio_contable`,year(curdate())) AS `anio_contable`, coalesce(sum(case when `pe`.`id_estado` > 1 then `pe`.`importe` else 0 end),0) AS `gasto_anual` FROM (`proveedores` `pr` left join `pedidos` `pe` on(`pr`.`id` = `pe`.`id_proveedor`)) WHERE `pr`.`borrado` is null GROUP BY `pr`.`id`, `pr`.`cif`, `pr`.`nombre`, `pr`.`direccion`, `pr`.`cod_postal`, `pr`.`poblacion`, `pr`.`provincia`, `pr`.`pais`, `pr`.`telefono`, `pr`.`correo`, `pr`.`factura_e`, `pr`.`cuanta_bancaria`, `pr`.`contacto`, `pr`.`id_servicio`, `pe`.`anio_contable` ;
 
 -- --------------------------------------------------------
 
@@ -342,7 +345,7 @@ CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vista_proveedores_gastos` 
 --
 DROP TABLE IF EXISTS `vista_resumen_areas`;
 
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vista_resumen_areas`  AS SELECT `ag`.`id` AS `id_area`, `ag`.`nombre` AS `nombre_area`, `ag`.`id_departamento` AS `id_departamento`, `d`.`nombre` AS `nombre_departamento`, ifnull(sum(case when `t`.`cantidad` > 0 then `t`.`cantidad` else 0 end),0) AS `ingresos`, ifnull(sum(case when `t`.`cantidad` < 0 then abs(`t`.`cantidad`) else 0 end),0) AS `gastos`, ifnull((select sum(`p`.`importe`) from `pedidos` `p` where `p`.`id_area_gasto` = `ag`.`id` and `p`.`id_estado` between 0 and 5),0) AS `gasto_pendiente`, ifnull(sum(case when `t`.`cantidad` > 0 then `t`.`cantidad` else 0 end),0) - (ifnull(sum(case when `t`.`cantidad` < 0 then abs(`t`.`cantidad`) else 0 end),0) + ifnull((select sum(`p`.`importe`) from `pedidos` `p` where `p`.`id_area_gasto` = `ag`.`id` and `p`.`id_estado` between 0 and 5),0)) AS `total` FROM ((`areas_gastos` `ag` left join `departamentos` `d` on(`ag`.`id_departamento` = `d`.`id`)) left join `transacciones` `t` on(`ag`.`id` = `t`.`id_area`)) GROUP BY `ag`.`id`, `ag`.`nombre`, `ag`.`id_departamento`, `d`.`nombre` ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vista_resumen_areas`  AS SELECT `ag`.`id` AS `id_area`, `ag`.`nombre` AS `nombre_area`, `ag`.`id_departamento` AS `id_departamento`, `d`.`nombre` AS `nombre_departamento`, ifnull(sum(case when `t`.`cantidad` > 0 then `t`.`cantidad` else 0 end),0) AS `ingresos`, ifnull(sum(case when `t`.`cantidad` < 0 then abs(`t`.`cantidad`) else 0 end),0) AS `gastos`, ifnull((select sum(`p`.`importe`) from `pedidos` `p` where `p`.`id_area_gasto` = `ag`.`id` and `p`.`id_estado` between 0 and 5),0) AS `gasto_pendiente`, ifnull(sum(case when `t`.`cantidad` > 0 then `t`.`cantidad` else 0 end),0) - (ifnull(sum(case when `t`.`cantidad` < 0 then abs(`t`.`cantidad`) else 0 end),0) + ifnull((select sum(`p`.`importe`) from `pedidos` `p` where `p`.`id_area_gasto` = `ag`.`id` and `p`.`id_estado` between 0 and 5),0)) AS `total` FROM ((`areas_gastos` `ag` left join `departamentos` `d` on(`ag`.`id_departamento` = `d`.`id`)) left join `transacciones` `t` on(`ag`.`id` = `t`.`id_area`)) WHERE `ag`.`baja` is null GROUP BY `ag`.`id`, `ag`.`nombre`, `ag`.`id_departamento`, `d`.`nombre` ;
 
 -- --------------------------------------------------------
 
@@ -351,7 +354,7 @@ CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vista_resumen_areas`  AS S
 --
 DROP TABLE IF EXISTS `vista_resumen_movimientos`;
 
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vista_resumen_movimientos`  AS SELECT `m`.`id` AS `id`, `m`.`id_departamento` AS `departamento_id`, `m`.`nombre` AS `nombre`, ifnull(sum(`mv`.`cantidad`),0) AS `cantidad` FROM (`materiales` `m` left join `movimientos` `mv` on(`m`.`id` = `mv`.`id_item`)) WHERE 1 GROUP BY `m`.`id` ;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vista_resumen_movimientos`  AS SELECT `m`.`id` AS `id`, `m`.`id_departamento` AS `departamento_id`, `m`.`nombre` AS `nombre`, ifnull(sum(`mv`.`cantidad`),0) AS `cantidad` FROM (`materiales` `m` left join `movimientos` `mv` on(`m`.`id` = `mv`.`id_item`)) WHERE `m`.`baja` is null GROUP BY `m`.`id` ;
 
 --
 -- Índices para tablas volcadas
@@ -614,7 +617,7 @@ ALTER TABLE `materiales`
 -- Filtros para la tabla `movimientos`
 --
 ALTER TABLE `movimientos`
-  ADD CONSTRAINT `movimientos_material` FOREIGN KEY (`id_item`) REFERENCES `materiales` (`id`);
+  ADD CONSTRAINT `movimientos_material` FOREIGN KEY (`id_item`) REFERENCES `materiales` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `pedidos`
@@ -622,9 +625,8 @@ ALTER TABLE `movimientos`
 ALTER TABLE `pedidos`
   ADD CONSTRAINT `pedido_areagasto` FOREIGN KEY (`id_area_gasto`) REFERENCES `areas_gastos` (`id`),
   ADD CONSTRAINT `pedido_departamento` FOREIGN KEY (`id_departamento`) REFERENCES `departamentos` (`id`),
-  ADD CONSTRAINT `pedido_factura` FOREIGN KEY (`id_factura`) REFERENCES `facturas` (`identificador`),
+  ADD CONSTRAINT `pedido_factura` FOREIGN KEY (`id_factura`) REFERENCES `facturas` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   ADD CONSTRAINT `pedido_proveedor` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedores` (`id`),
-  ADD CONSTRAINT `pedido_subconcepto` FOREIGN KEY (`id_subconcepto`) REFERENCES `subconceptos` (`id`),
   ADD CONSTRAINT `pedido_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`);
 
 --
