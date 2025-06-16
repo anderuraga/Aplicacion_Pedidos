@@ -341,7 +341,8 @@ VALUES(
         ]);
     }
 
-    public function reportes($anio){
+    public function reportes($anio)
+    {
         $sql = "SELECT
                 ts.id AS id_tipo_servicio,
                 ts.nombre      AS tipo_servicio,
@@ -356,17 +357,50 @@ VALUES(
                     ON p.id_proveedor = pr.id
                     AND p.anio_contable = :anio
                 GROUP BY ts.id, pr.id, pr.nombre;";
-                $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->execute([
             'anio' => $anio
         ]);
         $result = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $row["total_importe"] = getCantidadFormateada((float)$row['total_importe']);
+            $row["total_importe"] = getCantidadFormateada((float) $row['total_importe']);
             $result[] = $row;
         }
-            
+
         return $result;
+    }
+
+    public function borrar($id, $nombre, $cif)
+    {
+        $sql = "UPDATE
+            `proveedores`
+        SET
+            `cif` = :cif,
+            `nombre` = :nombre,
+            `direccion` = :nombre,
+            `cod_postal` = 0,
+            `poblacion` = :nombre,
+            `provincia` = :nombre,
+            `pais` = :nombre,
+            `telefono` = :nombre,
+            `correo` = :nombre,
+            `factura_e` = 1,
+            `cuanta_bancaria` = 0,
+            `contacto` = :nombre,
+            `terceros` = null,
+            `fecha_creado` = NOW(),
+            `fecha_editado` = NOW(),
+            `fecha_baja` = NOW(),
+            `limite` = 0,
+            `borrado` = NOW()
+        WHERE
+            `id` = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'id' => $id,
+            'cif' => $cif,
+            'nombre' => $nombre
+        ]);
     }
 
 }

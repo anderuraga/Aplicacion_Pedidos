@@ -31,23 +31,33 @@ class ProveedoresController extends Controller
          */
         $usuariosDAO = $this->dao("Usuarios");
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            global $usuario;
-            if ($usuario->tipo == ADMIN && isset($_POST['action']) && $_POST['action'] == "estado") {
-                $_SESSION['alert'] = $this->cambiarEstado($proveedoresDAO, $id);
+            if (isset($_POST['action']) && $_POST['action'] == "borrar") {
+                $_SESSION['alert'] = $this->borrar($proveedoresDAO);
+                if ($_SESSION['alert']['tipo'] == "success") {
+                    session_write_close();
+                    header("Location: " . BASE_URL . "Proveedores");
+                    exit;
+                }
+            } else {
+                global $usuario;
+                if ($usuario->tipo == ADMIN && isset($_POST['action']) && $_POST['action'] == "estado") {
+                    $_SESSION['alert'] = $this->cambiarEstado($proveedoresDAO, $id);
+                    session_write_close();
+                    header("Location:" . BASE_URL . "Proveedores/vereditar?id=" . $id);
+                    exit;
+                }
+
+                $_SESSION['alert'] = $this->guardar($proveedoresDAO, $usuariosDAO);
+                if ($proveedoresDAO->last_insert !== null) {
+                    session_write_close();
+                    header("Location:" . BASE_URL . "Proveedores/vereditar?id=" . $proveedoresDAO->last_insert);
+                    exit;
+                }
                 session_write_close();
                 header("Location:" . BASE_URL . "Proveedores/vereditar?id=" . $id);
                 exit;
             }
 
-            $_SESSION['alert'] = $this->guardar($proveedoresDAO,$usuariosDAO);
-            if ($proveedoresDAO->last_insert !== null) {
-                session_write_close();
-                header("Location:" . BASE_URL . "Proveedores/vereditar?id=" . $proveedoresDAO->last_insert);
-                exit;
-            }
-            session_write_close();
-            header("Location:" . BASE_URL . "Proveedores/vereditar?id=" . $id);
-            exit;
         }
 
         if ($id <> 0) {
@@ -252,6 +262,40 @@ class ProveedoresController extends Controller
             'tipo' => 'danger',
             'mensaje' => 'Error al cambiar el estado del proveedor'
         ];
+    }
+
+    private function borrar(ProveedoresDAO $proveedoresDAO): array
+    {
+        $id = $_POST['id'];
+        $confirmacion = $_POST['confirmacion'];
+
+        if ($confirmacion != "Borrar") {
+            return [
+                'tipo' => 'warning',
+                'mensaje' => 'El campo de confirmación no coincide'
+            ];
+        }
+
+        $proveedor = $proveedoresDAO->obtener($id);
+
+        if (!is_null($proveedor->terceros)) {
+            @unlink(__DIR__ . "/../../public/uploads/proveedor/" . $id . "/terceros/" . $proveedor->terceros);
+        }
+
+        $random = random_int(1, 99999999);
+        $nombre = "Borrado$random";
+
+        if ($proveedoresDAO->borrar($id, $random, $nombre)) {
+            return [
+                'tipo' => 'success',
+                'mensaje' => 'Se ha borrado el tipo de servicio correctamente'
+            ];
+        } else {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Ha sucedido un problema al borrar el tipo de servicio'
+            ];
+        }
     }
 
     #[\Override]
