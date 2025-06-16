@@ -15,7 +15,7 @@ class TiposServicioDAO
 
     public function obtener($id): TipoServicio
     {
-        $stmt = $this->db->prepare( "SELECT 
+        $stmt = $this->db->prepare("SELECT 
                                         `id` as tiposervicio_id, 
                                         `nombre` as tiposervicio_nombre
                                     FROM `tipos_servicio`
@@ -82,7 +82,7 @@ class TiposServicioDAO
                                         FROM
                                             `tipos_servicio`
                                         WHERE
-                                            1
+                                            baja IS NULL
                                         ORDER BY
                                             `nombre` ASC");
 
@@ -92,5 +92,21 @@ class TiposServicioDAO
         }
 
         return $result;
+    }
+
+    public function borrar($id, $nombre)
+    {
+        $sql = "UPDATE
+    `tipos_servicio`
+SET
+    `nombre` = :nombre ,
+    `baja` = NOW()
+WHERE
+    `id` = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'id' => $id,
+            'nombre' => $nombre
+        ]);
     }
 }

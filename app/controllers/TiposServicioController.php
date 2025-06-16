@@ -1,13 +1,15 @@
-<?php 
-require_once __DIR__.'/../helpers/auth.php';
+<?php
+require_once __DIR__ . '/../helpers/auth.php';
 
-class TiposServicioController extends Controller {
-    public function index() {
+class TiposServicioController extends Controller
+{
+    public function index()
+    {
 
         $tiposServicioDAO = $this->dao("TiposServicio");
         $tiposservicio = $tiposServicioDAO->listar();
 
-        $this->view("tiposservicio/index",['tiposservicio' => $tiposservicio]);
+        $this->view("tiposservicio/index", ['tiposservicio' => $tiposservicio]);
     }
 
     public function vereditar()
@@ -16,13 +18,23 @@ class TiposServicioController extends Controller {
 
         $tiposServicioDAO = $this->dao("TiposServicio");
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $_SESSION['alert'] = $this->guardar($tiposServicioDAO);
-            if($tiposServicioDAO->last_insert!=null){
-                session_write_close();
-                header("Location: vereditar?id=".$tiposServicioDAO->last_insert);
+            if (isset($_POST['action']) && $_POST['action'] == "borrar") {
+                $_SESSION['alert'] = $this->borrar($tiposServicioDAO);
+                if ($_SESSION['alert']['tipo'] == "success") {
+                    session_write_close();
+                    header("Location: " . BASE_URL . "TiposServicio");
+                    exit;
+                }
+            } else {
+                $_SESSION['alert'] = $this->guardar($tiposServicioDAO);
+                if ($tiposServicioDAO->last_insert != null) {
+                    session_write_close();
+                    header("Location: vereditar?id=" . $tiposServicioDAO->last_insert);
+                }
             }
+
         }
-        
+
 
         if ($id <> 0) {
             $tiposervicio = $tiposServicioDAO->obtener($id);
@@ -60,12 +72,12 @@ class TiposServicioController extends Controller {
             $ok = $tiposservicioDAO->editar($id, $nombre);
         }
 
-        if($ok){
+        if ($ok) {
             return [
                 'tipo' => 'success',
                 'mensaje' => $id == 0 ? 'Se ha creado el tipo de servio correctamente' : 'Se ha editado el tipo de servicio correctamente'
             ];
-        }else{
+        } else {
             return [
                 'tipo' => 'warning',
                 'mensaje' => $id == 0 ? 'No se ha podido crear el tipo de servicio' : 'No se ha podido editar el tipo de servicio'
@@ -73,8 +85,37 @@ class TiposServicioController extends Controller {
         }
     }
 
+    private function borrar(TiposServicioDAO $tiposServicioDAO)
+    {
+        $id = $_POST['id'];
+        $confirmacion = $_POST['confirmacion'];
+
+        if ($confirmacion != "Borrar") {
+            return [
+                'tipo' => 'warning',
+                'mensaje' => 'El campo de confirmación no coincide'
+            ];
+        }
+
+        $random = random_int(1, 99999999);
+        $nombre = "Borrado$random";
+
+        if ($tiposServicioDAO->borrar($id, $nombre)) {
+            return [
+                'tipo' => 'success',
+                'mensaje' => 'Se ha borrado el tipo de servicio correctamente'
+            ];
+        } else {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Ha sucedido un problema al borrar el tipo de servicio'
+            ];
+        }
+    }
+
     #[\Override]
-    public function tiene_permiso(): bool {
+    public function tiene_permiso(): bool
+    {
         return requireAdmin();
     }
 }

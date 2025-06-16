@@ -14,7 +14,8 @@
     <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
         <div class="statbox widget box box-shadow">
             <div class="widget-content widget-content-area">
-                <h1 class="mt-2 ms-2">Item: <?= $item->nombre ?></h1>
+                <a href="<?= BASE_URL ?>Inventario/" class="btn btn-secondary m-3">Volver</a>
+                <h1 class="ms-2">Item: <?= $item->nombre ?></h1>
 
                 <table id="movimientos" class="tabla table table-striped dt-table-hover" style="width:100%">
                     <thead>
@@ -47,7 +48,7 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-                <a href="<?= BASE_URL ?>Inventario/" class="btn btn-secondary m-2">Volver</a>
+                
             </div>
         </div>
     </div>

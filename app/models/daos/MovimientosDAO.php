@@ -113,7 +113,7 @@ JOIN materiales ma ON
 JOIN departamentos d ON
     d.id = ma.id_departamento
 WHERE
-    m.id_item=:id_item
+    m.id_item=:id_item AND m.baja IS NULL
 ORDER BY
     m.fecha DESC, 
     m.id DESC
@@ -127,5 +127,22 @@ ORDER BY
         }
 
         return $result;
+    }
+
+    public function borrar($id, $descripcion)
+    {
+        $sql = "UPDATE
+                `movimientos`
+            SET
+                `descripcion` = :descripcion,
+                `cantidad` = 0,
+                `baja` = NOW()
+            WHERE
+                `id` = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'id' => $id,
+            'descripcion' => $descripcion
+        ]);
     }
 }

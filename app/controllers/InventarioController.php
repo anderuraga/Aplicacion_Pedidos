@@ -165,21 +165,36 @@ class InventarioController extends Controller
     {
         $id = $_GET['id'];
 
+        /**
+         * @var MovimientosDAO
+         */
         $movimientosDAO = $this->dao("Movimientos");
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            /**
-             * @var ItemsDAO
-             */
-            $itemsDAO = $this->dao("Items");
-            /**
-             * @var UsuariosDAO
-             */
-            $usuariosDAO = $this->dao("Usuarios");
-            $_SESSION['alert'] = $this->guardarMovimiento($movimientosDAO, $itemsDAO,$usuariosDAO);
-            if ($movimientosDAO->last_insert != null) {
-                session_write_close();
-                header("Location: movimiento?id=" . $movimientosDAO->last_insert . "&item=" . $_POST['item_id']);
+            if (isset($_POST['action']) && $_POST['action'] == "borrar") {
+                $movimiento = $movimientosDAO->obtener($id);
+                $_SESSION['alert'] = $this->borrarMovimiento($movimientosDAO);
+                if ($_SESSION['alert']['tipo'] == "success") {
+                    session_write_close();
+                    header("Location: " . BASE_URL . "Inventario/historial?id=".$movimiento->item->id);
+                    exit;
+                }
+            } else {
+                /**
+                 * @var ItemsDAO
+                 */
+                $itemsDAO = $this->dao("Items");
+                /**
+                 * @var UsuariosDAO
+                 */
+                $usuariosDAO = $this->dao("Usuarios");
+                $_SESSION['alert'] = $this->guardarMovimiento($movimientosDAO, $itemsDAO, $usuariosDAO);
+                if ($movimientosDAO->last_insert != null) {
+                    session_write_close();
+                    header("Location: movimiento?id=" . $movimientosDAO->last_insert . "&item=" . $_POST['item_id']);
+                    exit;
+                }
             }
+
         }
 
         if ($id <> 0) {
@@ -251,6 +266,34 @@ class InventarioController extends Controller
             return [
                 'tipo' => 'danger',
                 'mensaje' => $id === 0 ? 'Error al crear el movimiento.' : 'Error al editar el movimiento.'
+            ];
+        }
+    }
+
+    private function borrarMovimiento(MovimientosDAO $movimientosDAO)
+    {
+        $id = $_POST['id'];
+        $confirmacion = $_POST['confirmacion'];
+
+        if ($confirmacion != "Borrar") {
+            return [
+                'tipo' => 'warning',
+                'mensaje' => 'El campo de confirmación no coincide'
+            ];
+        }
+
+        $random = random_int(1, 99999999);
+        $nombre = "Borrado$random";
+
+        if ($movimientosDAO->borrar($id, $nombre)) {
+            return [
+                'tipo' => 'success',
+                'mensaje' => 'Se ha borrado el movimiento correctamente'
+            ];
+        } else {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Ha sucedido un problema al borrar el movimiento'
             ];
         }
     }
