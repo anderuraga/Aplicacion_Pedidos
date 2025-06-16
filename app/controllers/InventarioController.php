@@ -56,19 +56,30 @@ class InventarioController extends Controller
         $itemsDAO = $this->dao("Items");
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            /**
-             * @var UsuariosDAO
-             */
-            $usuariosDAO = $this->dao("Usuarios");
-            /**
-             * @var DepartamentosDAO
-             */
-            $departamentosDAO = $this->dao("Departamentos");
-            $_SESSION['alert'] = $this->guardar($itemsDAO, $usuariosDAO, $departamentosDAO);
-            if ($itemsDAO->last_insert != null) {
-                session_write_close();
-                header("Location: vereditar?id=" . $itemsDAO->last_insert);
+            if (isset($_POST['action']) && $_POST['action'] == "borrar") {
+                $_SESSION['alert'] = $this->borrar($itemsDAO);
+                if ($_SESSION['alert']['tipo'] == "success") {
+                    session_write_close();
+                    header("Location: " . BASE_URL . "Inventario");
+                    exit;
+                }
+            } else {
+                /**
+                 * @var UsuariosDAO
+                 */
+                $usuariosDAO = $this->dao("Usuarios");
+                /**
+                 * @var DepartamentosDAO
+                 */
+                $departamentosDAO = $this->dao("Departamentos");
+                $_SESSION['alert'] = $this->guardar($itemsDAO, $usuariosDAO, $departamentosDAO);
+                if ($itemsDAO->last_insert != null) {
+                    session_write_close();
+                    header("Location: vereditar?id=" . $itemsDAO->last_insert);
+                    exit;
+                }
             }
+
         }
 
         if ($id <> 0) {
@@ -175,7 +186,7 @@ class InventarioController extends Controller
                 $_SESSION['alert'] = $this->borrarMovimiento($movimientosDAO);
                 if ($_SESSION['alert']['tipo'] == "success") {
                     session_write_close();
-                    header("Location: " . BASE_URL . "Inventario/historial?id=".$movimiento->item->id);
+                    header("Location: " . BASE_URL . "Inventario/historial?id=" . $movimiento->item->id);
                     exit;
                 }
             } else {
@@ -294,6 +305,34 @@ class InventarioController extends Controller
             return [
                 'tipo' => 'danger',
                 'mensaje' => 'Ha sucedido un problema al borrar el movimiento'
+            ];
+        }
+    }
+
+    private function borrar(ItemsDAO $itemsDAO)
+    {
+        $id = $_POST['id'];
+        $confirmacion = $_POST['confirmacion'];
+
+        if ($confirmacion != "Borrar") {
+            return [
+                'tipo' => 'warning',
+                'mensaje' => 'El campo de confirmación no coincide'
+            ];
+        }
+
+        $random = random_int(1, 99999999);
+        $nombre = "Borrado$random";
+
+        if ($itemsDAO->borrar($id, $nombre)) {
+            return [
+                'tipo' => 'success',
+                'mensaje' => 'Se ha borrado el item correctamente'
+            ];
+        } else {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Ha sucedido un problema al borrar el item'
             ];
         }
     }

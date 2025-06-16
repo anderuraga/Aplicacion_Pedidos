@@ -132,4 +132,20 @@ ORDER BY
 
         return $result;
     }
+
+    public function borrar($id, $nombre)
+    {
+        $sql = "UPDATE
+                    `materiales`
+                SET
+                    `nombre` = :nombre,
+                    `baja` = NOW()
+                WHERE
+                    `id` = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'id' => $id,
+            'nombre' => $nombre
+        ]);
+    }
 }
