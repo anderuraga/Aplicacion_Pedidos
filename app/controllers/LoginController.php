@@ -29,7 +29,6 @@ class LoginController extends Controller
         $usuario = $UsuariosDAO->login($correo, $clave);
 
         if ($usuario) {
-            session_start();
             $_SESSION['usuario'] = serialize($usuario);
             return true;
         } else {

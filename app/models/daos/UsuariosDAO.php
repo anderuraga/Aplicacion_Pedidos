@@ -82,7 +82,7 @@ class UsuariosDAO
                                             FROM `usuarios` u 
                                                 JOIN departamentos d 
                                                     ON u.id_departamento=d.id 
-                                            WHERE `correo`=:correo AND `baja` IS NULL");
+                                            WHERE `correo`=:correo AND u.`baja` IS NULL");
         $stmt->execute(['correo' => $correo]);
         if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             if (password_verify($contrasena, $row['contrasena'])) {

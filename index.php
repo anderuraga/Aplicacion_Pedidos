@@ -1,4 +1,5 @@
 <?php
+require_once 'core/errorHandler.php';
 require_once 'config/constantes.php';
 // Incluye el archivo que contiene la clase App, que se encarga del enrutamiento de la aplicación.
 require_once 'core/App.php';

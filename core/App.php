@@ -4,7 +4,7 @@ define('HOMEDIR',__DIR__);
 
 class App {
     // Propiedades por defecto: el controlador, el método y los parámetros
-    protected $controller = 'LoginController'; // Controlador predeterminado
+    protected $controller = 'Login'; // Controlador predeterminado
     protected $method = 'index';              // Método predeterminado
     protected $params = [];                   // Parámetros de la URL
 
@@ -13,9 +13,15 @@ class App {
        $url = $this->parseUrl();
 
         // Si hay un controlador correspondiente al primer segmento de la URL
+        if(empty($url[0])){
+            $url[0] = $this->controller;
+        }
         if (isset($url[0]) && file_exists(__DIR__ ."/../app/controllers/" . $url[0] . "Controller.php")) {
             $this->controller = $url[0] . "Controller"; // Cambiamos el controlador
             unset($url[0]); // Lo eliminamos del array para que queden solo método y parámetros
+        }else{
+            header("Location: ". BASE_URL. "Error/404");
+            exit;
         }
 
         // Incluimos el archivo del controlador

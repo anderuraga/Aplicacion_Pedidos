@@ -8,14 +8,15 @@ class MemoriaFormulario
 
     public function cargar($nombre)
     {
-        if(!)
+        if(isset($_SESSION['formularios'][$nombre])):
         $vars = json_encode($_SESSION['formularios'][$nombre]); ?>
         <script>
             let rellenado = <?= $vars ?>;
             $('input').each(function (index) {
-                
+                $('[')
             });
         </script>
         <?php unset($_SESSION['formularios'][$nombre]);
+        endif;
     }
 }

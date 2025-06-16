@@ -1,3 +1,4 @@
 /public/uploads
 /.vscode
 config/constantes.php
+/logs
