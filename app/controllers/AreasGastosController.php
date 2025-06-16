@@ -26,7 +26,7 @@ class AreasGastosController extends Controller
                 'mensaje' => "El are de gasto no existe."
             ];
             session_write_close();
-            header('Location: '.BASE_URL.'AreasGastos');
+            header('Location: ' . BASE_URL . 'AreasGastos');
         }
 
         $area = $AreasGastosDAO->obtener($id);
@@ -47,27 +47,38 @@ class AreasGastosController extends Controller
         $areasGastoDAO = $this->dao("AreasGastos");
         $departamentosDAO = $this->dao("Departamentos");
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $_SESSION['alert'] = $this->guardar($areasGastoDAO,$departamentosDAO);
-            if($areasGastoDAO->last_insert!=null){
-                session_write_close();
-                header("Location: vereditar?id=".$areasGastoDAO->last_insert);
+            if (isset($_POST['action']) && $_POST['action'] == "borrar") {
+                $_SESSION['alert'] = $this->borrar($areasGastoDAO);
+                if ($_SESSION['alert']['tipo'] == "success") {
+                    session_write_close();
+                    header("Location: " . BASE_URL . "AreasGastos");
+                    exit;
+                }
+            } else {
+                $_SESSION['alert'] = $this->guardar($areasGastoDAO, $departamentosDAO);
+                if ($areasGastoDAO->last_insert != null) {
+                    session_write_close();
+                    header("Location: vereditar?id=" . $areasGastoDAO->last_insert);
+                    exit;
+                }
             }
+
         }
-        
+
         $departamentos = $departamentosDAO->listar();
 
         if ($id <> 0) {
             $areaGasto = $areasGastoDAO->obtener($id);
         } else {
             require_once __DIR__ . "/../models/vo/AreaGastos.php";
-            $areaGasto = new AreaGastos(0, '', new Departamento(0,''), '',0,0,0);
+            $areaGasto = new AreaGastos(0, '', new Departamento(0, ''), '', 0, 0, 0);
         }
 
         $this->view("areasgastos/formulario", ['areaGasto' => $areaGasto, 'departamentos' => $departamentos]);
 
     }
 
-    public function guardar($areaGastosDAO,$departamentoDAO)
+    public function guardar($areaGastosDAO, $departamentoDAO)
     {
 
         $id = $_POST['id'];
@@ -101,12 +112,12 @@ class AreasGastosController extends Controller
             $ok = $areaGastosDAO->editar($id, $nombre, $id_departamento);
         }
 
-        if($ok){
+        if ($ok) {
             return [
                 'tipo' => 'success',
                 'mensaje' => $id == 0 ? 'Se ha creado el area de gastos correctamente' : 'Se ha editado el area de gastos correctamente'
             ];
-        }else{
+        } else {
             return [
                 'tipo' => 'warning',
                 'mensaje' => $id == 0 ? 'No se ha podido crear el departamento' : 'No se ha podido editar el departamento'
@@ -114,8 +125,37 @@ class AreasGastosController extends Controller
         }
     }
 
+    private function borrar(AreasGastosDAO $areasGastosDAO)
+    {
+        $id = $_POST['id'];
+        $confirmacion = $_POST['confirmacion'];
+
+        if ($confirmacion != "Borrar") {
+            return [
+                'tipo' => 'warning',
+                'mensaje' => 'El campo de confirmación no coincide'
+            ];
+        }
+
+        $random = random_int(1, 99999999);
+        $nombre = "Borrado$random";
+
+        if ($areasGastosDAO->borrar($id, $nombre)) {
+            return [
+                'tipo' => 'success',
+                'mensaje' => 'Se ha borrado el area de gastos correctamente'
+            ];
+        } else {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Ha sucedido un problema al borrar el area de gastos'
+            ];
+        }
+    }
+
     #[\Override]
-    public function tiene_permiso(): bool {
+    public function tiene_permiso(): bool
+    {
         return requireAdmin();
     }
 }
