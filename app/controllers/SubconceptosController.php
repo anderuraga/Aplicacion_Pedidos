@@ -30,6 +30,7 @@ class SubconceptosController extends Controller
                 if ($subconceptosDAO->last_insert != null) {
                     session_write_close();
                     header("Location: vereditar?id=" . $subconceptosDAO->last_insert);
+                    exit;
                 }
             }
 
@@ -110,12 +111,12 @@ class SubconceptosController extends Controller
         if ($subconceptosDAO->borrar($id, $nombre)) {
             return [
                 'tipo' => 'success',
-                'mensaje' => 'Se ha borrado el departamento correctamente'
+                'mensaje' => 'Se ha borrado el subconcepto correctamente'
             ];
         } else {
             return [
                 'tipo' => 'danger',
-                'mensaje' => 'Ha sucedido un problema al borrar el departamento'
+                'mensaje' => 'Ha sucedido un problema al borrar el subconcepto'
             ];
         }
     }

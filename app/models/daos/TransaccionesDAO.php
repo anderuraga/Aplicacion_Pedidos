@@ -38,7 +38,7 @@ class TransaccionesDAO
                                             JOIN vista_resumen_areas ag ON
                                                 t.id_area = ag.id_area
                                             WHERE
-                                                t.id_area = :id_area
+                                                t.id_area = :id_area AND baja IS NULL
                                             ORDER BY
                                                 t.fecha
                                             DESC
@@ -80,7 +80,7 @@ class TransaccionesDAO
                                             JOIN vista_resumen_areas ag ON
                                                 t.id_area = ag.id_area
                                             WHERE
-                                                t.cantidad > 0
+                                                t.cantidad > 0 AND baja IS NULL
                                             ORDER BY
                                                 t.fecha
                                             DESC
@@ -165,5 +165,22 @@ class TransaccionesDAO
         $row = $stmt->fetch();
         return Transaccion::fromArray($row);
 
+    }
+
+    public function borrar($id,$descripcion)
+    {
+        $sql = "UPDATE
+                    `transacciones`
+                SET
+                    `descripcion` = :descripcion,
+                    `cantidad` = 0,
+                    `baja` = NOW()
+                WHERE
+                    `id` = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'id' => $id,
+            'descripcion' => $descripcion
+        ]);
     }
 }

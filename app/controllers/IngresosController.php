@@ -19,11 +19,22 @@ class IngresosController extends Controller
         $transaccionesDAO = $this->dao("Transacciones");
         $areasGastosDAO = $this->dao("AreasGastos");
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $_SESSION['alert'] = $this->guardar($transaccionesDAO,$areasGastosDAO);
-            if($transaccionesDAO->last_insert!=null){
-                session_write_close();
-                header("Location: vereditar?id=".$transaccionesDAO->last_insert);
+            if (isset($_POST['action']) && $_POST['action'] == "borrar") {
+                $_SESSION['alert'] = $this->borrar($transaccionesDAO);
+                if ($_SESSION['alert']['tipo'] == "success") {
+                    session_write_close();
+                    header("Location: " . BASE_URL . "Ingresos");
+                    exit;
+                }
+            } else {
+                $_SESSION['alert'] = $this->guardar($transaccionesDAO, $areasGastosDAO);
+                if ($transaccionesDAO->last_insert != null) {
+                    session_write_close();
+                    header("Location: vereditar?id=" . $transaccionesDAO->last_insert);
+                    exit;
+                }
             }
+
         }
 
         $areasgastos = $areasGastosDAO->listar();
@@ -32,7 +43,7 @@ class IngresosController extends Controller
             $ingreso = $transaccionesDAO->obtener($id);
         } else {
             require_once __DIR__ . "/../models/vo/AreaGastos.php";
-            $ingreso = new Transaccion(0, new AreaGastos(0,'',new Departamento(0,''),'','','',''), '', '', '', '');
+            $ingreso = new Transaccion(0, new AreaGastos(0, '', new Departamento(0, ''), '', '', '', ''), '', '', '', '');
         }
 
         $this->view("ingresos/formulario", ['ingreso' => $ingreso, 'areasgastos' => $areasgastos]);
@@ -85,6 +96,34 @@ class IngresosController extends Controller
             return [
                 'tipo' => 'warning',
                 'mensaje' => $id == 0 ? 'No se ha podido crear la transacción' : 'No se ha podido editar la transacción'
+            ];
+        }
+    }
+
+    public function borrar(TransaccionesDAO $transaccionesDAO)
+    {
+        $id = $_POST['id'];
+        $confirmacion = $_POST['confirmacion'];
+
+        if ($confirmacion != "Borrar") {
+            return [
+                'tipo' => 'warning',
+                'mensaje' => 'El campo de confirmación no coincide'
+            ];
+        }
+
+        $random = random_int(1, 99999999);
+        $decripcion = "Borrado $random";
+
+        if ($transaccionesDAO->borrar($id, $decripcion)) {
+            return [
+                'tipo' => 'success',
+                'mensaje' => 'Se ha borrado el ingreso correctamente'
+            ];
+        } else {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Ha sucedido un problema al borrar el ingreso'
             ];
         }
     }
