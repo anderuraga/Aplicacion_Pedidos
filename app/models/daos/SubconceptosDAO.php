@@ -50,7 +50,7 @@ class SubconceptosDAO
         return $stmt->fetchColumn() > 0;
     }
 
-    public function crear($nombre, $tipo)
+    public function crear($nombre)
     {
         $stmt = $this->db->prepare("INSERT INTO `subconceptos`(`nombre`) VALUES (:nombre)");
         $ok = $stmt->execute([
@@ -65,9 +65,9 @@ class SubconceptosDAO
         return false;
     }
 
-    public function editar($id, $nombre, $tipo)
+    public function editar($id, $nombre)
     {
-        $stmt = $this->db->prepare(query:  "UPDATE `subconceptos` 
+        $stmt = $this->db->prepare(query: "UPDATE `subconceptos` 
                                             SET 
                                                 `nombre`= :nombre
                                             WHERE 
@@ -84,7 +84,7 @@ class SubconceptosDAO
                                             `id` as subconcepto_id, 
                                             `nombre` as subconcepto_nombre
                                         FROM `subconceptos` 
-                                        WHERE 1 
+                                        WHERE baja IS NULL
                                         ORDER BY `nombre` ASC");
 
         $result = [];
@@ -93,5 +93,21 @@ class SubconceptosDAO
         }
 
         return $result;
+    }
+
+    public function borrar($id, $nombre)
+    {
+        $sql = "UPDATE
+                    `subconceptos`
+                SET
+                    `nombre` = :nombre,
+                    `baja` = NOW()
+                WHERE
+                    `id` = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'id' => $id,
+            'nombre' => $nombre
+        ]);
     }
 }

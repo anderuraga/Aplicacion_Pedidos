@@ -93,7 +93,6 @@ class DepartamentosController extends Controller
 
     private function borrar(DepartamentosDAO $departamentosDAO)
     {
-
         $id = $_POST['id'];
         $confirmacion = $_POST['confirmacion'];
 

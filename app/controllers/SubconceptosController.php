@@ -1,43 +1,56 @@
-<?php 
-require_once __DIR__.'/../helpers/auth.php';
+<?php
+require_once __DIR__ . '/../helpers/auth.php';
 
-class SubconceptosController extends Controller {
-    public function index() {
+class SubconceptosController extends Controller
+{
+    public function index()
+    {
         $SubconceptosDAO = $this->dao("Subconceptos");
         $subconceptos = $SubconceptosDAO->listar();
-        $this->view("subconceptos/index",['subconceptos' => $subconceptos]);
+        $this->view("subconceptos/index", ['subconceptos' => $subconceptos]);
     }
 
     public function vereditar()
     {
         $id = $_GET['id'];
-
+        /**
+         * @var SubconceptosDAO
+         */
         $subconceptosDAO = $this->dao("Subconceptos");
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $_SESSION['alert'] = $this->guardar($subconceptosDAO);
-            if($subconceptosDAO->last_insert!=null){
-                session_write_close();
-                header("Location: vereditar?id=".$subconceptosDAO->last_insert);
+            if (isset($_POST['action']) && $_POST['action'] == "borrar") {
+                $_SESSION['alert'] = $this->borrar($subconceptosDAO);
+                if ($_SESSION['alert']['tipo'] == "success") {
+                    session_write_close();
+                    header("Location: " . BASE_URL . "Subconceptos");
+                    exit;
+                }
+            } else {
+                $_SESSION['alert'] = $this->guardar($subconceptosDAO);
+                if ($subconceptosDAO->last_insert != null) {
+                    session_write_close();
+                    header("Location: vereditar?id=" . $subconceptosDAO->last_insert);
+                }
             }
+
         }
-        
+
 
         if ($id <> 0) {
             $subconcepto = $subconceptosDAO->obtener($id);
         } else {
-            $subconcepto = new Subconcepto(0, '','Fungible');
+            $subconcepto = new Subconcepto(0, '');
         }
 
         $this->view("subconceptos/formulario", ['subconcepto' => $subconcepto]);
 
     }
 
-    public function guardar($subconceptosDAO)
+    public function guardar(SubconceptosDAO $subconceptosDAO)
     {
 
         $id = $_POST['id'];
         $nombre = trim($_POST['nombre']);
-        $tipo = trim($_POST['tipo']);
 
         if ($nombre === '') {
             return [
@@ -46,7 +59,7 @@ class SubconceptosController extends Controller {
             ];
         }
 
-        if ($id!=0 && !$subconceptosDAO->comprobarId($id)) {
+        if ($id != 0 && !$subconceptosDAO->comprobarId($id)) {
             return [
                 'tipo' => 'danger',
                 'mensaje' => "El subconcepto no existe."
@@ -61,17 +74,17 @@ class SubconceptosController extends Controller {
         }
 
         if ($id == 0) {
-            $ok = $subconceptosDAO->crear($nombre,$tipo);
+            $ok = $subconceptosDAO->crear($nombre);
         } else {
-            $ok = $subconceptosDAO->editar($id, $nombre,$tipo);
+            $ok = $subconceptosDAO->editar($id, $nombre);
         }
 
-        if($ok){
+        if ($ok) {
             return [
                 'tipo' => 'success',
                 'mensaje' => $id == 0 ? 'Se ha creado el subconcepto correctamente' : 'Se ha editado el subconcepto correctamente'
             ];
-        }else{
+        } else {
             return [
                 'tipo' => 'warning',
                 'mensaje' => $id == 0 ? 'No se ha podido crear el subconcepto' : 'No se ha podido editar el subconcepto'
@@ -79,9 +92,38 @@ class SubconceptosController extends Controller {
         }
     }
 
+    private function borrar(SubconceptosDAO $subconceptosDAO)
+    {
+        $id = $_POST['id'];
+        $confirmacion = $_POST['confirmacion'];
+
+        if ($confirmacion != "Borrar") {
+            return [
+                'tipo' => 'warning',
+                'mensaje' => 'El campo de confirmación no coincide'
+            ];
+        }
+
+        $random = random_int(1, 99999999);
+        $nombre = "Borrado$random";
+
+        if ($subconceptosDAO->borrar($id, $nombre)) {
+            return [
+                'tipo' => 'success',
+                'mensaje' => 'Se ha borrado el departamento correctamente'
+            ];
+        } else {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Ha sucedido un problema al borrar el departamento'
+            ];
+        }
+    }
+
 
     #[\Override]
-    public function tiene_permiso(): bool {
+    public function tiene_permiso(): bool
+    {
         return requireAdmin();
     }
 }
