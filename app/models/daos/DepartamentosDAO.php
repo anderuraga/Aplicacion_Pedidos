@@ -19,7 +19,7 @@ class DepartamentosDAO
                                                 `id` as departamento_id, 
                                                 `nombre` as departamento_nombre
                                             FROM `departamentos` 
-                                            WHERE `id`=:id");
+                                            WHERE `id`=:id AND baja IS NULL");
 
         $stmt->execute(['id' => $id]);
         $row = $stmt->fetch();
@@ -82,7 +82,7 @@ class DepartamentosDAO
 FROM
     `departamentos`
 WHERE
-    1
+    baja IS NULL
 ORDER BY
     `nombre` ASC");
 
@@ -92,5 +92,20 @@ ORDER BY
         }
 
         return $result;
+    }
+
+    public function borrar($id, $nombre){
+        $sql = "UPDATE
+                    `departamentos`
+                SET
+                    `nombre` = :nombre,
+                    `baja` = NOW()
+                WHERE
+                    `id` = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'id' => $id,
+            'nombre' => $nombre
+        ]);
     }
 }

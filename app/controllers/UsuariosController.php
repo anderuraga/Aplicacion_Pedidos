@@ -184,7 +184,7 @@ class UsuariosController extends Controller
         }else{
             return [
                 'tipo' => 'danger',
-                'mensaje' => 'Ha sucedido un problema al generar el usuario'
+                'mensaje' => 'Ha sucedido un problema al borrar el usuario'
             ];
         }
 
