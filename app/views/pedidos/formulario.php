@@ -16,7 +16,7 @@ if (count($incidenciasActivas) > 0) { ?>
         Hay <?= count($incidenciasActivas) ?> incidencia(s) abiertas en este pedido.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-<?php
+    <?php
 }
 
 $editable = false;
@@ -99,7 +99,7 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                             <?php
                             /** @var TipoServicio $t */
                             foreach ($tiposServicios as $t) {
-                            ?>
+                                ?>
                                 <option value="<?= $t->id ?>" <?= $t->id == $pedido->proveedor->tipo_servicio->id ? 'selected' : '' ?>><?= $t->nombre ?></option>
                             <?php } ?>
                         </select>
@@ -175,7 +175,8 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                 <div class="row">
                     <div class="col-6">
                         <h5>Descripción de la solicitud: *</h5>
-                        <textarea required class="form-control" id="descripcion" name="descripcion" rows="3" <?= $editable ? '' : 'disabled' ?>><?= $pedido->descripcion ?></textarea>
+                        <textarea required class="form-control" id="descripcion" name="descripcion" rows="3"
+                            <?= $editable ? '' : 'disabled' ?>><?= $pedido->descripcion ?></textarea>
                     </div>
                 </div>
 
@@ -256,7 +257,7 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                                 <input type="hidden" name="id" value="<?= $pedido->id ?>">
                                 <button class="btn btn-success float-end">Enviar</button><br>
                             </form>
-                        <?php break;
+                            <?php break;
                         case PEN_VALI: ?>
                             <?php if ($usuario->tipo == ADMIN) { ?>
                                 <form class="mb-2" id="seguir" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>">
@@ -264,7 +265,7 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                                     <button class="btn btn-success float-end">Enviar Proveedor</button><br>
                                 </form>
                             <?php } ?>
-                        <?php break;
+                            <?php break;
                         case PEN_PROV: ?>
                             <form class="mb-2" id="subirFacturas" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>"
                                 enctype="multipart/form-data">
@@ -272,15 +273,15 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                                 <input type="hidden" name="id" value="<?= $pedido->id ?>">
                                 <button class="btn btn-success float-end">Enviar</button><br>
                             </form>
-                        <?php break;
+                            <?php break;
                         case PEN_FACT: ?>
-                            <form class="mb-2 formulario" id="subirFacturas" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>"
-                                enctype="multipart/form-data">
+                            <form class="mb-2 formulario" id="subirFacturas" method="post"
+                                action="Pedidos/vereditar?id=<?= $pedido->id ?>" enctype="multipart/form-data">
                                 <input type="hidden" name="action" value="siguiente">
                                 <input type="hidden" name="id" value="<?= $pedido->id ?>">
                                 <button class="btn btn-success float-end">Enviar</button><br>
                             </form>
-                        <?php break;
+                            <?php break;
                         case PEN_ARCH: ?>
                             <?php if ($usuario->tipo == ADMIN) { ?>
                                 <form class="mb-2" id="seguir" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>">
@@ -289,18 +290,21 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                                     <button class="btn btn-success float-end">Archivar</button><br>
                                 </form>
                             <?php } ?>
-                        <?php break;
+                            <?php break;
                         case ARCHIVADO: ?>
                             <?php if ($usuario->tipo == ADMIN) { ?>
-                                <a target="_blank" href="<?= BASE_URL ?>Pedidos/pdf/<?= $pedido->id ?>" class="btn btn-success float-end">Imprimir</button>
+                                <a target="_blank" href="<?= BASE_URL ?>Pedidos/pdf/<?= $pedido->id ?>"
+                                    class="btn btn-success float-end">Imprimir</a>
                                 <?php } ?>
-                        <?php break;
+                                <?php break;
                         default:
                             break;
                     } ?>
                         <?php if ($usuario->tipo == ADMIN): ?>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#borrarModal">Borrar</button>
                             <a class="btn btn-warning"
-                                href="<?= BASE_URL ?>Incidencias/vereditar?id=0&pedido=<?= $pedido->id ?>">Nueva Incidencia</a>
+                                href="<?= BASE_URL ?>Incidencias/vereditar?id=0&pedido=<?= $pedido->id ?>">Nueva
+                                Incidencia</a>
                             <button type="submit" form="editarForm" class="btn btn-light-success mr-a">Guardar</button>
                         <?php endif; ?>
                 </div>
@@ -333,11 +337,12 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                         <h4>Presupuestos:</h4>
                         <?php for ($i = 1; $i <= $budgetCount; $i++):
                             $pres = $presupuestos[$i - 1] ?? null;
-                        ?>
+                            ?>
                             <div class="mb-2">
                                 <h5>Presupuesto <?= $i ?></h5>
                                 <?php if ($pres && $pres->documento): ?>
-                                    <a href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pres->documento ?>" target="_blank" class="ms-2">Ver documento actual</a>
+                                    <a href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pres->documento ?>"
+                                        target="_blank" class="ms-2">Ver documento actual</a>
                                 <?php endif; ?>
                                 <?php if ($budgetCount > 1): ?>
                                     <label class="ms-2">
@@ -347,7 +352,8 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                                 <?php if ($pres && $pres->documento): ?>
                                     <input type="hidden" name="presupuesto<?= $i ?>_current" value="<?= $pres->id ?>">
                                 <?php endif; ?>
-                                <input type="file" id="presupuesto<?= $i ?>" name="presupuesto<?= $i ?>" accept="application/pdf">
+                                <input type="file" id="presupuesto<?= $i ?>" name="presupuesto<?= $i ?>"
+                                    accept="application/pdf">
                             </div>
                         <?php endfor; ?>
 
@@ -355,7 +361,8 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                             <div class="mb-3">
                                 <h5>Anexo:</h5>
                                 <?php if ($anexo): ?>
-                                    <a href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $anexo ?>" target="_blank" class="ms-2">Ver documento actual</a>
+                                    <a href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $anexo ?>"
+                                        target="_blank" class="ms-2">Ver documento actual</a>
                                 <?php endif; ?>
                                 <input type="file" id="anexo" name="anexo" accept="application/pdf">
                             </div>
@@ -364,7 +371,8 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                         <div class="mb-3">
                             <h5>Albarán:</h5>
                             <?php if ($albaran): ?>
-                                <a href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $albaran ?>" target="_blank" class="ms-2">Ver documento actual</a>
+                                <a href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $albaran ?>"
+                                    target="_blank" class="ms-2">Ver documento actual</a>
                             <?php endif; ?>
                             <input type="file" id="albaran" name="albaran" accept="application/pdf">
 
@@ -377,25 +385,31 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
 
                 <div class="col-12 mb-3" id="facturaDiv">
                     <h5>Factura:</h5>
-                    <form class="mb-2 formulario" id="subirFactura" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>" enctype="multipart/form-data">
+                    <form class="mb-2 formulario" id="subirFactura" method="post"
+                        action="Pedidos/vereditar?id=<?= $pedido->id ?>" enctype="multipart/form-data">
                         <input type="hidden" name="action" value="subir_factura">
                         <input type="hidden" name="id" value="<?= $pedido->id ?>">
-                        <?php if (isset($pedido->factura) && $pedido->factura->id!=0): ?>
-                            <a href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pedido->factura->documento ?>" target="_blank" class="ms-2">Ver factura actual</a>
+                        <?php if (isset($pedido->factura) && $pedido->factura->id != 0): ?>
+                            <a href="<?= BASE_URL ?>public/uploads/presupuestos/<?= $pedido->id ?>/<?= $pedido->factura->documento ?>"
+                                target="_blank" class="ms-2">Ver factura actual</a>
                         <?php endif; ?>
                         <div class="mb-2">
                             <label for="referencia">Número de factura *</label>
-                            <input type="text" class="form-control" id="referencia" name="referencia" value="<?= $pedido->factura->referencia ?? '' ?>" required>
+                            <input type="text" class="form-control" id="referencia" name="referencia"
+                                value="<?= $pedido->factura->referencia ?? '' ?>" required>
                         </div>
 
                         <div class="mb-2">
                             <label for="fecha_factura">Fecha de factura *</label>
-                            <input type="date" class="form-control flatTime" id="fecha_factura" name="fecha_factura" value="<?= $pedido->factura->fecha ?? '' ?>" required>
+                            <input type="date" class="form-control flatTime" id="fecha_factura" name="fecha_factura"
+                                value="<?= $pedido->factura->fecha ?? '' ?>" required>
                         </div>
 
                         <div class="mb-2">
-                            <label for="factura">Archivo factura <?= isset($pedido->factura) ? '(reemplazará el actual)' : '' ?> *</label>
-                            <input type="file" id="factura" name="factura" accept="application/pdf" <?= isset($pedido->factura) ? '' : 'required' ?>>
+                            <label for="factura">Archivo factura
+                                <?= isset($pedido->factura) ? '(reemplazará el actual)' : '' ?> *</label>
+                            <input type="file" id="factura" name="factura" accept="application/pdf"
+                                <?= isset($pedido->factura) ? '' : 'required' ?>>
 
                         </div>
 
@@ -416,9 +430,12 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                 <div class="col-12 ">
                     <div class="mt-container mx-auto">
                         <ul class="lista_archivos">
-                            <li><a href="<?= BASE_URL ?>public/liquidacion_gastos.pdf" download="">Liquidación de gastos</a></li>
-                            <li><a href="<?= BASE_URL ?>public/ANEXO III CONTRATO MENOR.docx" download="">Anexo III - contrato menor</a></li>
-                            <li><a href="<?= BASE_URL ?>public/anexo XV prestacion servcicios.pdf" download="">Anexo XV - prestación de servicios</a></li>
+                            <li><a href="<?= BASE_URL ?>public/liquidacion_gastos.pdf" download="">Liquidación de
+                                    gastos</a></li>
+                            <li><a href="<?= BASE_URL ?>public/ANEXO III CONTRATO MENOR.docx" download="">Anexo III -
+                                    contrato menor</a></li>
+                            <li><a href="<?= BASE_URL ?>public/anexo XV prestacion servcicios.pdf" download="">Anexo XV
+                                    - prestación de servicios</a></li>
                             <li><a href="<?= BASE_URL ?>public/ALTA_TERCEROS.pdf" download="">Alta terceros</a></li>
                         </ul>
                     </div>
@@ -442,7 +459,7 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                              * @var Historial $h
                              */
                             foreach ($historial as $h) {
-                            ?>
+                                ?>
                                 <div class="item-timeline">
                                     <p class="t-time"><?= $h->getFechaVisible() ?></p>
                                     <div class="t-dot t-dot-warning">
@@ -460,6 +477,42 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
         </div>
     </div>
 </div>
+<div class="modal fade inputForm-modal" id="borrarModal" tabindex="-1" role="dialog"
+    aria-labelledby="borrarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header" id="borrarModalLabel">
+                <h5 class="modal-title">Borrar Pedido
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" class="feather feather-x">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="borrarForm" class="mt-0" method="post">
+                    <input type="hidden" name="id" value="<?= $pedido->id ?>">
+                    <input type="hidden" name="action" value="borrar">
+                    <h5>Una vez borrado los datos no se podrán recuperar</h5>
+                    <h5>Para confirmar la acción, escribe "Borrar" en el campo siguiente: </h5>
+                    <input type="text" name="confirmacion" class="form-control">
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-light-primary mt-2 mb-2 btn-no-effect"
+                    data-bs-dismiss="modal">Cancelar</button>
+                <button id="submitButton" type="submit" form="borrarForm"
+                    class="btn btn-danger mt-2 mb-2 btn-no-effect">Borrar</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     function toggleDetalles() {
         $("#detallesProveedor").toggle();
@@ -470,7 +523,7 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
     function filtrarProveedores() {
         var seleccionado = $('#servicio').val();
 
-        $('#proveedor option').each(function() {
+        $('#proveedor option').each(function () {
             var ts = $(this).data('ts');
 
             if (ts == seleccionado) {
@@ -486,12 +539,12 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
 
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         $('#servicio').on('change', filtrarProveedores)
         filtrarProveedores();
         inicial = false;
 
-        $('.formulario').find('input:required, textarea:required').on('blur', function() {
+        $('.formulario').find('input:required, textarea:required').on('blur', function () {
             if ($.trim($(this).val()) === '') {
                 $(this).addClass('required-vacio');
             } else {

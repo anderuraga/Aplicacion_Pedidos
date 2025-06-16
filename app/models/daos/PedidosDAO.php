@@ -91,6 +91,7 @@ class PedidosDAO
             LEFT JOIN facturas fs ON
                 fs.id = p.id_factura
             WHERE
+                p.baja is NULL AND
                     p.id = :id
                 ORDER BY
                     p.referencia DESC
@@ -177,6 +178,7 @@ class PedidosDAO
             LEFT JOIN facturas fs ON
                 fs.id = p.id_factura
             WHERE
+                p.baja is NULL AND
                 p.id_estado = :id_estado
             ORDER BY
                 p.referencia DESC
@@ -266,6 +268,7 @@ class PedidosDAO
             LEFT JOIN facturas fs ON
                 fs.id = p.id_factura
             WHERE
+                p.baja is NULL AND
                 p.id_estado = :id_estado AND
                 p.id_departamento = :id_departamento
             ORDER BY
@@ -672,9 +675,52 @@ ORDER BY
         ]);
         $result = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $row['total_importe'] = getCantidadFormateada((float)$row['total_importe']);
+            $row['total_importe'] = getCantidadFormateada((float) $row['total_importe']);
             $result[] = $row;
         }
         return $result;
+    }
+
+    public function borrar($id, $referencia)
+    {
+        $sql = "UPDATE
+    `pedidos`
+SET
+    `referencia` = :referencia,
+    `fecha_creada` = NOW(),
+    `fecha_enviada` = NOW(),
+    `descripcion` = :referencia,
+    `importe` = 0,
+    `id_factura` = null,
+    `anio_contable` = 0,
+    `anexo` = null,
+    `albaran` = null,
+    `factura` = null,
+    `baja` = NOW()
+WHERE
+    `id` = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'id' => $id,
+            'referencia' => $referencia
+        ]);
+    }
+
+    public function borrar_factura($id)
+    {
+        $sql = "DELETE FROM `facturas` WHERE `id`=:id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'id' => $id
+        ]);
+    }
+
+    public function borrar_presupuesto($id)
+    {
+        $sql = "DELETE FROM `presupuestos` WHERE `id` = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'id' => $id
+        ]);
     }
 }

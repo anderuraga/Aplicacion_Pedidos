@@ -159,6 +159,7 @@ class PedidosController extends Controller
             if ($pedidosDAO->last_insert != null) {
                 session_write_close();
                 header("Location: vereditar?id=" . $pedidosDAO->last_insert);
+                exit;
             }
         }
 
@@ -274,6 +275,13 @@ class PedidosController extends Controller
             } else if ($_POST['action'] == "subir_factura") {
                 $_SESSION['alert'] = $this->subirFactura($pedidosDAO);
                 $pedido = $pedidosDAO->obtener($_POST['id']);
+            } else if ($_POST['action'] == "borrar"){
+                $_SESSION['alert'] = $this->borrar($pedidosDAO);
+                if ($_SESSION['alert']['tipo'] == "success") {
+                    session_write_close();
+                    header("Location: " . BASE_URL . "Pedidos");
+                    exit;
+                }
             }
         }
 
@@ -728,9 +736,9 @@ class PedidosController extends Controller
                 // Reemplazar registro en BD
 
                 $pedidosDAO->insertar_presupuestos([
-                    'id_pedido'   => $pedidoId,
-                    'documento'   => $name,
-                    'seleccionado' => (!empty($_POST['presupuesto_seleccionado']) && (int)$_POST['presupuesto_seleccionado'] === $i) ? 1 : 0
+                    'id_pedido' => $pedidoId,
+                    'documento' => $name,
+                    'seleccionado' => (!empty($_POST['presupuesto_seleccionado']) && (int) $_POST['presupuesto_seleccionado'] === $i) ? 1 : 0
                 ]);
                 $insertedPresuID["pres$i"] = $pedidosDAO->last_insert_presupuesto;
             }
@@ -784,7 +792,7 @@ class PedidosController extends Controller
         $pedido = $pedidosDAO->obtener($pedidoId);
 
         // Validar campos obligatorios
-        $referencia   = trim($_POST['referencia'] ?? '');
+        $referencia = trim($_POST['referencia'] ?? '');
         $fechaFactura = $_POST['fecha_factura'] ?? null;
         if ($referencia === '' || !$fechaFactura) {
             return ['tipo' => 'warning', 'mensaje' => 'Debe indicar número y fecha de factura.'];
@@ -828,6 +836,55 @@ class PedidosController extends Controller
         }
 
         return ['tipo' => 'success', 'mensaje' => 'Factura actualizada correctamente.'];
+    }
+
+    private function borrar(PedidosDAO $pedidosDAO)
+    {
+        $id = $_POST['id'];
+        $confirmacion = $_POST['confirmacion'];
+
+        if ($confirmacion != "Borrar") {
+            return [
+                'tipo' => 'warning',
+                'mensaje' => 'El campo de confirmación no coincide'
+            ];
+        }
+
+        $pedido = $pedidosDAO->obtener($id);
+
+        if (!is_null($pedido->anexo)) {
+            @unlink(__DIR__ . "/../../public/uploads/presupuestos/" . $pedido->id . "/" . $pedido->anexo);
+        }
+
+        if (!is_null($pedido->albaran)) {
+            @unlink(__DIR__ . "/../../public/uploads/presupuestos/" . $pedido->id . "/" . $pedido->albaran);
+        }
+
+        if ($pedido->factura->id!=0) {
+            @unlink(__DIR__ . "/../../public/uploads/presupuestos/" . $pedido->id . "/" . $pedido->factura->documento);
+            $pedidosDAO->borrar_factura($pedido->factura->id);
+        }
+
+        $presupuestos = $pedidosDAO->obtener_presupuestos($pedido->id);
+        foreach($presupuestos as $p){
+            @unlink(__DIR__ . "/../../public/uploads/presupuestos/" . $pedido->id . "/" . $p->documento);
+            $pedidosDAO->borrar_presupuesto($p->id);
+        }
+
+        $random = random_int(1, 99999999);
+        $ref = "Borrado$random";
+
+        if ($pedidosDAO->borrar($id, $ref)) {
+            return [
+                'tipo' => 'success',
+                'mensaje' => 'Se ha borrado el pedido correctamente'
+            ];
+        } else {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Ha sucedido un problema al borrar el pedido'
+            ];
+        }
     }
 
     #[\Override]

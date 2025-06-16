@@ -288,12 +288,12 @@ class ProveedoresController extends Controller
         if ($proveedoresDAO->borrar($id, $random, $nombre)) {
             return [
                 'tipo' => 'success',
-                'mensaje' => 'Se ha borrado el tipo de servicio correctamente'
+                'mensaje' => 'Se ha borrado el proveedor correctamente'
             ];
         } else {
             return [
                 'tipo' => 'danger',
-                'mensaje' => 'Ha sucedido un problema al borrar el tipo de servicio'
+                'mensaje' => 'Ha sucedido un problema al borrar el proveedor'
             ];
         }
     }
