@@ -19,11 +19,22 @@ class UsuariosController extends Controller
         $usuariosDAO = $this->dao("Usuarios");
         $departamentosDAO = $this->dao("Departamentos");
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $_SESSION['alert'] = $this->guardar($usuariosDAO, $departamentosDAO);
-            if ($usuariosDAO->last_insert != null) {
-                session_write_close();
-                header("Location: vereditar?id=" . $usuariosDAO->last_insert);
+            if (isset($_POST['action']) && $_POST['action'] == "borrar") {
+                $_SESSION['alert'] = $this->borrar($usuariosDAO);
+                if($_SESSION['alert']['tipo']=="success"){
+                    session_write_close();
+                    header("Location: ".BASE_URL."Usuarios");
+                    exit;
+                }
+            } else {
+                $_SESSION['alert'] = $this->guardar($usuariosDAO, $departamentosDAO);
+                if ($usuariosDAO->last_insert != null) {
+                    session_write_close();
+                    header("Location: vereditar?id=" . $usuariosDAO->last_insert);
+                    exit;
+                }
             }
+
         }
 
         $departamentos = $departamentosDAO->listar();
@@ -119,7 +130,7 @@ class UsuariosController extends Controller
                         'contrasena' => $contrasena,
                     ]
                 );
-            }else if($contrasena!=null){
+            } else if ($contrasena != null) {
                 $mailer = new Mailer();
                 $mailer->enviarCorreo(
                     $correo,
@@ -140,6 +151,43 @@ class UsuariosController extends Controller
                 'mensaje' => $id == 0 ? 'No se ha podido crear el usuario' : 'No se ha podido editar el usuario'
             ];
         }
+    }
+
+    public function borrar(UsuariosDAO $usuariosDAO){
+        global $usuario;
+        $id = $_POST['id'];
+        $confirmacion = $_POST['confirmacion'];
+
+        if($confirmacion != "Borrar"){
+            return [
+                'tipo' => 'warning',
+                'mensaje' => 'El campo de confirmación no coincide'
+            ];
+        }
+
+        if($usuario->id == $id){
+            return [
+                'tipo' => 'warning',
+                'mensaje' => 'No te puedes borrar tu propio usuario'
+            ];
+        }
+
+        $random = random_int(1, 99999999);
+        $nombre = "Borrado$random";
+        $correo = "$random@borrado.com";
+
+        if($usuariosDAO->borrar($id,$nombre,$correo)){
+            return [
+                'tipo' => 'success',
+                'mensaje' => 'Se ha borrado el usuario correctamente'
+            ];
+        }else{
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Ha sucedido un problema al generar el usuario'
+            ];
+        }
+
     }
 
     #[\Override]

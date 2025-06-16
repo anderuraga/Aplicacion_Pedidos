@@ -221,4 +221,23 @@ class UsuariosDAO
         return false;
     }
 
+    public function borrar($id, $nombre, $correo)
+    {
+        $sql = "UPDATE
+                    `usuarios`
+                SET
+                    `nombre` = :nombre,
+                    `correo` = :correo,
+                    `contrasena` = 'Borrado',
+                    `baja` = NOW()
+                WHERE
+                    `id`=:id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'id' => $id,
+            'correo' => $correo,
+            'nombre' => $nombre
+        ]);
+    }
+
 }
