@@ -41,7 +41,7 @@
                             <option value="" disabled <?= $ingreso->id == 0 ? 'selected' : '' ?>>Selecciona una area de
                                 gasto</option>
                             <?php foreach ($areasgastos as $a): ?>
-                                <option value="<?= $a->id ?>" <?= $a->id == $ingreso->id ? 'selected' : '' ?>>
+                                <option value="<?= $a->id ?>" <?= $a->id == $ingreso->areaGastos->id ? 'selected' : '' ?>>
                                     <?= htmlspecialchars($a->nombre) ?>
                                 </option>
                             <?php endforeach; ?>

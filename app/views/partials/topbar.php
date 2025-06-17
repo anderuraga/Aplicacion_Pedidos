@@ -63,7 +63,7 @@
                 </a>
                 <ul class="dropdown-menu submenu list-unstyled" id="dashboard" data-bs-parent="#accordionExample">
                     <li>
-                        <a href="<?= BASE_URL ?>Inventario"> Modificaciones </a>
+                        <a href="<?= BASE_URL ?>Inventario"> Listado </a>
                     </li>
                     <li>
                         <a href="<?= BASE_URL ?>Inventario/vereditar?id=0"> Nuevo </a>
@@ -88,7 +88,7 @@
                     </a>
                     <ul class="dropdown-menu submenu list-unstyled" id="dashboard" data-bs-parent="#accordionExample">
                         <li>
-                            <a href="<?= BASE_URL ?>Proveedores"> Modificaciones </a>
+                            <a href="<?= BASE_URL ?>Proveedores"> Listado </a>
                         </li>
                         <li>
                             <a href="<?= BASE_URL ?>Proveedores/vereditar?id=0"> Alta </a>
@@ -114,7 +114,7 @@
                     </a>
                     <ul class="dropdown-menu submenu list-unstyled" id="dashboard" data-bs-parent="#accordionExample">
                         <li>
-                            <a href="<?= BASE_URL ?>Proveedores"> Altas/Modificaciones </a>
+                            <a href="<?= BASE_URL ?>Proveedores">Listado</a>
                         </li>
                         <li>
                             <a href="<?= BASE_URL ?>Proveedores/vereditar?id=0"> Alta </a>
@@ -158,7 +158,7 @@
                     </a>
                     <ul class="dropdown-menu submenu list-unstyled" id="dashboard" data-bs-parent="#accordionExample">
                         <li>
-                            <a href="<?= BASE_URL ?>AreasGastos"> Modificaciones </a>
+                            <a href="<?= BASE_URL ?>AreasGastos">Listado</a>
                         </li>
                         <li>
                             <a href="<?= BASE_URL ?>AreasGastos/vereditar?id=0"> Alta </a>
@@ -188,7 +188,7 @@
                     </a>
                     <ul class="dropdown-menu submenu list-unstyled" id="dashboard" data-bs-parent="#accordionExample">
                         <li>
-                            <a href="<?= BASE_URL ?>Subconceptos"> Modificaciones </a>
+                            <a href="<?= BASE_URL ?>Subconceptos">Listado</a>
                         </li>
                         <li>
                             <a href="<?= BASE_URL ?>Subconceptos/vereditar?id=0"> Alta </a>
@@ -212,7 +212,7 @@
                     </a>
                     <ul class="dropdown-menu submenu list-unstyled" id="dashboard" data-bs-parent="#accordionExample">
                         <li>
-                            <a href="<?= BASE_URL ?>Usuarios"> Modificaciones </a>
+                            <a href="<?= BASE_URL ?>Usuarios">Listado</a>
                         </li>
                         <li>
                             <a href="<?= BASE_URL ?>Usuarios/vereditar?id=0"> Alta </a>
