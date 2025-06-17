@@ -550,10 +550,10 @@ class PedidosController extends Controller
                 'mensaje' => 'Falta la id del pedido'
             ];
         }
-        
+
 
         $pedido = $pedidosDAO->obtener($pedidoId);
-        if($pedido->albaran==null){
+        if ($pedido->albaran == null) {
             return [
                 'tipo' => 'danger',
                 'mensaje' => 'Es necesario adjuntar un albarán'
@@ -596,7 +596,7 @@ class PedidosController extends Controller
         }
 
         $pedido = $pedidosDAO->obtener($pedidoId);
-        if($pedido->factura->id==0){
+        if ($pedido->factura->id == 0) {
             return [
                 'tipo' => 'danger',
                 'mensaje' => 'Es necesario adjuntar una factura'
@@ -641,7 +641,8 @@ class PedidosController extends Controller
             $pedido = $pedidosDAO->obtener($pedidoId);
             $fecha = date("Y-m-d H:i:s");
             $descr = "Pedido <a target='_blank' href='" . BASE_URL . "Pedidos/vereditar?id=" . $pedido->id . "'>" . $pedido->referencia . "</a> archivado";
-            $ok = $transaccionesDAO->crear($fecha, $descr, $pedido->areaGastos->id, getCantidadMysql("-" . $pedido->importe));
+            //$ok = $transaccionesDAO->crear($fecha, $descr, $pedido->areaGastos->id, getCantidadMysql("-" . $pedido->importe));
+            $ok = $transaccionesDAO->crear($fecha, $descr, $pedido->areaGastos->id,  $pedido->importe);
             if ($ok) {
                 return [
                     'tipo' => 'success',
@@ -763,6 +764,9 @@ class PedidosController extends Controller
         // Presupuestos: 1 o 3
         $insertedPresuID = [];
         $count = $importe >= 1000 ? 3 : 1;
+        if ($count == 1) {
+            $_POST['presupuesto_seleccionado'] = 1;
+        }
         for ($i = 1; $i <= $count; $i++) {
             $field = "presupuesto$i";
             if (!empty($_FILES[$field]['tmp_name'])) {
@@ -851,7 +855,7 @@ class PedidosController extends Controller
         // Eliminar factura existente si se sube un nuevo archivo
         if (!empty($_FILES['factura']['tmp_name'])) {
             $existing = $pedido->factura;
-            if ($existing && $pedido->factura->id !=0 && file_exists("$pathFact/{$existing->documento}")) {
+            if ($existing && $pedido->factura->id != 0 && file_exists("$pathFact/{$existing->documento}")) {
                 @unlink("$pathFact/{$existing->documento}");
             }
             // Subir archivo

@@ -31,7 +31,7 @@
                         </select>
                         <textarea <?= $incidencia->id == 0 ? 'style="display: none;"' : '' ?> class="form-control mt-2" id="descripcion" name="descripcion"
                             rows="3"
-                            placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit. In iaculis erat justo, ac cursus nibh."><?= $incidencia->descripcion ?></textarea>
+                            placeholder="Escribe el motivo de la incidencia"><?= $incidencia->descripcion ?></textarea>
                     </div>
                 </div>
 

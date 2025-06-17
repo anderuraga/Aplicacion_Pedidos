@@ -41,29 +41,24 @@
                     <div class="col-4 servicioDiv">
                         <h5>Filtrar proveedor por servicio:</h5>
                         <select class="form-control" id="servicio" name="servicio">
-                            <option value="" disabled selected hidden>Selecciona una opción</option>
+                            <option value="-1" selected>------- TODOS -------</option>
                             <?php
                             /** @var TipoServicio $t */
                             foreach ($tiposServicio as $t) {
                                 ?>
-                                <option value="<?= $t->id ?>"><?= $t->nombre ?></optionv>
-                                <?php } ?>
+                                <option value="<?= $t->id ?>"><?= $t->nombre ?></option>
+                            <?php } ?>
                         </select>
                     </div>
                 </div>
                 <table id="Proveedores" class="tabla table table-striped dt-table-hover" style="width:100%">
                     <thead>
                         <tr>
-                            <th>id</th>
                             <th>tipoServicioId</th>
-                            <th>CIF</th>
-                            <th></th>
-                            <th>Razón Social</th>
-                            <th>Dirección</th>
-                            <th title="Código Postal">C.P.</th>
-                            <th>Población</th>
-                            <th>Provincia</th>
+                            <th><!--selector proveedor--></th>
                             <th>Servicio</th>
+                            <th>Razón Social</th>
+                            <th>Población</th>
                             <th>F.E.</th>
                             <th>Gasto</th>
                         </tr>
@@ -71,21 +66,16 @@
                     <tbody>
                         <?php foreach ($proveedores as $p) { ?>
                             <tr>
-                                <td><?= $p->id ?></td>
                                 <td><?= $p->tipo_servicio->id ?></td>
-                                <td><?= $p->cif ?></td>
                                 <td>
                                     <div class="form-radio form-radio-primary form-radio-inline">
                                         <input class="form-radio-input proveedorRadio" type="radio" name="proveedor"
                                             value="<?= $p->id ?>">
                                     </div>
                                 </td>
-                                <td><?= $p->nombre ?></td>
-                                <td><?= $p->direccion ?></td>
-                                <td><?= $p->cod_postal ?></td>
-                                <td><?= $p->poblacion ?></td>
-                                <td><?= $p->provincia ?></td>
                                 <td><?= $p->tipo_servicio->nombre ?></td>
+                                <td><?= $p->nombre ?></td>
+                                <td><?= $p->poblacion ?></td>
                                 <td><?= $p->factura_electronica ? 'Si' : 'No' ?></td>
                                 <td><?= $p->cantidad_formato() ?>€</td>
                             </tr>
@@ -106,18 +96,25 @@
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         $("#servicio").on("change", function () {
-            $("#radio_btn").prop('checked', false)
-            tabla.columns(1)
-                .search($(this).val())
-                .draw();
+            if ($(this).val() != -1) {
+                $("#radio_btn").prop('checked', false)
+                tabla.columns(0)
+                    .search($(this).val())
+                    .draw();
+            }else{
+                tabla.columns(0)
+                    .search("")
+                    .draw();
+            }
+
         });
     });
 
 </script>
 <?php
-$target = 2;
+$target = 6;
 $extraColumndef = "{
-                target: 1,
+                target: 0,
                 visible: false,
                 searchable: true
             }"
