@@ -13,6 +13,7 @@ class SubconceptosController extends Controller
     public function vereditar()
     {
         $id = $_GET['id'];
+        $idnuevo = $_POST['idnuevo'] ?? null;
         /**
          * @var SubconceptosDAO
          */
@@ -27,11 +28,10 @@ class SubconceptosController extends Controller
                 }
             } else {
                 $_SESSION['alert'] = $this->guardar($subconceptosDAO);
-                if ($subconceptosDAO->last_insert != null) {
-                    session_write_close();
-                    header("Location: vereditar?id=" . $subconceptosDAO->last_insert);
-                    exit;
-                }
+
+                session_write_close();
+                header("Location: vereditar?id=" . $idnuevo);
+                exit;
             }
 
         }
@@ -51,6 +51,8 @@ class SubconceptosController extends Controller
     {
 
         $id = $_POST['id'];
+        $idnuevo = $_POST['idnuevo'] ?? null;
+
         $nombre = trim($_POST['nombre']);
 
         if ($nombre === '') {
@@ -75,9 +77,9 @@ class SubconceptosController extends Controller
         }
 
         if ($id == 0) {
-            $ok = $subconceptosDAO->crear($nombre);
+            $ok = $subconceptosDAO->crear($idnuevo, $nombre);
         } else {
-            $ok = $subconceptosDAO->editar($id, $nombre);
+            $ok = $subconceptosDAO->editar($id, $idnuevo, $nombre);
         }
 
         if ($ok) {

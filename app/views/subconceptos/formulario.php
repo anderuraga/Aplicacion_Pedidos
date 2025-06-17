@@ -19,6 +19,16 @@
             <form id="editarSubconcepto" class="mt-0" action="<?= BASE_URL ?>Subconceptos/vereditar?id=<?= $subconcepto->id ?>"
                 method="post">
                 <input type="hidden" id="idedit" name="id" value="<?= $subconcepto->id ?>">
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h5>código: *</h5>
+                        <input type="text" maxlength="11" class="form-control mb-2" placeholder="código nuevo" aria-label="código nuevo"
+                            name="idnuevo" id="idnuevo" required value="<?= $subconcepto->id ?>">
+                    </div>
+                </div>
+
+
                 <div class="row">
                     <div class="col-sm-4">
                         <h5>Nombre: *</h5>
@@ -26,6 +36,7 @@
                             name="nombre" id="nombreEdit" required value="<?= $subconcepto->nombre ?>">
                     </div>
                 </div>
+
 
                 
 
