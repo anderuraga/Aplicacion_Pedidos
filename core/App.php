@@ -42,7 +42,8 @@ class App {
         // Comprueba si el usuario logeado puede acceder al controller
         if(!$this->controller->tiene_permiso()){
             //TODO Seguridad: Implementar que pasa cuando hay permisos para acceder a la página.
-            echo "No tienes permiso para esta página";
+            // echo "No tienes permiso para esta página";
+            header("Location: ". BASE_URL. "Error/403");
             die();
         }
 
