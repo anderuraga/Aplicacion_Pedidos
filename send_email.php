@@ -8,18 +8,20 @@ require 'phpmailer/src/OAuth.php';
 
 require 'phpmailer/src/Exception.php';
 
+require 'config/constantes.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\OAuth;
 use League\OAuth2\Client\Provider\Google;
 
  
-$userEmail = '';
-$clientId = '';
-$clientSecret = '';
-$refreshToken = '';
-$emailFrom = '';
-$emailTo = '';
+$userEmail = EMAIL_CORREO;
+$clientId = CLIENT_ID;
+$clientSecret = CLIENT_SECRET;
+$refreshToken = REFRESH_TOKEN;
+$emailFrom = EMAIL_CORREO;
+$emailTo = 'sscauraga@elorrieta-errekamari.com';
 
 
 try {

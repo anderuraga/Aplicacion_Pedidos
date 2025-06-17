@@ -1,9 +1,19 @@
 <?php
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\OAuth;
 use PHPMailer\PHPMailer\Exception;
+use League\OAuth2\Client\Provider\Google;
 
 require __DIR__ . "/../../static/vendor/autoload.php";
+require __DIR__ . '/../../autoload.php';
+require  __DIR__ . '/../../vendor/autoload.php';
+
+require 'phpmailer/src/PHPMailer.php';
+require 'phpmailer/src/SMTP.php';
+require 'phpmailer/src/OAuthTokenProvider.php';
+require 'phpmailer/src/OAuth.php';
+require 'phpmailer/src/Exception.php';
+
 
 class Mailer
 {
@@ -14,16 +24,38 @@ class Mailer
         $this->mail = new PHPMailer(true);
         $this->mail->isSMTP();
         $this->mail->Host = EMAIL_HOST;
-        $this->mail->SMTPAuth = true;
-        $this->mail->Username = EMAIL_CORREO;
-        $this->mail->Password = EMAIL_CONTRASENA;
-        $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-        //$this->mail->SMTPSecure = 'tls';
         $this->mail->Port = EMAIL_PORT;
+        $this->mail->SMTPSecure = 'tls';
+        $this->mail->SMTPAuth = true;
+        $this->mail->AuthType = 'XOAUTH2';
+        
+        $provider = new Google([
+                'clientId' => CLIENT_ID,
+                'clientSecret' => CLIENT_SECRET,
+            ]);
+
+        $this->mail->setOAuth(
+            new OAuth([
+                'provider' => $provider,
+                'clientId' => CLIENT_ID,
+                'clientSecret' => CLIENT_SECRET,
+                'refreshToken' => REFRESH_TOKEN,
+                'userName' => EMAIL_CORREO,
+            ])
+        );
+
+
+        // config basica            
+        $this->mail->Username = EMAIL_CORREO;         
         $this->mail->setFrom(EMAIL_CORREO, EMAIL_FROM_NAME);
         $this->mail->isHTML(true);
         $this->mail->CharSet = 'UTF-8';
         $this->mail->Encoding = 'base64';
+
+         // debug   
+        //$this->mail->SMTPDebug = 3; 
+        //$this->mail->Debugoutput = 'html';
+
     }
 
     protected function renderPlantilla(string $templateName, array $data): string
