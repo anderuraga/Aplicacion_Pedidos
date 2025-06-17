@@ -26,7 +26,7 @@
                                         <div class="mb-3">
                                             <label class="form-label">Correo electrónico</label>
                                             <input type="email" id="correo" name="correo" class="form-control"
-                                                value="javier.gomez@emaginarte.com" placeholder="Correo electrónico">
+                                                value="" placeholder="Correo electrónico">
                                         </div>
                                     </div>
                                     <div class="col-12">
@@ -34,7 +34,7 @@
                                             <label class="form-label">Contraseña</label>
                                             <div class="input-group mb-3">
                                                 <input type="password" class="form-control" id="contrasena"
-                                                    name="contrasena" placeholder="Contraseña" value="emaginarte!"
+                                                    name="contrasena" placeholder="Contraseña" value=""
                                                     aria-describedby="button-addon2">
                                                 <button class="btn btn-primary" type="button" id="button-addon2"
                                                     onclick="switch_passwordfield(this)">

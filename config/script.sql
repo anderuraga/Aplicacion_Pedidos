@@ -21,18 +21,26 @@ SET time_zone = "+00:00";
 -- Base de datos: `elorrieta`
 --
 
+
+DROP DATABASE IF EXISTS  `elorrieta` ;
+CREATE DATABASE `elorrieta` CHARACTER SET utf8 COLLATE UTF8_GENERAL_CI;
+USE `elorrieta` ;
+
+
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `areas_gastos`
 --
 
+
+
 CREATE TABLE `areas_gastos` (
   `id` int(11) NOT NULL,
   `id_departamento` int(11) NOT NULL,
   `nombre` varchar(255) NOT NULL,
   `baja` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=UTF8_GENERAL_CI;
 
 -- --------------------------------------------------------
 
@@ -44,7 +52,7 @@ CREATE TABLE `departamentos` (
   `id` int(11) NOT NULL,
   `nombre` varchar(255) NOT NULL,
   `baja` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=UTF8_GENERAL_CI;
 
 -- --------------------------------------------------------
 
@@ -56,7 +64,7 @@ CREATE TABLE `estado` (
   `id` int(11) NOT NULL,
   `nombre` varchar(45) NOT NULL,
   `icono` mediumtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=UTF8_GENERAL_CI;
 
 -- --------------------------------------------------------
 
@@ -69,7 +77,7 @@ CREATE TABLE `facturas` (
   `identificador` varchar(255) NOT NULL,
   `fecha` date NOT NULL,
   `documento` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=UTF8_GENERAL_CI;
 
 -- --------------------------------------------------------
 
@@ -84,7 +92,7 @@ CREATE TABLE `incidencias` (
   `descripcion` mediumtext NOT NULL,
   `estado` int(1) NOT NULL DEFAULT 0,
   `fecha_solucionada` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=UTF8_GENERAL_CI;
 
 -- --------------------------------------------------------
 
@@ -97,7 +105,7 @@ CREATE TABLE `materiales` (
   `id_departamento` int(11) NOT NULL,
   `nombre` varchar(45) NOT NULL,
   `baja` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=UTF8_GENERAL_CI;
 
 -- --------------------------------------------------------
 
@@ -112,7 +120,7 @@ CREATE TABLE `movimientos` (
   `descripcion` varchar(255) NOT NULL,
   `cantidad` int(11) NOT NULL,
   `baja` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=UTF8_GENERAL_CI;
 
 -- --------------------------------------------------------
 
@@ -139,7 +147,7 @@ CREATE TABLE `pedidos` (
   `albaran` varchar(255) DEFAULT NULL,
   `factura` varchar(255) DEFAULT NULL,
   `baja` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=UTF8_GENERAL_CI;
 
 -- --------------------------------------------------------
 
@@ -153,7 +161,7 @@ CREATE TABLE `pedidos_estados` (
   `id_pedido` int(11) NOT NULL,
   `fecha` datetime NOT NULL DEFAULT current_timestamp(),
   `comentario` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=UTF8_GENERAL_CI;
 
 -- --------------------------------------------------------
 
@@ -167,7 +175,7 @@ CREATE TABLE `presupuestos` (
   `documento` varchar(255) NOT NULL,
   `fecha` datetime NOT NULL DEFAULT current_timestamp(),
   `seleccionado` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=UTF8_GENERAL_CI;
 
 -- --------------------------------------------------------
 
@@ -177,7 +185,7 @@ CREATE TABLE `presupuestos` (
 
 CREATE TABLE `proveedores` (
   `id` int(11) NOT NULL,
-  `cif` varchar(9) NOT NULL,
+  `cif` varchar(25) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `direccion` varchar(255) NOT NULL,
   `cod_postal` varchar(10) NOT NULL,
@@ -195,9 +203,11 @@ CREATE TABLE `proveedores` (
   `fecha_editado` datetime NOT NULL DEFAULT current_timestamp(),
   `fecha_baja` datetime DEFAULT NULL,
   `limite` decimal(10,2) NOT NULL DEFAULT 15000.00,
-  `usuario_id` int(11) NOT NULL,
+  `usuario_id` int(11) NOT NULL DEFAULT '1',
   `borrado` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=UTF8_GENERAL_CI;
+
+
 
 -- --------------------------------------------------------
 
@@ -223,7 +233,7 @@ CREATE TABLE `subconceptos` (
   `id` int(11) NOT NULL,
   `nombre` varchar(45) NOT NULL,
   `baja` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=UTF8_GENERAL_CI;
 
 -- --------------------------------------------------------
 
@@ -235,7 +245,7 @@ CREATE TABLE `tipos_servicio` (
   `id` int(11) NOT NULL,
   `nombre` varchar(45) NOT NULL,
   `baja` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=UTF8_GENERAL_CI;
 
 -- --------------------------------------------------------
 
@@ -250,7 +260,7 @@ CREATE TABLE `transacciones` (
   `descripcion` varchar(255) NOT NULL,
   `cantidad` float(15,2) NOT NULL,
   `baja` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=UTF8_GENERAL_CI;
 
 -- --------------------------------------------------------
 
@@ -266,7 +276,7 @@ CREATE TABLE `usuarios` (
   `contrasena` varchar(255) NOT NULL,
   `id_departamento` int(11) NOT NULL,
   `baja` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=UTF8_GENERAL_CI;
 
 -- --------------------------------------------------------
 
