@@ -218,7 +218,7 @@ class PedidosController extends Controller
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
                     case PEN_VALI:
-                        $this->pendienteProveedor($pedidosDAO, $pedido, $usuariosDAO);
+                        $_SESSION['alert'] = $this->pendienteProveedor($pedidosDAO, $pedido, $usuariosDAO);
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
                     case PEN_PROV:
@@ -275,7 +275,7 @@ class PedidosController extends Controller
             } else if ($_POST['action'] == "subir_factura") {
                 $_SESSION['alert'] = $this->subirFactura($pedidosDAO);
                 $pedido = $pedidosDAO->obtener($_POST['id']);
-            } else if ($_POST['action'] == "borrar"){
+            } else if ($_POST['action'] == "borrar") {
                 $_SESSION['alert'] = $this->borrar($pedidosDAO);
                 if ($_SESSION['alert']['tipo'] == "success") {
                     session_write_close();
@@ -503,6 +503,22 @@ class PedidosController extends Controller
                 'mensaje' => 'Falta la id del pedido'
             ];
         }
+        $pedido = $pedidosDAO->obtener($pedidoId);
+        if ($pedido->comprobacion_presupuestos()) {
+            $presupuestos = $pedidosDAO->obtener_presupuestos($pedido->id);
+            if (count($presupuestos) < 3) {
+                return [
+                    'tipo' => 'danger',
+                    'mensaje' => 'Tiene que haber 3 presupuestos adjuntados a este pedido'
+                ];
+            }
+            if (is_null($pedido->anexo)) {
+                return [
+                    'tipo' => 'danger',
+                    'mensaje' => 'Es necesario adjuntar el anexo correspondiente'
+                ];
+            }
+        }
 
         $pedidosDAO->cambiarEstado($pedidoId, 2);
         $pedidosDAO->rellenarEstado(2, $pedidoId, "Se han subido los presupuestos");
@@ -520,7 +536,7 @@ class PedidosController extends Controller
 
         return [
             'tipo' => 'success',
-            'mensaje' => 'Archivos subidos correctamente.'
+            'mensaje' => 'Estado cambiado correctamente.'
         ];
     }
 
@@ -534,8 +550,16 @@ class PedidosController extends Controller
                 'mensaje' => 'Falta la id del pedido'
             ];
         }
+        
 
         $pedido = $pedidosDAO->obtener($pedidoId);
+        if($pedido->albaran==null){
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Es necesario adjuntar un albarán'
+            ];
+        }
+
         $correos = $usuariosDAO->obtenerCorreosAdmin();
         $correoJD = $pedido->usuario->correo;
         $cc = [
@@ -556,7 +580,7 @@ class PedidosController extends Controller
         $pedidosDAO->rellenarEstado(4, $pedidoId, "Se ha subido el albarán");
         return [
             'tipo' => 'success',
-            'mensaje' => 'Archivo subido correctamente.'
+            'mensaje' => 'Estado cambiado correctamente.'
         ];
     }
 
@@ -572,6 +596,14 @@ class PedidosController extends Controller
         }
 
         $pedido = $pedidosDAO->obtener($pedidoId);
+        if($pedido->factura->id==0){
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Es necesario adjuntar una factura'
+            ];
+        }
+
+
         $correos = $usuariosDAO->obtenerCorreosAdmin();
         $correoJD = $pedido->usuario->correo;
         $cc = [
@@ -631,34 +663,47 @@ class PedidosController extends Controller
 
     private function pendienteProveedor(PedidosDAO $pedidosDAO, Pedido $pedido, UsuariosDAO $usuariosDAO)
     {
+        $presupuestoSelec = $pedidosDAO->obtener_presupuesto_seleccionado($pedido->id);
+        if ($pedido->comprobacion_presupuestos()) {
+            if ($presupuestoSelec == null) {
+                return [
+                    'tipo' => 'danger',
+                    'mensaje' => 'Hay que marcar un presupuesto como seleccionado'
+                ];
+            }
+        }
+
         $pedidosDAO->cambiarEstado($pedido->id, 3);
         $pedidosDAO->rellenarEstado(3, $pedido->id, "Se ha enviado el pedido al proveedor");
 
-        $correoProv = $pedido->proveedor->correo;
-        $correosAdmin = $usuariosDAO->obtenerCorreosAdmin();
-        $correoJD = $pedido->usuario->correo;
-        $replyto = [
-            $correoJD
-        ];
-
-        $presupuestoSelec = $pedidosDAO->obtener_presupuesto_seleccionado($pedido->id);
-        $archivoUrl = [
-            __DIR__ . "/../../public/uploads/presupuestos/" . $pedido->id . "/" . $presupuestoSelec->documento
-        ];
 
 
-        $mailer = new Mailer();
-        $mailer->enviarCorreo(
-            $correoProv,
-            "Envío de presupuesto",
-            "PendienteProveedor",
-            [
-                'referencia' => $pedido->referencia
-            ],
-            $correosAdmin,
-            $archivoUrl,
-            $replyto
-        );
+        if ($presupuestoSelec != null) {
+            $correoProv = $pedido->proveedor->correo;
+            $correosAdmin = $usuariosDAO->obtenerCorreosAdmin();
+            $correoJD = $pedido->usuario->correo;
+            $replyto = [
+                $correoJD
+            ];
+
+
+            $archivoUrl = [
+                __DIR__ . "/../../public/uploads/presupuestos/" . $pedido->id . "/" . $presupuestoSelec->documento
+            ];
+            $mailer = new Mailer();
+            $mailer->enviarCorreo(
+                $correoProv,
+                "Envío de presupuesto",
+                "PendienteProveedor",
+                [
+                    'referencia' => $pedido->referencia
+                ],
+                $correosAdmin,
+                $archivoUrl,
+                $replyto
+            );
+        }
+
     }
 
     public function pdf($id)
@@ -688,7 +733,7 @@ class PedidosController extends Controller
 
         $footerHtml = '
   <div style="text-align: right; font-size: 10px;">
-    <img src="' . BASE_URL . 'static/assets/img/Pedido_pie.png" height="50" alt="Pie de página">
+    <img src="static/assets/img/Pedido_pie.png" height="50" alt="Pie de página">
   </div>
 ';
         $mpdf->SetHTMLFooter($footerHtml);
@@ -806,7 +851,7 @@ class PedidosController extends Controller
         // Eliminar factura existente si se sube un nuevo archivo
         if (!empty($_FILES['factura']['tmp_name'])) {
             $existing = $pedido->factura;
-            if ($existing && file_exists("$pathFact/{$existing->documento}")) {
+            if ($existing && $pedido->factura->id !=0 && file_exists("$pathFact/{$existing->documento}")) {
                 @unlink("$pathFact/{$existing->documento}");
             }
             // Subir archivo
@@ -860,13 +905,13 @@ class PedidosController extends Controller
             @unlink(__DIR__ . "/../../public/uploads/presupuestos/" . $pedido->id . "/" . $pedido->albaran);
         }
 
-        if ($pedido->factura->id!=0) {
+        if ($pedido->factura->id != 0) {
             @unlink(__DIR__ . "/../../public/uploads/presupuestos/" . $pedido->id . "/" . $pedido->factura->documento);
             $pedidosDAO->borrar_factura($pedido->factura->id);
         }
 
         $presupuestos = $pedidosDAO->obtener_presupuestos($pedido->id);
-        foreach($presupuestos as $p){
+        foreach ($presupuestos as $p) {
             @unlink(__DIR__ . "/../../public/uploads/presupuestos/" . $pedido->id . "/" . $p->documento);
             $pedidosDAO->borrar_presupuesto($p->id);
         }

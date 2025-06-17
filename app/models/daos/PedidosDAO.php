@@ -507,7 +507,7 @@ ORDER BY
         return $result;
     }
 
-    public function obtener_presupuesto_seleccionado($id): Presupuesto
+    public function obtener_presupuesto_seleccionado($id): Presupuesto | null
     {
         $stmt = $this->db->prepare("SELECT
     `id` as presupuesto_id,
@@ -525,8 +525,13 @@ ORDER BY
     ");
 
         $stmt->execute(['id' => $id]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return Presupuesto::fromArray($row);
+        if ($stmt->rowCount() > 0) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            return Presupuesto::fromArray($row);
+        }else{
+            return null;
+        }
+
     }
 
     public function obtener_presupuesto($id_presupuesto): Presupuesto
