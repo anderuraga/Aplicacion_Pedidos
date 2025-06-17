@@ -16,12 +16,10 @@
                         <th>id</th>
                         <th>CIF</th>
                         <th>Estado</th>
-                        <th>Razón Social</th>
-                        <th>Dirección</th>
-                        <th title="Código Postal">C.P.</th>
-                        <th>Población</th>
-                        <th>Provincia</th>
                         <th>Servicio</th>
+                        <th>Razón Social</th>                        
+                        <th>Telefono</th>
+                        <th>Población</th>                                                
                         <th>F.E.</th>
                         <th>Opciones</th>
                     </tr>
@@ -32,12 +30,10 @@
                             <td><?= $p->id ?></td>
                             <td><?= $p->cif ?></td>
                             <td><?= $p->getEstado() ?></td>
-                            <td><?= $p->nombre ?></td>
-                            <td><?= $p->direccion ?></td>
-                            <td><?= $p->cod_postal ?></td>
-                            <td><?= $p->poblacion ?></td>
-                            <td><?= $p->provincia ?></td>
                             <td><?= $p->tipo_servicio->nombre ?></td>
+                            <td><?= $p->nombre ?></td>                            
+                            <td><?= $p->telefono ?></td>
+                            <td><?= $p->poblacion ?></td>            
                             <td><?= $p->factura_electronica ? 'Si' : 'No' ?></td>
                             <td>
                                 <div class="btn-group" role="group">
