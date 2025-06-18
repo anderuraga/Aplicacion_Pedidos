@@ -36,10 +36,12 @@
 <script src="<?= BASE_URL ?>static/plugins/src/sweetalerts2/sweetalerts2.min.js"></script>
 <script src="<?= BASE_URL ?>static/layouts/horizontal-light-menu/loader.js"></script>
 <script src="<?= BASE_URL ?>static/plugins/src/flatpickr/flatpickr.js"></script>
+<script src="<?= BASE_URL ?>static/plugins/src/flatpickr/es.js"></script>
 <script src="<?= BASE_URL ?>static/plugins/src/input-mask/jquery.inputmask.bundle.min.js"></script>
 <script src="<?= BASE_URL ?>static/plugins/src/formsave/jquery.formsaver.js"></script>
 
 <script>
+    flatpickr.localize(flatpickr.l10ns.es);
     var tabla = $('.tabla').DataTable({
         "dom": "<'dt--top-section' i <'row'<'col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center'l B><'col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3'f>>>" + "<'table-responsive'tr>" + "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
         buttons: [{ extend: 'copy', text: 'Copiar' }, 'csv', 'excel', 'pdf', { extend: 'print', text: 'Imprimir' }],
