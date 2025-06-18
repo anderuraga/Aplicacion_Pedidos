@@ -507,7 +507,7 @@ ORDER BY
         return $result;
     }
 
-    public function obtener_presupuesto_seleccionado($id): Presupuesto | null
+    public function obtener_presupuesto_seleccionado($id): Presupuesto|null
     {
         $stmt = $this->db->prepare("SELECT
     `id` as presupuesto_id,
@@ -528,7 +528,7 @@ ORDER BY
         if ($stmt->rowCount() > 0) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             return Presupuesto::fromArray($row);
-        }else{
+        } else {
             return null;
         }
 
@@ -631,8 +631,31 @@ DESC
             'comentario' => $comentario
         ]);
     }
-
-    public function pedidos_incidencias_abiertas($usuario)
+    public function areas_gastos_incidencias_abiertas()
+    {
+        $query = "SELECT
+  ag.id           AS id_area,
+  ag.nombre       AS nombre_area,
+  COUNT(i.id)     AS incidencias_abiertas
+FROM areas_gastos AS ag
+JOIN pedidos AS p
+  ON p.id_area_gasto = ag.id
+JOIN incidencias AS i
+  ON i.id_pedido = p.id
+  AND i.estado = 0
+WHERE ag.baja IS NULL
+GROUP BY ag.id, ag.nombre
+HAVING COUNT(i.id) > 0; 
+                    ";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        $result = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $result[] = $row;
+        }
+        return $result;
+    }
+    public function pedidos_incidencias_abiertas_JD($usuario)
     {
         $query = "SELECT
                     p.id AS id_pedido,
@@ -640,7 +663,7 @@ DESC
                     FROM pedidos p
                     JOIN incidencias i
                         ON i.id_pedido = p.id
-                    AND i.estado = 0    -- asumimos que estado=0 significa “abierta”
+                    AND i.estado = 0
                     WHERE p.id_departamento = (
                         SELECT u.id_departamento
                         FROM usuarios u

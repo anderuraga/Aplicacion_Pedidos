@@ -19,6 +19,26 @@
                 <?php
                 $notificacion = false;
                 if ($usuario->tipo == ADMIN): ?>
+                    <?php if (count($areasGastosIncidencias) > 0): ?>
+                        <?php $notificacion = true; ?>
+                        <div class="alert alert-icon-left alert-light-warning alert-dismissible fade show mb-4" role="alert">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                class="feather feather-alert-circle">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12" y2="16"></line>
+                            </svg>
+                            <strong>Aviso: </strong>Hay incidencias abiertas en las siguientes areas de gastos:
+                            <ul>
+                                <?php foreach ($areasGastosIncidencias as $areagastos): ?>
+                                    <li>
+                                        <b><?= $areagastos["nombre_area"] ?>:</b> Tiene <?= $areagastos["incidencias_abiertas"] ?> incidencia(s) abierta(s)
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
                     <?php if (count($pedidosRevisar) > 0): ?>
                         <?php $notificacion = true; ?>
                         <div class="alert alert-icon-left alert-light-warning alert-dismissible fade show mb-4" role="alert">

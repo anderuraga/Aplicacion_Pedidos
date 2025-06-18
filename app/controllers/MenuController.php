@@ -16,8 +16,9 @@ class MenuController extends Controller
         if ($usuario->tipo == ADMIN) {
             $data["pedidosRevisar"] = $pedidosDAO->listar_estado(PEN_VALI);
             $data["pedidosArchivar"] = $pedidosDAO->listar_estado(PEN_ARCH);
+            $data["areasGastosIncidencias"] = $pedidosDAO->areas_gastos_incidencias_abiertas();
         } else {
-            $pedidosincidencias = $pedidosDAO->pedidos_incidencias_abiertas($usuario->id);
+            $pedidosincidencias = $pedidosDAO->pedidos_incidencias_abiertas_JD($usuario->id);
             $data["pedidosIncidencias"] = [];
             foreach ($pedidosincidencias as $pedIncid) {
                 $data["pedidosIncidencias"][] = [$pedidosDAO->obtener($pedIncid['id_pedido']),$pedIncid['num_incidencias_abiertas']];
