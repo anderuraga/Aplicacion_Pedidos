@@ -51,6 +51,7 @@
                                             <th>Area Gastos</th>
                                             <th>Subconcepto</th>
                                             <th>Proveedor</th>
+                                            <th>Incidencias</th>
                                             <th>Opciones</th>
                                         </tr>
                                     </thead>
@@ -75,6 +76,7 @@
                                                 <td><?= $p->areaGastos->nombre ?></td>
                                                 <td><?= $p->subconcepto->nombre ?></td>
                                                 <td><?= $p->proveedor->nombre ?></td>
+                                                <td><?= $incidencias[$p->id] ?></td>
                                                 <td>
                                                     <div class="btn-group" role="group" aria-label="Basic example">
                                                         <a href="<?= BASE_URL . "Pedidos/vereditar?id=" . $p->id ?>"
