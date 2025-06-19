@@ -9,4 +9,10 @@ class ManualesController extends Controller
         global $usuario;
         $this->view("manuales/index", []);
     }
+
+    #[\Override]
+    public function tiene_permiso(): bool
+    {
+        return requireLogin();
+    }
 }

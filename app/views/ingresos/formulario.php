@@ -7,7 +7,7 @@
 <?php $titulo = "Ingresos - " . ($ingreso->id == 0 ? 'Crear' : 'Editar'); ?>
 <?php require HOMEDIR . '/../app/views/partials/header.php' ?>
 <?php require HOMEDIR . '/../app/views/partials/navbar.php' ?>
-<?php $tab = 9; ?>
+<?php $tab = 8; ?>
 <?php require HOMEDIR . '/../app/views/partials/container.php' ?>
 <?php require HOMEDIR . '/../app/views/partials/alert.php' ?>
 

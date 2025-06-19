@@ -2,7 +2,7 @@
 <?php $titulo = "Ingresos" ?>
 <?php require HOMEDIR . '/../app/views/partials/header.php' ?>
 <?php require HOMEDIR . '/../app/views/partials/navbar.php' ?>
-<?php $tab = 9; ?>
+<?php $tab = 8; ?>
 <?php require HOMEDIR . '/../app/views/partials/container.php' ?>
 <?php require HOMEDIR . '/../app/views/partials/alert.php' ?>
 <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">

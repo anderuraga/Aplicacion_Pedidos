@@ -141,7 +141,7 @@
                         </div>
                     </a>
                 </li>
-                <li class="menu <?= $tab == 8 || $tab == 9 ? 'active' : '' ?>">
+                <li class="menu <?= $tab == 8 ? 'active' : '' ?>">
                     <a href="<?= BASE_URL ?>AreasGastos" data-bs-toggle="dropdown" aria-expanded="false"
                         class="dropdown-toggle">
                         <div class="">
