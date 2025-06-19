@@ -40,15 +40,20 @@ class PedidosController extends Controller
         }
 
         $pedidos = [];
+        $incidencias = [];
         foreach ($estados as $e) {
             if ($usuario->tipo == ADMIN) {
                 $pedidos[$e->id] = $pedidosDAO->listar_estado($e->id);
             } else {
                 $pedidos[$e->id] = $pedidosDAO->listar_estado_departamento($e->id, $usuario->departamento->id);
             }
+
+            foreach($pedidos[$e->id] as $p){
+                $incidencias[$p->id] = $pedidosDAO->pedido_incidencias_abiertas($p->id);
+            }
         }
 
-        $this->view("pedidos/index", ['estados' => $estados, 'pedidos' => $pedidos]);
+        $this->view("pedidos/index", ['estados' => $estados, 'pedidos' => $pedidos, 'incidencias' => $incidencias]);
     }
 
     public function proveedor()
