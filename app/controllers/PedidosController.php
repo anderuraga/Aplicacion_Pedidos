@@ -48,7 +48,7 @@ class PedidosController extends Controller
                 $pedidos[$e->id] = $pedidosDAO->listar_estado_departamento($e->id, $usuario->departamento->id);
             }
 
-            foreach($pedidos[$e->id] as $p){
+            foreach ($pedidos[$e->id] as $p) {
                 $incidencias[$p->id] = $pedidosDAO->pedido_incidencias_abiertas($p->id);
             }
         }
@@ -647,7 +647,7 @@ class PedidosController extends Controller
             $fecha = date("Y-m-d H:i:s");
             $descr = "Pedido <a target='_blank' href='" . BASE_URL . "Pedidos/vereditar?id=" . $pedido->id . "'>" . $pedido->referencia . "</a> archivado";
             //$ok = $transaccionesDAO->crear($fecha, $descr, $pedido->areaGastos->id, getCantidadMysql("-" . $pedido->importe));
-            $ok = $transaccionesDAO->crear($fecha, $descr, $pedido->areaGastos->id,  $pedido->importe);
+            $ok = $transaccionesDAO->crear($fecha, $descr, $pedido->areaGastos->id, $pedido->importe);
             if ($ok) {
                 return [
                     'tipo' => 'success',
@@ -841,7 +841,10 @@ class PedidosController extends Controller
     {
         $pedidoId = $_POST['id'] ?? null;
         if (!$pedidoId) {
-            return ['tipo' => 'danger', 'mensaje' => 'Falta la id del pedido para la factura.'];
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Falta la id del pedido para la factura.'
+            ];
         }
         $pedido = $pedidosDAO->obtener($pedidoId);
 
@@ -849,7 +852,17 @@ class PedidosController extends Controller
         $referencia = trim($_POST['referencia'] ?? '');
         $fechaFactura = $_POST['fecha_factura'] ?? null;
         if ($referencia === '' || !$fechaFactura) {
-            return ['tipo' => 'warning', 'mensaje' => 'Debe indicar número y fecha de factura.'];
+            return [
+                'tipo' => 'warning',
+                'mensaje' => 'Debe indicar número y fecha de factura.'
+            ];
+        }
+
+        if (!$pedidosDAO->comprobar_referencia($referencia, $pedido->factura->id)) {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Ya existe una factura con esa referencia en la paltaforma.'
+            ];
         }
 
         $pathFact = __DIR__ . "/../../public/uploads/presupuestos/$pedidoId";

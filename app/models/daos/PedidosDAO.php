@@ -722,6 +722,21 @@ ORDER BY
         return $result;
     }
 
+    public function comprobar_referencia($referencia, $excluirID = 0){
+        $sql = "SELECT
+                    COUNT(*) AS cantidad
+                FROM
+                    `facturas`
+                WHERE
+                    `identificador` = :referencia AND `id` != :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'referencia' => $referencia,
+            'id' => $excluirID
+        ]);
+        return ($stmt->fetch(PDO::FETCH_ASSOC)['cantidad'] == 0);
+    }
+
     public function borrar($id, $referencia)
     {
         $sql = "UPDATE
