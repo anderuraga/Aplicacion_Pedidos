@@ -287,6 +287,9 @@ class PedidosController extends Controller
                     header("Location: " . BASE_URL . "Pedidos");
                     exit;
                 }
+            } else if($_POST['action'] == "borrar_factura"){
+                $_SESSION['alert'] = $this->borrarFactura($pedidosDAO);
+                $pedido = $pedidosDAO->obtener($_POST['id']);
             }
         }
 
@@ -901,8 +904,43 @@ class PedidosController extends Controller
                 $name
             );
         }
+        $pedidosDAO->rellenarEstado($pedido->estado->id, $pedido->id, "Se ha adjuntado una factura");
 
         return ['tipo' => 'success', 'mensaje' => 'Factura actualizada correctamente.'];
+    }
+
+    private function borrarFactura(PedidosDAO $pedidosDAO)
+    {
+        $pedidoId = $_POST['id'] ?? null;
+        if (!$pedidoId) {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Falta la id del pedido para la factura.'
+            ];
+        }
+        $pedido = $pedidosDAO->obtener($pedidoId);
+        if ($pedido->factura->id == 0) {
+            return [
+                'tipo' => 'warning',
+                'mensaje' => 'Ho hay factura asociada a este pedido.'
+            ];
+        }
+        $pathFact = __DIR__ . "/../../public/uploads/presupuestos/$pedidoId";
+        if (file_exists("$pathFact/{$pedido->factura->documento}")) {
+            @unlink("$pathFact/{$pedido->factura->documento}");
+        }
+        $pedidosDAO->rellenarEstado($pedido->estado->id, $pedido->id, "Se ha borrado la factura adjunta");
+        if($pedidosDAO->borrar_factura($pedido->factura->id)){
+            return [
+                'tipo' => 'success',
+                'mensaje' => 'Factura borrada correctamente.'
+            ];
+        }else {
+            return [
+                'tipo' => 'warning',
+                'mensaje' => 'Ha sucedido un error al borrar la factura.'
+            ];
+        }
     }
 
     private function borrar(PedidosDAO $pedidosDAO)

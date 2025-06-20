@@ -138,7 +138,7 @@
                                     value="<?= $pedido->factura->fecha ?? '' ?>" required>
                             </div>
 
-                            <div class="mb-2">
+                            <div class="mb-4">
                                 <label for="factura"><i>Archivo factura
                                         <?= $pedido->factura->id != 0 ? '(reemplazará el actual)' : '' ?> *</i></label>
                                 <input type="file" id="factura" name="factura" accept="application/pdf"
@@ -146,8 +146,15 @@
 
                             </div>
 
-                            <button type="submit" class="btn btn-success float-end">Subir factura</button>
                         </form>
+                        <form method="post" id="borar_factura_form">
+                            <input type="hidden" name="action" value="borrar_factura">
+                            <input type="hidden" name="id" value="<?= $pedido->id ?>">
+                        </form>
+                        <?php if ($usuario->tipo == ADMIN && isset($pedido->factura) && $pedido->factura->id != 0): ?>
+                            <button type="submit" form="borar_factura_form" class="btn btn-danger">Borrar Archivo</button>
+                        <?php endif; ?>
+                        <button type="submit" form="subirFactura" class="btn btn-success float-end">Subir factura</button>
                     </div>
                 </div>
             </div>
