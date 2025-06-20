@@ -105,7 +105,7 @@ class TransaccionesDAO
             'area' => $area,
             'fecha' => $fecha,
             'descr' => $descr,
-            'cantidad' => -$cantidad,
+            'cantidad' => $cantidad,
         ]);
 
         if ($ok) {

@@ -647,7 +647,7 @@ class PedidosController extends Controller
             $fecha = date("Y-m-d H:i:s");
             $descr = "Pedido <a target='_blank' href='" . BASE_URL . "Pedidos/vereditar?id=" . $pedido->id . "'>" . $pedido->referencia . "</a> archivado";
             //$ok = $transaccionesDAO->crear($fecha, $descr, $pedido->areaGastos->id, getCantidadMysql("-" . $pedido->importe));
-            $ok = $transaccionesDAO->crear($fecha, $descr, $pedido->areaGastos->id, $pedido->importe);
+            $ok = $transaccionesDAO->crear($fecha, $descr, $pedido->areaGastos->id, -$pedido->importe);
             if ($ok) {
                 return [
                     'tipo' => 'success',
