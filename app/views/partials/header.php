@@ -43,6 +43,10 @@
     <link rel="stylesheet" type="text/css" href="<?= BASE_URL ?>static/plugins/src/stepper/bsStepper.min.css">
     <link rel="stylesheet" type="text/css" href="<?= BASE_URL ?>static/plugins/css/light/stepper/custom-bsStepper.css">
     <link rel="stylesheet" type="text/css" href="<?= BASE_URL ?>static/plugins/css/dark/stepper/custom-bsStepper.css">
+
+    
+    <link href="<?= BASE_URL ?>static/assets/css/light/components/accordions.css" rel="stylesheet" type="text/css" />
+    <link href="<?= BASE_URL ?>static/assets/css/dark/components/accordions.css" rel="stylesheet" type="text/css" />
     <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 
     <link href="<?= BASE_URL ?>static/css/custom.css" rel="stylesheet" type="text/css" />
