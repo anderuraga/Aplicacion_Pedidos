@@ -8,7 +8,7 @@ class LogoutController extends Controller {
         session_destroy();
 
         // Redirigir al login
-        header('Location: /');
+        header('Location: ' . BASE_URL);
         exit;
     }
 }
