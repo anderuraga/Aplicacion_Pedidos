@@ -655,7 +655,8 @@ HAVING COUNT(i.id) > 0;
         }
         return $result;
     }
-    public function pedido_incidencias_abiertas($id_pedido){
+    public function pedido_incidencias_abiertas($id_pedido)
+    {
         $sql = "SELECT
                     COUNT(`id`) as num_incidencias
                 FROM
@@ -722,7 +723,8 @@ ORDER BY
         return $result;
     }
 
-    public function comprobar_referencia($referencia, $excluirID = 0){
+    public function comprobar_referencia($referencia, $excluirID = 0)
+    {
         $sql = "SELECT
                     COUNT(*) AS cantidad
                 FROM
@@ -774,6 +776,34 @@ WHERE
     public function borrar_presupuesto($id)
     {
         $sql = "DELETE FROM `presupuestos` WHERE `id` = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'id' => $id
+        ]);
+    }
+
+    public function borrar_anexo($id)
+    {
+        $sql = "UPDATE
+    `pedidos`
+SET
+    `anexo` = NULL
+WHERE
+    `id` = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'id' => $id
+        ]);
+    }
+
+    public function borrar_albaran($id)
+    {
+        $sql = "UPDATE
+    `pedidos`
+SET
+    `albaran` = NULL
+WHERE
+    `id` = :id";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([
             'id' => $id

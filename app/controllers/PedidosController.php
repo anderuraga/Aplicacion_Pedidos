@@ -287,7 +287,7 @@ class PedidosController extends Controller
                     header("Location: " . BASE_URL . "Pedidos");
                     exit;
                 }
-            } else if($_POST['action'] == "borrar_factura"){
+            } else if ($_POST['action'] == "borrar_factura") {
                 $_SESSION['alert'] = $this->borrarFactura($pedidosDAO);
                 $pedido = $pedidosDAO->obtener($_POST['id']);
             }
@@ -777,6 +777,13 @@ class PedidosController extends Controller
         }
         for ($i = 1; $i <= $count; $i++) {
             $field = "presupuesto$i";
+            if (isset($_POST['borrar_presupuesto_' . $i])) {
+                $presupesto = $pedidosDAO->obtener_presupuesto($_POST['borrar_presupuesto_' . $i]);
+                if (file_exists("$path/{$presupesto->documento}")) {
+                    @unlink("$path/{$presupesto->documento}");
+                }
+                $pedidosDAO->eliminar_presupuesto($presupesto->id);
+            }
             if (!empty($_FILES[$field]['tmp_name'])) {
                 // Eliminar físicamente presupuesto existente
                 if (isset($_POST[$field . '_current'])) {
@@ -812,8 +819,14 @@ class PedidosController extends Controller
             }
             @$pedidosDAO->seleccionar_presupuesto($presid);
         }
-        // Anexo si importe >= 1000
-        if ($importe >= 1000 && !empty($_FILES['anexo']['tmp_name'])) {
+
+        if (isset($_POST['borrar_anexo'])) {
+            $existingAnexo = $pedido->anexo;
+            if ($existingAnexo && file_exists("$path/$existingAnexo")) {
+                @unlink("$path/$existingAnexo");
+            }
+            $pedidosDAO->borrar_anexo($pedidoId);
+        } else if ($importe >= 1000 && !empty($_FILES['anexo']['tmp_name'])) {
             // Eliminar físicamente anexo existente
             $existingAnexo = $pedido->anexo;
             if ($existingAnexo && file_exists("$path/$existingAnexo")) {
@@ -824,9 +837,13 @@ class PedidosController extends Controller
             move_uploaded_file($_FILES['anexo']['tmp_name'], "$path/$name");
             $pedidosDAO->insertar_anexo($pedidoId, $name);
         }
-        // Albarán siempre
-        if (!empty($_FILES['albaran']['tmp_name'])) {
-            // Eliminar físicamente albarán existente
+        if (isset($_POST['borrar_albaran'])) {
+            $existingAlb = $pedido->albaran;
+            if ($existingAlb && file_exists("$path/$existingAlb")) {
+                @unlink("$path/$existingAlb");
+            }
+            $pedidosDAO->borrar_albaran($pedidoId);
+        } else if (!empty($_FILES['albaran']['tmp_name'])) {
             $existingAlb = $pedido->albaran;
             if ($existingAlb && file_exists("$path/$existingAlb")) {
                 @unlink("$path/$existingAlb");
@@ -930,12 +947,12 @@ class PedidosController extends Controller
             @unlink("$pathFact/{$pedido->factura->documento}");
         }
         $pedidosDAO->rellenarEstado($pedido->estado->id, $pedido->id, "Se ha borrado la factura adjunta");
-        if($pedidosDAO->borrar_factura($pedido->factura->id)){
+        if ($pedidosDAO->borrar_factura($pedido->factura->id)) {
             return [
                 'tipo' => 'success',
                 'mensaje' => 'Factura borrada correctamente.'
             ];
-        }else {
+        } else {
             return [
                 'tipo' => 'warning',
                 'mensaje' => 'Ha sucedido un error al borrar la factura.'

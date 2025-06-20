@@ -50,6 +50,10 @@
                                                 <line x1="16" y1="17" x2="8" y2="17"></line>
                                                 <polyline points="10 9 9 9 8 9"></polyline>
                                             </svg> Ver documento</a>
+                                        <div class="form-check form-check-primary form-check-inline">
+                                            <input class="form-check-input proveedorRadio" type="checkbox" name="borrar_presupuesto_<?= $i ?>"
+                                                value="<?= $pres->id ?>"> Borrar Presupuesto
+                                        </div>
                                     <?php endif; ?>
                                     <?php if ($budgetCount > 1): ?>
                                         <label class="ms-2">
@@ -79,6 +83,10 @@
                                                 <line x1="16" y1="17" x2="8" y2="17"></line>
                                                 <polyline points="10 9 9 9 8 9"></polyline>
                                             </svg> Ver documento </a>
+                                        <div class="form-check form-check-primary form-check-inline">
+                                            <input class="form-check-input proveedorRadio" type="checkbox" name="borrar_anexo"
+                                                value="borrar"> Borrar Anexo
+                                        </div>
                                     <?php endif; ?>
                                     <input type="file" id="anexo" name="anexo" accept="application/pdf">
                                 </div>
@@ -98,6 +106,10 @@
                                             <line x1="16" y1="17" x2="8" y2="17"></line>
                                             <polyline points="10 9 9 9 8 9"></polyline>
                                         </svg> Ver documento </a>
+                                    <div class="form-check form-check-primary form-check-inline">
+                                        <input class="form-check-input proveedorRadio" type="checkbox" name="borrar_albaran"
+                                            value="borrar"> Borrar Albarán
+                                    </div>
                                 <?php endif; ?>
                                 <input type="file" id="albaran" name="albaran" accept="application/pdf">
 
@@ -144,6 +156,7 @@
                                 <input type="file" id="factura" name="factura" accept="application/pdf"
                                     <?= $pedido->factura->id != 0 ? '' : 'required' ?>>
 
+
                             </div>
 
                         </form>
@@ -154,7 +167,8 @@
                         <?php if ($usuario->tipo == ADMIN && isset($pedido->factura) && $pedido->factura->id != 0): ?>
                             <button type="submit" form="borar_factura_form" class="btn btn-danger">Borrar Archivo</button>
                         <?php endif; ?>
-                        <button type="submit" form="subirFactura" class="btn btn-success float-end">Subir factura</button>
+                        <button type="submit" form="subirFactura" class="btn btn-success float-end">Subir
+                            factura</button>
                     </div>
                 </div>
             </div>
