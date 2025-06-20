@@ -118,3 +118,11 @@ table td a {
     border-color: #a1a1a1;
     color: white;
 }
+
+.fecha_incidencia{
+    font-size: 150%;
+}
+
+.inci_desc{
+    font-weight: bolder;
+}

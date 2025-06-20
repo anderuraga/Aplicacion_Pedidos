@@ -14,21 +14,29 @@
                     </div>
                 </section>
             </div>
-            <div id="activasAccordionUno" class="collapse" aria-labelledby="activasAccordionUnoHeadingUno" data-bs-parent="#activasAccordion"
-                style="">
+            <div id="activasAccordionUno" class="collapse" aria-labelledby="activasAccordionUnoHeadingUno"
+                data-bs-parent="#activasAccordion" style="">
                 <div class="card-body">
                     <?php foreach ($incidenciasActivas as $incidencia) { ?>
                         <div class="col-12 mb-2 p-2 incidencia">
                             <form method="post">
-                                <input type="hidden" name="action" value="incidencia">
-                                <input type="hidden" name="id" value="<?= $incidencia->id ?>">
-                                <h4>Fecha: <?= $incidencia->getFechaVisible() ?></h4>
-                                <h5><?= $incidencia->descripcion ?></h5>
-                                <button class="btn btn-success">Marcar como solucionada</button>
-                                <?php if ($usuario->tipo == ADMIN) { ?>
-                                    <a href="Incidencias/vereditar?id=<?= $incidencia->id ?>&pedido=<?= $pedido->id ?>"
-                                        class="btn btn-primary">Editar</a>
-                                <?php } ?>
+                                <div class="row align-items-center">
+                                    <div class="col-6">
+                                        <input type="hidden" name="action" value="incidencia">
+                                        <input type="hidden" name="id" value="<?= $incidencia->id ?>">
+                                        <h5>Fecha: <span class="fecha_incidencia"><?= $incidencia->getFechaVisible() ?></span>
+                                        </h5>
+                                        <p>Descripción:</p>
+                                        <h5 class="inci_desc"><?= $incidencia->descripcion ?></h5>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn btn-success">Marcar como solucionada</button>
+                                        <?php if ($usuario->tipo == ADMIN) { ?>
+                                            <a href="Incidencias/vereditar?id=<?= $incidencia->id ?>&pedido=<?= $pedido->id ?>"
+                                                class="btn btn-primary">Editar</a>
+                                        <?php } ?>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     <?php } ?>

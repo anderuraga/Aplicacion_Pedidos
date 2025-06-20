@@ -22,13 +22,14 @@
                             <input type="hidden" name="id" value="<?= $incidencia->id ?>">
                             <div class="row">
                                 <div class="col-6">
-                                    <h4>Fecha: <?= $incidencia->getFechaVisible() ?></h4>
+                                    <h5>Fecha: <span class="fecha_incidencia"><?= $incidencia->getFechaVisible() ?></span>
                                 </div>
                                 <div class="col-6">
-                                    <h4>Fecha Solucionada: <?= $incidencia->getFechaSolucionVisible() ?></h4>
+                                    <h5>Fecha: <span class="fecha_incidencia"><?= $incidencia->getFechaSolucionVisible() ?></span>
                                 </div>
                             </div>
-                            <h5><?= $incidencia->descripcion ?></h5>
+                            <p>Descripción:</p>
+                            <h5 class="inci_desc"><?= $incidencia->descripcion ?></h5>
                         </div>
                     <?php } ?>
                 </div>
