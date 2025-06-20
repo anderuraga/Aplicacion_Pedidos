@@ -14,7 +14,7 @@
 <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
-            <a href="<?= BASE_URL ?>Usuarios" class="btn btn-secondary mt-2 mb-3">Volver</a>
+            <a href="<?= BASE_URL ?>Usuarios" class="btn btn-volver mt-2 mb-3">Volver</a>
             <h1>Usuario: <?= $usuario_form->id == 0 ? 'Nuevo' : 'Editar' ?></h1>
             <form id="editarUsuario" class="mt-0 formulario"
                 action="<?= BASE_URL ?>Usuarios/vereditar?id=<?= $usuario_form->id ?>" method="post">

@@ -15,7 +15,7 @@
 <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area ps-3">
-            <a href="<?= BASE_URL . "Pedidos/proveedor" ?>" class="btn btn-danger mt-2 mb-3">Volver</a>
+            <a href="<?= BASE_URL . "Pedidos/proveedor" ?>" class="btn btn-volver mt-2 mb-3">Volver</a>
             <h1 class="mt-2 mb-0 ms-2">Nuevo pedido:</h1>
             <div class="bs-stepper stepper-form-one linear">
                 <div class="bs-stepper-header" role="tablist">

@@ -15,7 +15,7 @@
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
             <a href="<?= BASE_URL ?>Pedidos/vereditar?id=<?= $pedido->id ?>"
-                    class="btn btn-secondary mb-2">Volver</a>
+                    class="btn btn-volver mb-2">Volver</a>
             <h1>Incidencia: <?= $incidencia->id == 0 ? 'Nueva' : 'Editar' ?></h1>
             <form id="editarSubconcepto" class="mt-0"
                 action="<?= BASE_URL ?>Incidencias/vereditar?id=<?= $incidencia->id ?>&pedido=<?= $pedido->id ?>" method="post">

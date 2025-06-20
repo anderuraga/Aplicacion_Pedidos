@@ -14,7 +14,7 @@
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
             <a href="<?= BASE_URL ?>Inventario/historial?id=<?= $_GET['item'] ?>"
-                class="btn btn-secondary mt-2 mb-3">Volver</a>
+                class="btn btn-volver mt-2 mb-3">Volver</a>
             <h1>Item: Movimiento</h1>
             <form id="editarMovimiento" class="mt-0 formulario"
                 action="<?= BASE_URL ?>Inventario/movimiento?id=<?= $movimiento->id ?>&item=<?= $_GET['item'] ?>"

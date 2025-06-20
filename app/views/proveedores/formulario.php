@@ -12,7 +12,7 @@
 <div id="tableSimple" class="col-lg-12 col-12 layout-spacing proveedor_formulario">
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
-            <a href="<?= BASE_URL ?>Proveedores" class="btn btn-secondary mr-2 mb-3">
+            <a href="<?= BASE_URL ?>Proveedores" class="btn btn-volver mr-2 mb-3">
                 Volver
             </a>
             <h1>Proveedor: <?= $proveedor->id == 0 ? 'Nuevo' : 'Editar' ?></h1>

@@ -15,6 +15,7 @@
     <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
         <div class="statbox widget box box-shadow">
             <div class="widget-content widget-content-area">
+                <a href="<?= BASE_URL ?>AreasGastos" class="btn btn-volver m-1">Volver</a>
                 <h1 class="mt-2 ms-2">Area de Gastos: <?= $area->nombre ?></h1>
 
                 <table id="areasgastos" class="tabla table table-striped dt-table-hover" style="width:100%">
@@ -41,7 +42,7 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-                <a href="<?= BASE_URL ?>AreasGastos" class="btn btn-secondary m-2">Volver</a>
+                
             </div>
         </div>
     </div>

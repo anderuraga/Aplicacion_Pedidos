@@ -112,3 +112,9 @@ table td a {
 .lista_archivos li a {
     color: #4361ee;
 }
+
+.btn-volver{
+    background-color: #a1a1a1;
+    border-color: #a1a1a1;
+    color: white;
+}

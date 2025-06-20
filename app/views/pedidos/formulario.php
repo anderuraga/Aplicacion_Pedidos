@@ -45,7 +45,7 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
             <div class="widget-content widget-content-area p-3">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12 ">
-                        <a href="<?= BASE_URL ?>Pedidos" class="btn btn-secondary btn-outline mb-3">Volver</a>
+                        <a href="<?= BASE_URL ?>Pedidos" class="btn btn-volver btn-outline mb-3">Volver</a>
                         <h1>Resumen del pedido: <?= $pedido->referencia ?></h1>
                         <h2>Estado: <?= $pedido->estado->nombre ?></h2>
                     </div>

@@ -13,7 +13,7 @@
 <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
-            <a href="<?= BASE_URL ?>Inventario" class="btn btn-secondary mt-2 mb-3">Volver</a>
+            <a href="<?= BASE_URL ?>Inventario" class="btn btn-volver mt-2 mb-3">Volver</a>
             <h1>Item: <?= $item->id == 0 ? 'Nuevo' : 'Editar' ?></h1>
             <form id="editarDepartamento" class="mt-0 formulario"
                 action="<?= BASE_URL ?>Inventario/vereditar?id=<?= $item->id ?>" method="post">
