@@ -671,6 +671,15 @@ ALTER TABLE `usuarios`
   ADD CONSTRAINT `usuario_departamento` FOREIGN KEY (`id_departamento`) REFERENCES `departamentos` (`id`);
 COMMIT;
 
+
+--
+-- constrainst de ultimo hora
+--
+ALTER TABLE `pedidos` ADD CONSTRAINT `pedido_estado` FOREIGN KEY (`id_estado`) REFERENCES `estado`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `pedidos_estados` ADD  CONSTRAINT `historial_pedido` FOREIGN KEY (`id_pedido`) REFERENCES `pedidos`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `pedidos_estados` ADD  CONSTRAINT `historial_estado` FOREIGN KEY (`id_estado`) REFERENCES `estado`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `pedidos` ADD CONSTRAINT `pedido_subconcepto` FOREIGN KEY (`id_subconcepto`) REFERENCES `subconceptos`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
