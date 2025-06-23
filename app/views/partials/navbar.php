@@ -25,6 +25,23 @@
         </a>
 
         <ul class="navbar-item flex-row ms-lg-auto ms-0">
+
+
+        <li class="menu">
+                <a href="<?= BASE_URL ?>Manuales" aria-expanded="false" class="dropdown-toggle">
+                    <div class="">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
+                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                             stroke-linejoin="round" class="feather feather-help-circle" data-v-5522efca="">
+                             <circle cx="12" cy="12" r="10"></circle>
+                             <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                             <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        <span>AYUDA y MANUALES</span>
+                    </div>
+                </a>
+            </li>
+
             <li class="nav-item theme-toggle-item">
                 <a href="javascript:void(0);" class="nav-link theme-toggle">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
