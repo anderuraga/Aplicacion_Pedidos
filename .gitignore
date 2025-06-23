@@ -1,5 +1,4 @@
 /public/uploads
 /.vscode
-config/constantes.php
 /logs
 config/script_datos_sensibles.sql
