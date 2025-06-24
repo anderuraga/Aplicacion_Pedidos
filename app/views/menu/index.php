@@ -17,28 +17,32 @@
             <div class="widget-content widget-content-area p-3">
                 <h1 class="mt-2 ">Bienvenido, <?= $usuario->nombre ?></h1>
                 <?php
-                $notificacion = false;
-                if ($usuario->tipo == ADMIN): ?>
-                    <?php if (count($areasGastosIncidencias) > 0): ?>
-                        <?php $notificacion = true; ?>
-                        <div class="alert alert-icon-left alert-light-warning alert-dismissible fade show mb-4" role="alert">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                class="feather feather-alert-circle">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="8" x2="12" y2="12"></line>
-                                <line x1="12" y1="16" x2="12" y2="16"></line>
-                            </svg>
-                            <strong>Aviso: </strong>Hay incidencias abiertas en las siguientes areas de gastos:
-                            <ul>
-                                <?php foreach ($areasGastosIncidencias as $areagastos): ?>
-                                    <li>
-                                        <b><?= $areagastos["nombre_area"] ?>:</b> Tiene <?= $areagastos["incidencias_abiertas"] ?> incidencia(s) abierta(s)
-                                    </li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </div>
-                    <?php endif; ?>
+                $notificacion = false; ?>
+                <?php if (count($pedidosIncidencias) > 0): ?>
+                    <?php $notificacion = true; ?>
+                    <div class="alert alert-icon-left alert-light-danger alert-dismissible fade show mb-4" role="alert">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-alert-triangle">
+                            <path
+                                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                            </path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        <strong>Aviso: </strong>Hay <strong><?= count($pedidosIncidencias) ?></strong> pedido(s)
+                        pendiente(s)
+                        con incidencias abiertas:
+                        <ul>
+                            <?php foreach ($pedidosIncidencias as $pedido): ?>
+                                <li><a href="<?= BASE_URL ?>Pedidos/vereditar?id=<?= $pedido[0]->id ?>"><?= $pedido[0]->referencia ?>
+                                        (<?= $pedido[1] ?> incidencia(s))</a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                <?php endif; ?>
+                <?php if ($usuario->tipo == ADMIN): ?>
                     <?php if (count($pedidosRevisar) > 0): ?>
                         <?php $notificacion = true; ?>
                         <div class="alert alert-icon-left alert-light-warning alert-dismissible fade show mb-4" role="alert">
@@ -85,30 +89,6 @@
                         </div>
                     <?php endif; ?>
                 <?php elseif ($usuario->tipo == JEFE_DEP): ?>
-                    <?php if (count($pedidosIncidencias) > 0): ?>
-                        <?php $notificacion = true; ?>
-                        <div class="alert alert-icon-left alert-light-danger alert-dismissible fade show mb-4" role="alert">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                class="feather feather-alert-triangle">
-                                <path
-                                    d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
-                                </path>
-                                <line x1="12" y1="9" x2="12" y2="13"></line>
-                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                            </svg>
-                            <strong>Aviso: </strong>Hay <strong><?= count($pedidosIncidencias) ?></strong> pedido(s)
-                            pendiente(s)
-                            con incidencias abiertas:
-                            <ul>
-                                <?php foreach ($pedidosIncidencias as $pedido): ?>
-                                    <li><a href="<?= BASE_URL ?>Pedidos/vereditar?id=<?= $pedido[0]->id ?>"><?= $pedido[0]->referencia ?>
-                                            (<?= $pedido[1] ?> incidencia(s))</a>
-                                    </li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </div>
-                    <?php endif; ?>
                     <?php if (count($pedidosProveedor) > 0): ?>
                         <?php $notificacion = true; ?>
                         <div class="alert alert-icon-left alert-light-warning alert-dismissible fade show mb-4" role="alert">

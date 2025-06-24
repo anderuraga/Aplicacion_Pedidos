@@ -692,6 +692,26 @@ HAVING COUNT(i.id) > 0;
         ]);
         return $stmt->fetch(PDO::FETCH_ASSOC)["num_incidencias"];
     }
+
+    public function pedidos_incidencias_abiertas()
+    {
+        $query = "SELECT
+                    p.id AS id_pedido,
+                    COUNT(i.id) AS num_incidencias_abiertas
+                    FROM pedidos p
+                    JOIN incidencias i
+                        ON i.id_pedido = p.id
+                    AND i.estado = 0
+                    GROUP BY p.id;
+                    ";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        $result = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $result[] = $row;
+        }
+        return $result;
+    }
     public function pedidos_incidencias_abiertas_JD($usuario)
     {
         $query = "SELECT
