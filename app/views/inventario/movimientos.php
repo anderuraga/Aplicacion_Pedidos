@@ -51,7 +51,7 @@
                 <div class="row">
                     <div class="col-sm-4">
                         <h5>Fecha: *</h5>
-                        <input type="text" class="form-control flatTime mb-2" placeholder="Fecha" aria-label="fecha"
+                        <input type="text" class="form-control flatTime mb-2 flatpickr-input" placeholder="Fecha" aria-label="fecha"
                             name="fecha" id="fecha" required value="<?= $movimiento->fecha ?>">
                     </div>
                 </div>

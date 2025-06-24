@@ -146,7 +146,7 @@
 
                             <div class="mb-2">
                                 <label for="fecha_factura">Fecha de factura *</label>
-                                <input type="date" class="form-control flatTime" id="fecha_factura" name="fecha_factura"
+                                <input type="date" class="form-control flatTime flatpickr-input" id="fecha_factura" name="fecha_factura"
                                     value="<?= $pedido->factura->fecha ?? '' ?>" required>
                             </div>
 
