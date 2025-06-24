@@ -35,7 +35,8 @@
                         con incidencias abiertas:
                         <ul>
                             <?php foreach ($pedidosIncidencias as $pedido): ?>
-                                <li><a href="<?= BASE_URL ?>Pedidos/vereditar?id=<?= $pedido[0]->id ?>"><?= $pedido[0]->referencia ?>
+                                <li>
+                                    <a href="<?= BASE_URL ?>Pedidos/vereditar?id=<?= $pedido[0]->id ?>"><?= $pedido[0]->referencia ?>
                                         (<?= $pedido[1] ?> incidencia(s))</a>
                                 </li>
                             <?php endforeach; ?>
@@ -102,7 +103,8 @@
                             del proveedor:
                             <ul>
                                 <?php foreach ($pedidosProveedor as $pedido): ?>
-                                    <li><a
+                                    <li>
+                                        <a
                                             href="<?= BASE_URL ?>Pedidos/vereditar?id=<?= $pedido->id ?>"><?= $pedido->referencia ?></a>
                                     </li>
                                 <?php endforeach; ?>

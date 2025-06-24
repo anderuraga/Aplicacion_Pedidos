@@ -294,10 +294,17 @@ class PedidosController extends Controller
             } else if ($_POST['action'] == "borrar_factura") {
                 $_SESSION['alert'] = $this->borrarFactura($pedidosDAO);
                 $pedido = $pedidosDAO->obtener($_POST['id']);
+            } else if ($_POST['action'] == "subir_otro_doc") {
+                $_SESSION['alert'] = $this->subirOtroDoc($pedidosDAO);
+                $pedido = $pedidosDAO->obtener($_POST['id']);
+            } else if ($_POST['action'] == "borrar_otros_doc") {
+                $_SESSION['alert'] = $this->borrarOtrosDoc($pedidosDAO);
+                $pedido = $pedidosDAO->obtener($_POST['id']);
             }
         }
 
         $historial = $pedidosDAO->obtener_historial($pedido->id);
+        $otrosdocs = $pedidosDAO->obtener_otros_docs($pedido->id);
 
 
         $incidenciasActivas = $incidenciasDAO->listar_estado($pedido->id, 0);
@@ -324,6 +331,7 @@ class PedidosController extends Controller
 
         $proveedores = $proveedoresDAO->listar(true);
 
+
         $usuarios = $usuariosDAO->listar();
 
         $data = [
@@ -335,7 +343,8 @@ class PedidosController extends Controller
             'tiposServicios' => $tiposServicios,
             'proveedores' => $proveedores,
             'departamentos' => $departamentos,
-            'usuarios' => $usuarios
+            'usuarios' => $usuarios,
+            'otrosdocs' => $otrosdocs
         ];
 
         if ($usuario->tipo == ADMIN) {
@@ -622,7 +631,7 @@ class PedidosController extends Controller
             $cc
         );
 
-        
+
         return [
             'tipo' => 'success',
             'mensaje' => 'Estado cambiado correctamente.'
@@ -962,6 +971,75 @@ class PedidosController extends Controller
         $pedidosDAO->rellenarEstado($pedido->estado->id, $pedido->id, "Se ha adjuntado una factura");
 
         return ['tipo' => 'success', 'mensaje' => 'Factura actualizada correctamente.'];
+    }
+
+    private function subirOtroDoc(PedidosDAO $pedidosDAO)
+    {
+        $pedidoId = $_POST['id'] ?? null;
+        if (!$pedidoId) {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Falta la id del pedido para la factura.'
+            ];
+        }
+        $pedido = $pedidosDAO->obtener($pedidoId);
+
+        $tipo = $_POST['tipo'] ?? null;
+        if (!$tipo && !empty($tipo)) {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Falta añadir el tipo de documento'
+            ];
+        }
+
+        $path = __DIR__ . "/../../public/uploads/otros/$pedidoId";
+        if (!is_dir($path)) {
+            mkdir($path, 0777, true);
+        }
+
+        if (!empty($_FILES['archivo']['tmp_name'])) {
+            // Subir archivo
+            $name = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $_FILES['archivo']['name']);
+            move_uploaded_file($_FILES['archivo']['tmp_name'], "$path/$name");
+            $pedidosDAO->subir_otro_doc($pedidoId, $tipo, $name);
+            $pedidosDAO->rellenarEstado($pedido->estado->id, $pedido->id, "Se ha adjuntado un documentto");
+        } else {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'No se ha añadido ningún documento'
+            ];
+        }
+
+        return ['tipo' => 'success', 'mensaje' => 'Documento subido correctamente.'];
+    }
+
+    private function borrarOtrosDoc(PedidosDAO $pedidosDAO)
+    {
+        $pedidoId = $_POST['id'] ?? null;
+        if (!$pedidoId) {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Falta la id del pedido para la factura.'
+            ];
+        }
+        $pedido = $pedidosDAO->obtener($pedidoId);
+
+        $docs = $_POST['docs'] ?? null;
+        if (!$docs || count($docs) == 0) {
+            return [
+                'tipo' => 'warning',
+                'mensaje' => 'No se ha seleccionado ningún archivo.'
+            ];
+        }
+
+        foreach ($docs as $d) {
+            $doc = $pedidosDAO->obtener_otro_doc($d);
+            @unlink(__DIR__ . '/../../public/uploads/otros/'.$pedido->id.'/'.$doc['documento']);
+            $pedidosDAO->borrar_otro_doc($d);
+        }
+
+        $pedidosDAO->rellenarEstado($pedido->estado->id, $pedido->id, "Se han borrado documentos");
+        return ['tipo' => 'success', 'mensaje' => 'Se han borrado los documentos correctamente'];
     }
 
     private function borrarFactura(PedidosDAO $pedidosDAO)

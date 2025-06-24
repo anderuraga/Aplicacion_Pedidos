@@ -473,6 +473,57 @@ WHERE
         ]);
     }
 
+    public function subir_otro_doc($pedido, $tipo, $documento)
+    {
+        $sql = "INSERT INTO `otros_documentos`(`id_pedido`, `tipo`, `documento`)
+                VALUES(:pedido, :tipo, :documento)";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'pedido' => $pedido,
+            'tipo' => $tipo,
+            'documento' => $documento
+        ]);
+    }
+
+    public function obtener_otros_docs($pedido){
+        $sql = "SELECT
+                    `id`,
+                    `tipo`,
+                    `documento`
+                FROM
+                    `otros_documentos`
+                WHERE
+                    `id_pedido` = :pedido
+                ORDER BY
+                    `id` ASC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'pedido' => $pedido
+        ]);
+        $result = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $result[] = $row;
+        }
+        return $result;
+    }
+
+    public function obtener_otro_doc($id){
+        $sql = "SELECT `id`, `id_pedido`, `tipo`, `documento` FROM `otros_documentos` WHERE `id`=:id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'id' => $id
+        ]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function borrar_otro_doc($id){
+        $sql = "DELETE FROM `otros_documentos` WHERE `id`=:id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'id' => $id
+        ]);
+    }
+
     public function editar($id, $subconcepto, $descripcion)
     {
         $stmt = $this->db->prepare("UPDATE `pedidos` SET `id_subconcepto`=:subconcepto, `descripcion`=:descripcion WHERE `id`=:id");

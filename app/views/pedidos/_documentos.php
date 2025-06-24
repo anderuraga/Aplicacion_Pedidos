@@ -51,8 +51,8 @@
                                                 <polyline points="10 9 9 9 8 9"></polyline>
                                             </svg> Ver documento</a>
                                         <div class="form-check form-check-primary form-check-inline">
-                                            <input class="form-check-input proveedorRadio" type="checkbox" name="borrar_presupuesto_<?= $i ?>"
-                                                value="<?= $pres->id ?>"> Borrar Presupuesto
+                                            <input class="form-check-input proveedorRadio" type="checkbox"
+                                                name="borrar_presupuesto_<?= $i ?>" value="<?= $pres->id ?>"> Borrar Presupuesto
                                         </div>
                                     <?php endif; ?>
                                     <?php if ($budgetCount > 1): ?>
@@ -146,8 +146,8 @@
 
                             <div class="mb-2">
                                 <label for="fecha_factura">Fecha de factura *</label>
-                                <input type="date" class="form-control flatTime flatpickr-input" id="fecha_factura" name="fecha_factura"
-                                    value="<?= $pedido->factura->fecha ?? '' ?>" required>
+                                <input type="date" class="form-control flatTime flatpickr-input" id="fecha_factura"
+                                    name="fecha_factura" value="<?= $pedido->factura->fecha ?? '' ?>" required>
                             </div>
 
                             <div class="mb-4">
@@ -158,17 +158,52 @@
 
 
                             </div>
-
-                        </form>
-                        <form method="post" id="borar_factura_form">
-                            <input type="hidden" name="action" value="borrar_factura">
-                            <input type="hidden" name="id" value="<?= $pedido->id ?>">
                         </form>
                         <?php if ($usuario->tipo == ADMIN && isset($pedido->factura) && $pedido->factura->id != 0): ?>
                             <button type="submit" form="borar_factura_form" class="btn btn-danger">Borrar Archivo</button>
                         <?php endif; ?>
                         <button type="submit" form="subirFactura" class="btn btn-success float-end">Subir
                             factura</button>
+
+                        <?php if (count($otrosdocs) > 0): ?>
+                            <div class="mt-2">
+                                <h4>Otros Documentos</h4>
+                                <form id="borrarOtrosDocs" method="post">
+                                    <input type="hidden" name="action" value="borrar_otros_doc">
+                                    <input type="hidden" name="id" value="<?= $pedido->id ?>">
+                                    <ul>
+                                        <?php foreach ($otrosdocs as $doc): ?>
+                                            <li>
+                                                <input type="checkbox" class="form-check-input" name="docs[]"
+                                                    value="<?= $doc['id'] ?>">
+                                                <a target="_blank"
+                                                    href="<?= BASE_URL ?>public/uploads/otros/<?= $pedido->id ?>/<?= $doc['documento'] ?>"><?= $doc['tipo'] ?></a>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </form>
+                                <button type="submit" form="borrarOtrosDocs" class="mt-2 mb-2 btn btn-danger">Borrar
+                                    Seleccionados</button>
+                            </div>
+                        <?php endif; ?>
+
+                        <form class="mb-2 mt-2 formulario" id="subirOtroDoc" method="post"
+                            enctype="multipart/form-data">
+                            <input type="hidden" name="action" value="subir_otro_doc">
+                            <input type="hidden" name="id" value="<?= $pedido->id ?>">
+                            <h5>Añadir otro documento:</h5>
+                            <label for="referencia">Tipo: *</label>
+                            <input type="text" class="form-control mb-2" id="tipo" name="tipo" required>
+                            <label for="factura"><i>Archivo: *</i></label><br>
+                            <input type="file" id="archivo" name="archivo" accept="application/pdf" required>
+                        </form>
+                        <button type="submit" form="subirOtroDoc" class="btn btn-success float-end">Subir
+                            documento</button>
+                        <form method="post" id="borar_factura_form">
+                            <input type="hidden" name="action" value="borrar_factura">
+                            <input type="hidden" name="id" value="<?= $pedido->id ?>">
+                        </form>
+
                     </div>
                 </div>
             </div>
