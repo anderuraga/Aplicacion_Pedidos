@@ -81,10 +81,11 @@ class AreasGastosDAO
     return AreaGastos::fromArray($row);
   }
 
-  public function crear($nombre, $id_departamento)
+  public function crear($id, $nombre, $id_departamento)
   {
-    $stmt = $this->db->prepare("INSERT INTO areas_gastos (nombre, id_departamento) VALUES (:nombre, :id_departamento)");
+    $stmt = $this->db->prepare("INSERT INTO areas_gastos (id, nombre, id_departamento) VALUES (:id, :nombre, :id_departamento)");
     $ok = $stmt->execute([
+      'id' => $id,
       'nombre' => $nombre,
       'id_departamento' => $id_departamento
     ]);
@@ -97,10 +98,18 @@ class AreasGastosDAO
     return false;
   }
 
-  public function editar($id, $nombre, $id_departamento)
+  public function editar($id, $idnuevo, $nombre, $id_departamento)
   {
-    $stmt = $this->db->prepare("UPDATE `areas_gastos` SET `id_departamento`=:departamento,`nombre`=:nombre WHERE `id` = :id");
+    $stmt = $this->db->prepare("UPDATE
+                                          `areas_gastos`
+                                      SET
+                                          `id` = :idnuevo,
+                                          `id_departamento` = :departamento,
+                                          `nombre` = :nombre
+                                      WHERE
+                                          `id` = :id");
     return $stmt->execute([
+      'idnuevo' => $idnuevo,
       'nombre' => $nombre,
       'departamento' => $id_departamento,
       'id' => $id

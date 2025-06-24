@@ -43,7 +43,8 @@ class AreasGastosController extends Controller
     public function vereditar()
     {
         $id = $_GET['id'];
-
+        $idnuevo = $_POST['idnuevo'] ?? null;
+        
         $areasGastoDAO = $this->dao("AreasGastos");
         $departamentosDAO = $this->dao("Departamentos");
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -56,11 +57,9 @@ class AreasGastosController extends Controller
                 }
             } else {
                 $_SESSION['alert'] = $this->guardar($areasGastoDAO, $departamentosDAO);
-                if ($areasGastoDAO->last_insert != null) {
-                    session_write_close();
-                    header("Location: vereditar?id=" . $areasGastoDAO->last_insert);
-                    exit;
-                }
+                session_write_close();
+                header("Location: vereditar?id=" . $idnuevo);
+                exit;
             }
 
         }
@@ -78,10 +77,11 @@ class AreasGastosController extends Controller
 
     }
 
-    public function guardar($areaGastosDAO, $departamentoDAO)
+    public function guardar(AreasGastosDAO $areaGastosDAO, DepartamentosDAO $departamentoDAO)
     {
 
         $id = $_POST['id'];
+        $idnuevo = $_POST['idnuevo'];
         $id_departamento = $_POST['departamento'];
         $nombre = trim($_POST['nombre']);
 
@@ -107,9 +107,9 @@ class AreasGastosController extends Controller
         }
 
         if ($id == 0) {
-            $ok = $areaGastosDAO->crear($nombre, $id_departamento);
+            $ok = $areaGastosDAO->crear($idnuevo, $nombre, $id_departamento);
         } else {
-            $ok = $areaGastosDAO->editar($id, $nombre, $id_departamento);
+            $ok = $areaGastosDAO->editar($id, $idnuevo, $nombre, $id_departamento);
         }
 
         if ($ok) {

@@ -19,6 +19,16 @@
             <form id="editarAreaGasto" class="mt-0 formulario"
                 action="<?= BASE_URL ?>AreasGastos/vereditar?id=<?= $areaGasto->id ?>" method="post">
                 <input type="hidden" id="idedit" name="id" value="<?= $areaGasto->id ?>">
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h5>Código: *</h5>
+                        <input type="text" maxlength="11" class="form-control mb-2" placeholder="Código"
+                            aria-label="código nuevo" name="idnuevo" id="idnuevo" required
+                            value="<?= $areaGasto->id != 0 ? $areaGasto->id : ''; ?>">
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-sm-4">
                         <h5>Nombre: *</h5>
@@ -26,6 +36,7 @@
                             name="nombre" id="nombreEdit" required value="<?= $areaGasto->nombre ?>">
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="col-sm-4">
                         <h5>Departamento: *</h5>
