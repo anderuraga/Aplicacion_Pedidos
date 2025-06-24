@@ -1,8 +1,6 @@
 window.addEventListener("load", function(){
 
-    // Remove Loader
-    var load_screen = document.getElementById("load_screen");
-    document.body.removeChild(load_screen);
+    
 
     var layoutName = 'Horizontal Light Menu';
 
@@ -15,8 +13,8 @@ window.addEventListener("load", function(){
                 darkMode: false,
                 boxed: true,
                 logo: {
-                    darkLogo: 'src/assets/img/logo/EEM-logo-color22.svg',
-                    lightLogo: 'src/assets/img/logo/EEM-logo-color222.svg'
+                    darkLogo: 'src/assets/img/logo/EEM-logo-color.svg',
+                    lightLogo: 'src/assets/img/logo/EEM-logo-color.svg'
                 }
             }
         },
@@ -68,15 +66,15 @@ window.addEventListener("load", function(){
         if (getParseObject.settings.layout.darkMode) {
             ifStarterKit = document.body.getAttribute('page') === 'starter-pack' ? true : false;
             document.body.classList.add('dark');
-            if (ifStarterKit) {
+            /*if (ifStarterKit) {
                 if (document.querySelector('.navbar-logo')) {
-                    document.querySelector('.navbar-logo').setAttribute('src', 'src/assets/img/logo/EEM-logo-color1.svg')
+                    document.querySelector('.navbar-logo').setAttribute('src', 'src/assets/img/logo/EEM-logo-color.svg')
                 }
             } else {
                 if (document.querySelector('.navbar-logo')) {
-                    document.querySelector('.navbar-logo').setAttribute('src', 'src/assets/img/logo/EEM-logo-color2.svg')
+                    document.querySelector('.navbar-logo').setAttribute('src', 'src/assets/img/logo/EEM-logo-color.svg')
                 }
-            }
+            }*/
         }
     } else {
         localStorage.setItem("theme", JSON.stringify(corkThemeObject));
@@ -86,15 +84,15 @@ window.addEventListener("load", function(){
         if (!getParseObject.settings.layout.darkMode) {
             ifStarterKit = document.body.getAttribute('page') === 'starter-pack' ? true : false;
             document.body.classList.remove('dark');
-            if (ifStarterKit) {
+            /*if (ifStarterKit) {
                 if (document.querySelector('.navbar-logo')) {
-                    document.querySelector('.navbar-logo').setAttribute('src', 'src/assets/img/logo/EEM-logo-color3.svg')
+                    document.querySelector('.navbar-logo').setAttribute('src', 'src/assets/img/logo/EEM-logo-color.svg')
                 }
             } else {
                 if (document.querySelector('.navbar-logo')) {
                     document.querySelector('.navbar-logo').setAttribute('src', 'src/assets/img/logo/EEM-logo-color.svg')
                 }
-            }
+            }*/
             
         }
     }
@@ -158,7 +156,7 @@ window.addEventListener("load", function(){
     }
 
     
-
+    
 
     
 });
