@@ -79,14 +79,14 @@ if ($usuario->tipo == ADMIN || $pedido->estado->id == BORRADOR || $pedido->estad
                                 <?php
                                 /** @var Departamento $d */
                                 foreach ($departamentos as $d) { ?>
-                                    <option value="<?= $d->id ?>"
-                                        <?= $d->id == $pedido->departamento->id ? 'selected' : '' ?>><?= $d->nombre ?>
+                                    <option value="<?= $d->id ?>" <?= $d->id == $pedido->departamento->id ? 'selected' : '' ?>>
+                                        <?= $d->nombre ?>
                                     </option>
                                 <?php } ?>
                             </select>
                         <?php } else { ?>
                             <input type="text" class="form-control mb-2" value="<?= $pedido->departamento->nombre ?>"
-                            <?= $editable ? '' : 'disabled' ?> required>
+                                <?= $editable ? '' : 'disabled' ?> required>
                         <?php } ?>
                     </div>
                     <div class="col-4">
@@ -96,15 +96,15 @@ if ($usuario->tipo == ADMIN || $pedido->estado->id == BORRADOR || $pedido->estad
                                 <?php
                                 /** @var Usuario $u */
                                 foreach ($usuarios as $u) { ?>
-                                    <option value="<?= $u->id ?>"
-                                        <?= $u->id == $pedido->usuario->id ? 'selected' : '' ?>><?= $u->nombre ?>
+                                    <option value="<?= $u->id ?>" <?= $u->id == $pedido->usuario->id ? 'selected' : '' ?>>
+                                        <?= $u->nombre ?>
                                     </option>
                                 <?php } ?>
                             </select>
                         <?php } else { ?>
                             <input type="text" class="form-control mb-2" value="<?= $pedido->usuario->nombre ?>" disabled>
                         <?php } ?>
-                        
+
                     </div>
                     <div class="col-4">
                         <h5>Area Gasto: *</h5>
@@ -271,12 +271,14 @@ if ($usuario->tipo == ADMIN || $pedido->estado->id == BORRADOR || $pedido->estad
                             </form>
                             <?php break;
                         case PEN_FACT: ?>
-                            <form class="mb-2 formulario" id="subirFacturas" method="post"
-                                action="Pedidos/vereditar?id=<?= $pedido->id ?>" enctype="multipart/form-data">
-                                <input type="hidden" name="action" value="siguiente">
-                                <input type="hidden" name="id" value="<?= $pedido->id ?>">
-                                <button class="btn btn-success float-end">Cambiar a P.Archivado</button><br>
-                            </form>
+                            <?php if ($usuario->tipo == ADMIN) { ?>
+                                <form class="mb-2 formulario" id="subirFacturas" method="post"
+                                    action="Pedidos/vereditar?id=<?= $pedido->id ?>" enctype="multipart/form-data">
+                                    <input type="hidden" name="action" value="siguiente">
+                                    <input type="hidden" name="id" value="<?= $pedido->id ?>">
+                                    <button class="btn btn-success float-end">Cambiar a P.Archivado</button><br>
+                                </form>
+                            <?php } ?>
                             <?php break;
                         case PEN_ARCH: ?>
                             <?php if ($usuario->tipo == ADMIN) { ?>
