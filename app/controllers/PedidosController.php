@@ -603,6 +603,9 @@ class PedidosController extends Controller
             ];
         }
 
+        $pedidosDAO->cambiarEstado($pedidoId, 4);
+        $pedidosDAO->rellenarEstado(4, $pedidoId, "Se ha subido el albarán");
+
         $correos = $usuariosDAO->obtenerCorreosAdmin();
         $correoJD = $pedido->usuario->correo;
         $cc = [
@@ -619,8 +622,7 @@ class PedidosController extends Controller
             $cc
         );
 
-        $pedidosDAO->cambiarEstado($pedidoId, 4);
-        $pedidosDAO->rellenarEstado(4, $pedidoId, "Se ha subido el albarán");
+        
         return [
             'tipo' => 'success',
             'mensaje' => 'Estado cambiado correctamente.'
@@ -646,6 +648,8 @@ class PedidosController extends Controller
             ];
         }
 
+        $pedidosDAO->cambiarEstado($pedidoId, 5);
+        $pedidosDAO->rellenarEstado(5, $pedidoId, "Se ha subido la factura");
 
         $correos = $usuariosDAO->obtenerCorreosAdmin();
         $correoJD = $pedido->usuario->correo;
@@ -662,8 +666,7 @@ class PedidosController extends Controller
             ],
             $cc
         );
-        $pedidosDAO->cambiarEstado($pedidoId, 5);
-        $pedidosDAO->rellenarEstado(5, $pedidoId, "Se ha subido la factura");
+
         return [
             'tipo' => 'success',
             'mensaje' => 'Archivo subido correctamente.'

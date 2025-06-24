@@ -22,6 +22,7 @@
 
 <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
 <script src="<?= BASE_URL ?>static/plugins/src/table/datatable/datatables.min.js"></script>
+<script src="<?= BASE_URL ?>static/plugins/src/table/datatable/ellipsis.js"></script>
 <script src="<?= BASE_URL ?>static/plugins/src/sweetalerts2/sweetalerts2.min.js"></script>
 <script src="<?= BASE_URL ?>static/layouts/horizontal-light-menu/loader.js"></script>
 <script src="<?= BASE_URL ?>static/plugins/src/flatpickr/flatpickr.js"></script>
