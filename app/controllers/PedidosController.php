@@ -193,6 +193,8 @@ class PedidosController extends Controller
 
     public function vereditar()
     {
+
+
         global $usuario;
         /**
          * @var PedidosDAO
@@ -214,6 +216,8 @@ class PedidosController extends Controller
          * @var UsuariosDAO
          */
         $usuariosDAO = $this->dao("Usuarios");
+
+
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($_POST['action'] == "siguiente") {
@@ -311,8 +315,16 @@ class PedidosController extends Controller
         $tiposServiciosDAO = $this->dao("TiposServicio");
         $tiposServicios = $tiposServiciosDAO->listar();
 
+        /**
+         * @var DepartamentosDAO
+         */
+        $departamentosDAO = $this->dao("Departamentos");
+        $departamentos = $departamentosDAO->listar();
+
 
         $proveedores = $proveedoresDAO->listar(true);
+
+        $usuarios = $usuariosDAO->listar();
 
         $data = [
             'pedido' => $pedido,
@@ -321,7 +333,9 @@ class PedidosController extends Controller
             'incidenciasResueltas' => $incidenciasResueltas,
             'subconceptos' => $subconceptos,
             'tiposServicios' => $tiposServicios,
-            'proveedores' => $proveedores
+            'proveedores' => $proveedores,
+            'departamentos' => $departamentos,
+            'usuarios' => $usuarios
         ];
 
         if ($usuario->tipo == ADMIN) {
@@ -469,9 +483,30 @@ class PedidosController extends Controller
             ];
         }
 
+
         if ($usuario->tipo == ADMIN) {
 
             $areaGasto = $_POST['areagasto'];
+
+            $referencia = $_POST['referencia'];
+            $fechaCreacion = $_POST['fechaCreacion'];
+            $departamento = $_POST['departamento'];
+            $usuario_id = $_POST['usuario_id'];
+
+            if (
+                !$pedidosDAO->editar_admin(
+                    $id,
+                    $referencia,
+                    $fechaCreacion,
+                    $departamento,
+                    $usuario_id
+                )
+            ) {
+                return [
+                    'tipo' => 'danger',
+                    'mensaje' => 'Error al cambiar los datos.'
+                ];
+            }
 
             if ($pedido->areaGastos->id != $areaGasto) {
                 $newareaGastos = $areasGastosDAO->obtener($areaGasto);

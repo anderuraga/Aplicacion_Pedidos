@@ -484,6 +484,29 @@ WHERE
         ]);
     }
 
+    public function editar_admin($id, $referencia, $fecha_creada, $id_departamento, $id_usuario)
+    {
+        $stmt = $this->db->prepare("UPDATE
+                                                `pedidos`
+                                            SET
+                                                `referencia` = :referencia,
+                                                `fecha_creada` = :fecha_creada,
+                                                `id_departamento` = :id_departamento,
+                                                `id_usuario` = :id_usuario
+                                            WHERE
+                                                `id` = :id");
+
+        $ok = $stmt->execute([
+            'referencia' => $referencia,
+            'fecha_creada' => $fecha_creada,
+            'id_departamento' => $id_departamento,
+            'id_usuario' => $id_usuario,
+            'id' => $id
+        ]);
+        $error = $stmt->errorInfo();
+        return $ok;
+    }
+
     public function obtener_presupuestos($id)
     {
         $stmt = $this->db->prepare("SELECT

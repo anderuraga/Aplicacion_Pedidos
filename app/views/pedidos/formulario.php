@@ -15,9 +15,9 @@ if (count($incidenciasActivas) > 0) { ?>
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
         Hay <?= count($incidenciasActivas) ?> incidencia(s) abiertas en este pedido.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="feather feather-x close" data-bs-dismiss="alert">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x close"
+                data-bs-dismiss="alert">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
@@ -27,7 +27,7 @@ if (count($incidenciasActivas) > 0) { ?>
 }
 
 $editable = false;
-if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
+if ($usuario->tipo == ADMIN || $pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
     $editable = true;
 }
 
@@ -62,23 +62,49 @@ if ($pedido->estado->id == BORRADOR || $pedido->estado->id == PEN_VALI) {
                     </div>
                     <div class="col-4">
                         <h5>Referencia:</h5>
-                        <input type="text" class="form-control mb-2" value="<?= $pedido->referencia ?>" disabled>
+                        <input type="text" class="form-control mb-2" name="referencia"
+                            value="<?= $pedido->referencia ?>" <?= $editable ? '' : 'disabled' ?> required>
                     </div>
                     <div class="col-4">
                         <h5>Fecha creación:</h5>
-                        <input type="text" class="form-control mb-2" value="<?= $pedido->getFechaCreadaVisible() ?>"
-                            disabled>
+                        <input type="text" class="form-control mb-2 flatTime flatpickr-input" name="fechaCreacion"
+                            value="<?= $pedido->fecha_creada ?>" <?= $editable ? '' : 'disabled' ?> required>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-4">
                         <h5>Departamento:</h5>
-                        <input type="text" class="form-control mb-2" value="<?= $pedido->departamento->nombre ?>"
-                            disabled>
+                        <?php if ($usuario->tipo == ADMIN) { ?>
+                            <select class="form-control" id="departamento" name="departamento" required>
+                                <?php
+                                /** @var Departamento $d */
+                                foreach ($departamentos as $d) { ?>
+                                    <option value="<?= $d->id ?>"
+                                        <?= $d->id == $pedido->departamento->id ? 'selected' : '' ?>><?= $d->nombre ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        <?php } else { ?>
+                            <input type="text" class="form-control mb-2" value="<?= $pedido->departamento->nombre ?>"
+                            <?= $editable ? '' : 'disabled' ?> required>
+                        <?php } ?>
                     </div>
                     <div class="col-4">
                         <h5>Usuario:</h5>
-                        <input type="text" class="form-control mb-2" value="<?= $pedido->usuario->nombre ?>" disabled>
+                        <?php if ($usuario->tipo == ADMIN) { ?>
+                            <select class="form-control" id="usuario_id" name="usuario_id" required>
+                                <?php
+                                /** @var Usuario $u */
+                                foreach ($usuarios as $u) { ?>
+                                    <option value="<?= $u->id ?>"
+                                        <?= $u->id == $pedido->usuario->id ? 'selected' : '' ?>><?= $u->nombre ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        <?php } else { ?>
+                            <input type="text" class="form-control mb-2" value="<?= $pedido->usuario->nombre ?>" disabled>
+                        <?php } ?>
+                        
                     </div>
                     <div class="col-4">
                         <h5>Area Gasto: *</h5>
