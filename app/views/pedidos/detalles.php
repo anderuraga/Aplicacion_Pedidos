@@ -105,7 +105,7 @@
                 <div class="row mx-4 my-1">
                     
                     <div class="col-12">
-                        <button type="submit" id="botoncontinuar" class="btn btn-success float-end">Gurdar</d>
+                        <button type="submit" id="botoncontinuar" class="btn btn-success float-end">Guardar</d>
                     </div>
 
                 </div>
