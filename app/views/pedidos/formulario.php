@@ -285,6 +285,8 @@ if ($usuario->tipo == ADMIN || $pedido->estado->id == BORRADOR || $pedido->estad
                                 <form class="mb-2" id="seguir" method="post" action="Pedidos/vereditar?id=<?= $pedido->id ?>">
                                     <input type="hidden" name="action" value="siguiente">
                                     <input type="hidden" name="id" value="<?= $pedido->id ?>">
+                                    <a target="_blank" href="<?= BASE_URL ?>Pedidos/pdf/<?= $pedido->id ?>"
+                                        class="btn btn-primary">Imprimir</a>
                                     <button class="btn btn-success float-end">Archivar</button><br>
                                 </form>
                             <?php } ?>
@@ -292,7 +294,7 @@ if ($usuario->tipo == ADMIN || $pedido->estado->id == BORRADOR || $pedido->estad
                         case ARCHIVADO: ?>
                             <?php if ($usuario->tipo == ADMIN) { ?>
                                 <a target="_blank" href="<?= BASE_URL ?>Pedidos/pdf/<?= $pedido->id ?>"
-                                    class="btn btn-success float-end">Imprimir</a>
+                                    class="btn btn-primary">Imprimir</a>
                             <?php } ?>
                             <?php break;
                         default:
