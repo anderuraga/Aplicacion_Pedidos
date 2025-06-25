@@ -339,6 +339,19 @@ CREATE TABLE `vista_resumen_movimientos` (
 ,`cantidad` decimal(32,0)
 );
 
+
+
+
+CREATE TABLE `otros_documentos` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+   `id_pedido` INT(11) NOT NULL , 
+   `tipo` VARCHAR(255) NOT NULL ,
+    `documento` VARCHAR(255) NOT NULL ,
+     PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
+ALTER TABLE `otros_documetnos` ADD CONSTRAINT `pedido_otro_documento` FOREIGN KEY (`id_pedido`) REFERENCES `pedidos`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+
 -- --------------------------------------------------------
 
 --
