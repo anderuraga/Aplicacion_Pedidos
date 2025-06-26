@@ -50,6 +50,11 @@
         },
         order: [[<?= $target ?? '1' ?>, '<?= $order ?? "asc" ?>']],
         columnDefs: [
+                {
+                targets: ["_all"],
+                render: $.fn.dataTable.render.ellipsis(40, true)
+                },
+
             <?= $extraColumndef ?? '' ?>
         ],
         "stripeClasses": [],

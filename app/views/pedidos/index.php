@@ -99,10 +99,4 @@
         </div>
     </div>
 </div>
-<?php
-$extraColumndef = "{
-      targets: [7,8],
-      render: $.fn.dataTable.render.ellipsis(50, true)
-    }"
-    ?>
 <?php require HOMEDIR . '/../app/views/partials/footer.php' ?>
