@@ -1,4 +1,7 @@
 
+
+<?php global $usuario; ?>
+
 <!DOCTYPE html>
 <html lang="es">
 

@@ -2,6 +2,7 @@
     Custom styles para dar estilos a toda la App y sobreescribir los de bootstrap y resto plugins
 */
 
+
 a {
     text-decoration: none;
 }
@@ -47,6 +48,10 @@ body.dark .layout-px-spacing,
 
 #dt-length-0 {
     width: 65px !important;
+}
+
+.dropdown-menu-usuario {
+    max-width: 40rem !important;
 }
 
 /* end menu */
