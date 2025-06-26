@@ -59,7 +59,7 @@
 
                 <div class="dropdown-menu dropdown-menu-usuario position-absolute" aria-labelledby="userProfileDropdown">
                     <div class="dropdown-item mt-2">
-                        <a href="Perfil.php">
+                       
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" class="feather feather-user">
@@ -69,8 +69,8 @@
                             <br>
                             <span>Usuario: <?= $usuario->correo ?> </span> <br>
                             <span>Nombre: <?= $usuario->nombre ?> </span> <br>
-                            <span>Depaartamento: <?= $usuario->departamento->nombre ?> </span>
-                        </a>
+                            <span>Departamento: <?= $usuario->departamento->nombre ?> </span>
+                       
                     </div>
                     <div class="dropdown-item">
                         <a href="Logout">

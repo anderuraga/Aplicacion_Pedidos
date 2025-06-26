@@ -119,8 +119,9 @@
                         </div>
                     </form>
 
+                    <hr class="mt-2">
 
-                    <div class="col-12 mb-3" id="facturaDiv">
+                    <div class="col-12 mb-3 bg-light-primary" id="facturaDiv">
                         <h5>Factura:</h5>
                         <form class="mb-2 formulario" id="subirFactura" method="post"
                             action="Pedidos/vereditar?id=<?= $pedido->id ?>" enctype="multipart/form-data">
@@ -165,6 +166,13 @@
                         <button type="submit" form="subirFactura" class="btn btn-success float-end">Subir
                             factura</button>
 
+
+                    </div>
+
+
+                    <hr class="mt-2">
+
+                    <div class="col-12 mb-3" id="OtrosDiv">
                         <?php if (count($otrosdocs) > 0): ?>
                             <div class="mt-2">
                                 <h4>Otros Documentos</h4>
@@ -191,7 +199,7 @@
                             enctype="multipart/form-data">
                             <input type="hidden" name="action" value="subir_otro_doc">
                             <input type="hidden" name="id" value="<?= $pedido->id ?>">
-                            <h5>Añadir otro documento:</h5>
+                            <h5>Añadir nuevo documento:</h5>
                             <label for="referencia">Tipo: *</label>
                             <input type="text" class="form-control mb-2" id="tipo" name="tipo" required>
                             <label for="factura"><i>Archivo: *</i></label><br>
