@@ -81,12 +81,12 @@ if ($usuario->tipo == ADMIN || $pedido->estado->id == BORRADOR || $pedido->estad
                     <div class="col-4">
                         <h5>Referencia:</h5>
                         <input type="text" class="form-control mb-2" name="referencia"
-                            value="<?= $pedido->referencia ?>" <?= $editable ? '' : 'disabled' ?> required>
+                            value="<?= $pedido->referencia ?>" <?= $usuario->tipo == ADMIN ? '' : 'disabled' ?> required>
                     </div>
                     <div class="col-4">
                         <h5>Fecha creación:</h5>
-                        <input type="text" class="form-control mb-2 flatTime flatpickr-input" name="fechaCreacion"
-                            value="<?= $pedido->fecha_creada ?>" <?= $editable ? '' : 'disabled' ?> required>
+                        <input type="text" class="form-control mb-2 flatTime <?= $usuario->tipo == ADMIN ? 'flatpickr-input' : '' ?> " name="fechaCreacion"
+                            value="<?= $pedido->fecha_creada ?>" <?= $usuario->tipo == ADMIN ? '' : 'disabled' ?> required>
                     </div>
                 </div>
                 <div class="row">
@@ -103,8 +103,7 @@ if ($usuario->tipo == ADMIN || $pedido->estado->id == BORRADOR || $pedido->estad
                                 <?php } ?>
                             </select>
                         <?php } else { ?>
-                            <input type="text" class="form-control mb-2" value="<?= $pedido->departamento->nombre ?>"
-                                <?= $editable ? '' : 'disabled' ?> required>
+                            <input type="text" class="form-control mb-2" value="<?= $pedido->departamento->nombre ?>" disabled required>
                         <?php } ?>
                     </div>
                     <div class="col-4">

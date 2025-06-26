@@ -4,7 +4,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline)
     // Directorio de logs
     $logsDir = __DIR__ . '/../logs';
     if (!is_dir($logsDir)) {
-        mkdir($logsDir, 0755, true);
+        mkdir($logsDir, 0777, true);
     }
 
     // Nombre de fichero con fecha y hora
