@@ -328,6 +328,12 @@ class PedidosController extends Controller
         $departamentosDAO = $this->dao("Departamentos");
         $departamentos = $departamentosDAO->listar();
 
+        /**
+         * @var EstadosDAO
+         */
+        $estadosDAO = $this->dao("Estados");
+        $estados = $estadosDAO->listar();
+
 
         $proveedores = $proveedoresDAO->listar(true);
 
@@ -344,7 +350,8 @@ class PedidosController extends Controller
             'proveedores' => $proveedores,
             'departamentos' => $departamentos,
             'usuarios' => $usuarios,
-            'otrosdocs' => $otrosdocs
+            'otrosdocs' => $otrosdocs,
+            'estados' => $estados
         ];
 
         if ($usuario->tipo == ADMIN) {
@@ -495,6 +502,7 @@ class PedidosController extends Controller
 
         if ($usuario->tipo == ADMIN) {
 
+            $estado_id = $_POST['estado'];
             $areaGasto = $_POST['areagasto'];
 
             $referencia = $_POST['referencia'];
@@ -508,7 +516,8 @@ class PedidosController extends Controller
                     $referencia,
                     $fechaCreacion,
                     $departamento,
-                    $usuario_id
+                    $usuario_id,
+                    $estado_id
                 )
             ) {
                 return [

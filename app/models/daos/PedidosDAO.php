@@ -535,7 +535,7 @@ WHERE
         ]);
     }
 
-    public function editar_admin($id, $referencia, $fecha_creada, $id_departamento, $id_usuario)
+    public function editar_admin($id, $referencia, $fecha_creada, $id_departamento, $id_usuario, $id_estado)
     {
         $stmt = $this->db->prepare("UPDATE
                                                 `pedidos`
@@ -543,7 +543,8 @@ WHERE
                                                 `referencia` = :referencia,
                                                 `fecha_creada` = :fecha_creada,
                                                 `id_departamento` = :id_departamento,
-                                                `id_usuario` = :id_usuario
+                                                `id_usuario` = :id_usuario,
+                                                `id_estado` = :id_estado
                                             WHERE
                                                 `id` = :id");
 
@@ -552,7 +553,8 @@ WHERE
             'fecha_creada' => $fecha_creada,
             'id_departamento' => $id_departamento,
             'id_usuario' => $id_usuario,
-            'id' => $id
+            'id' => $id,
+            'id_estado' => $id_estado
         ]);
         $error = $stmt->errorInfo();
         return $ok;

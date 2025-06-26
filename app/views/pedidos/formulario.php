@@ -10,6 +10,7 @@
  * @var Pedido $pedido
  * @var Presupuesto[] $presupuestos
  * @var Incidencia[] $incidenciasActivas
+ * @var Estado[] $estados
  */
 if (count($incidenciasActivas) > 0) { ?>
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -47,7 +48,24 @@ if ($usuario->tipo == ADMIN || $pedido->estado->id == BORRADOR || $pedido->estad
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12 ">
                         <a href="<?= BASE_URL ?>Pedidos" class="btn btn-volver btn-outline mb-3">Volver</a>
                         <h1>Resumen del pedido: <?= $pedido->referencia ?></h1>
-                        <h2>Estado: <?= $pedido->estado->nombre ?></h2>
+                        <?php if ($usuario->tipo == ADMIN): ?>
+                            <div class="row">
+                                <div class="col-4">
+                                    <h5>Estado:</h5>
+                                    <select class="form-control mb-2" id="estado" name="estado" required>
+                                        <?php
+                                        foreach ($estados as $es) { ?>
+                                            <option value="<?= $es->id ?>" <?= $es->id == $pedido->estado->id ? 'selected' : '' ?>>
+                                                <?= $es->nombre ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+
+                        <?php else: ?>
+                            <h2>Estado: <?= $pedido->estado->nombre ?></h2>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="row">
