@@ -71,25 +71,32 @@ class PedidosDAO
                 fs.id AS factura_id,
                 fs.identificador AS factura_referencia,
                 fs.fecha AS factura_fecha,
-                fs.documento AS factura_documento
-            FROM
-                `pedidos` p
-            JOIN estado e ON
-                e.id = p.id_estado
-            JOIN usuarios u ON
-                u.id = p.id_usuario
-            JOIN departamentos d ON
-                d.id = p.id_departamento
-            JOIN subconceptos s ON
-                s.id = p.id_subconcepto
-            JOIN vista_resumen_areas a ON
-                a.id_area = p.id_area_gasto
-            JOIN vista_proveedores_gastos vpg ON
-                vpg.id = p.id_proveedor AND vpg.anio_contable = p.anio_contable
-            JOIN tipos_servicio ts ON
-                ts.id = vpg.id_servicio
-            LEFT JOIN facturas fs ON
-                fs.id = p.id_factura
+                fs.documento AS factura_documento,
+    tra.id AS transaccion_id,
+    tra.fecha AS transaccion_fecha,
+    tra.descripcion AS transaccion_descripcion,
+    tra.cantidad AS transaccion_cantidad,
+    0 AS transaccion_total
+FROM
+    `pedidos` p
+JOIN estado e ON
+    e.id = p.id_estado
+JOIN usuarios u ON
+    u.id = p.id_usuario
+JOIN departamentos d ON
+    d.id = p.id_departamento
+JOIN subconceptos s ON
+    s.id = p.id_subconcepto
+JOIN vista_resumen_areas a ON
+    a.id_area = p.id_area_gasto
+JOIN vista_proveedores_gastos vpg ON
+    vpg.id = p.id_proveedor AND vpg.anio_contable = p.anio_contable
+JOIN tipos_servicio ts ON
+    ts.id = vpg.id_servicio
+LEFT JOIN facturas fs ON
+    fs.id = p.id_factura
+LEFT JOIN transacciones tra ON
+	tra.id=p.id_transaccion
             WHERE
                 p.baja is NULL AND
                     p.id = :id
@@ -158,25 +165,32 @@ class PedidosDAO
                 fs.id AS factura_id,
                 fs.identificador AS factura_referencia,
                 fs.fecha AS factura_fecha,
-                fs.documento AS factura_documento
-            FROM
-                `pedidos` p
-            JOIN estado e ON
-                e.id = p.id_estado
-            JOIN usuarios u ON
-                u.id = p.id_usuario
-            JOIN departamentos d ON
-                d.id = p.id_departamento
-            JOIN subconceptos s ON
-                s.id = p.id_subconcepto
-            JOIN vista_resumen_areas a ON
-                a.id_area = p.id_area_gasto
-            JOIN vista_proveedores_gastos vpg ON
-                vpg.id = p.id_proveedor AND vpg.anio_contable = p.anio_contable
-            JOIN tipos_servicio ts ON
-                ts.id = vpg.id_servicio
-            LEFT JOIN facturas fs ON
-                fs.id = p.id_factura
+                fs.documento AS factura_documento,
+    tra.id AS transaccion_id,
+    tra.fecha AS transaccion_fecha,
+    tra.descripcion AS transaccion_descripcion,
+    tra.cantidad AS transaccion_cantidad,
+    0 AS transaccion_total
+FROM
+    `pedidos` p
+JOIN estado e ON
+    e.id = p.id_estado
+JOIN usuarios u ON
+    u.id = p.id_usuario
+JOIN departamentos d ON
+    d.id = p.id_departamento
+JOIN subconceptos s ON
+    s.id = p.id_subconcepto
+JOIN vista_resumen_areas a ON
+    a.id_area = p.id_area_gasto
+JOIN vista_proveedores_gastos vpg ON
+    vpg.id = p.id_proveedor AND vpg.anio_contable = p.anio_contable
+JOIN tipos_servicio ts ON
+    ts.id = vpg.id_servicio
+LEFT JOIN facturas fs ON
+    fs.id = p.id_factura
+LEFT JOIN transacciones tra ON
+	tra.id=p.id_transaccion
             WHERE
                 p.baja is NULL AND
                 p.id_estado = :id_estado
@@ -248,25 +262,32 @@ class PedidosDAO
                 fs.id AS factura_id,
                 fs.identificador AS factura_referencia,
                 fs.fecha AS factura_fecha,
-                fs.documento AS factura_documento
-            FROM
-                `pedidos` p
-            JOIN estado e ON
-                e.id = p.id_estado
-            JOIN usuarios u ON
-                u.id = p.id_usuario
-            JOIN departamentos d ON
-                d.id = p.id_departamento
-            JOIN subconceptos s ON
-                s.id = p.id_subconcepto
-            JOIN vista_resumen_areas a ON
-                a.id_area = p.id_area_gasto
-            JOIN vista_proveedores_gastos vpg ON
-                vpg.id = p.id_proveedor AND vpg.anio_contable = p.anio_contable
-            JOIN tipos_servicio ts ON
-                ts.id = vpg.id_servicio
-            LEFT JOIN facturas fs ON
-                fs.id = p.id_factura
+                fs.documento AS factura_documento,
+    tra.id AS transaccion_id,
+    tra.fecha AS transaccion_fecha,
+    tra.descripcion AS transaccion_descripcion,
+    tra.cantidad AS transaccion_cantidad,
+    0 AS transaccion_total
+FROM
+    `pedidos` p
+JOIN estado e ON
+    e.id = p.id_estado
+JOIN usuarios u ON
+    u.id = p.id_usuario
+JOIN departamentos d ON
+    d.id = p.id_departamento
+JOIN subconceptos s ON
+    s.id = p.id_subconcepto
+JOIN vista_resumen_areas a ON
+    a.id_area = p.id_area_gasto
+JOIN vista_proveedores_gastos vpg ON
+    vpg.id = p.id_proveedor AND vpg.anio_contable = p.anio_contable
+JOIN tipos_servicio ts ON
+    ts.id = vpg.id_servicio
+LEFT JOIN facturas fs ON
+    fs.id = p.id_factura
+LEFT JOIN transacciones tra ON
+	tra.id=p.id_transaccion
             WHERE
                 p.baja is NULL AND
                 p.id_estado = :id_estado AND
@@ -485,7 +506,8 @@ WHERE
         ]);
     }
 
-    public function obtener_otros_docs($pedido){
+    public function obtener_otros_docs($pedido)
+    {
         $sql = "SELECT
                     `id`,
                     `tipo`,
@@ -507,7 +529,8 @@ WHERE
         return $result;
     }
 
-    public function obtener_otro_doc($id){
+    public function obtener_otro_doc($id)
+    {
         $sql = "SELECT `id`, `id_pedido`, `tipo`, `documento` FROM `otros_documentos` WHERE `id`=:id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
@@ -516,7 +539,8 @@ WHERE
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function borrar_otro_doc($id){
+    public function borrar_otro_doc($id)
+    {
         $sql = "DELETE FROM `otros_documentos` WHERE `id`=:id";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([
@@ -850,7 +874,8 @@ SET
     `anexo` = null,
     `albaran` = null,
     `factura` = null,
-    `baja` = NOW()
+    `baja` = NOW(),
+    `id_transaccion` = null
 WHERE
     `id` = :id";
         $stmt = $this->db->prepare($sql);
@@ -903,6 +928,21 @@ WHERE
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([
             'id' => $id
+        ]);
+    }
+
+    public function anadir_transaccion($id, $id_transaccion)
+    {
+        $sql = "UPDATE
+                `pedidos`
+            SET
+                `id_transaccion` = :id_transaccion
+            WHERE
+            `id` = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'id' => $id,
+            'id_transaccion' => $id_transaccion
         ]);
     }
 }

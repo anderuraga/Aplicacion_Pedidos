@@ -7,6 +7,7 @@ require_once __DIR__ . '/Subconcepto.php';
 require_once __DIR__ . '/AreaGastos.php';
 require_once __DIR__ . '/Proveedor.php';
 require_once __DIR__ . '/Factura.php';
+require_once __DIR__ . '/Transaccion.php';
 
 class Pedido
 {
@@ -26,6 +27,7 @@ class Pedido
     public int $anio_contable;
     public string | null $anexo;
     public string | null $albaran;
+    public Transaccion | null $transaccion;
 
     public function __construct(
         int $id,
@@ -43,7 +45,8 @@ class Pedido
         Factura $factura,
         int $anio_contable,
         string | null $anexo,
-        string | null $albaran
+        string | null $albaran,
+        Transaccion | null $transaccion
     ) {
         $this->id = $id;
         $this->referencia = $referencia;
@@ -61,6 +64,7 @@ class Pedido
         $this->anio_contable = $anio_contable;
         $this->anexo = $anexo;
         $this->albaran = $albaran;
+        $this->transaccion = $transaccion;
     }
 
     public static function fromArray(array $row): Pedido
@@ -81,7 +85,8 @@ class Pedido
             factura: Factura::fromArray($row),
             anio_contable: (int) $row['pedido_anio_contable'],
             anexo: $row['pedido_anexo'],
-            albaran: $row['pedido_albaran']
+            albaran: $row['pedido_albaran'],
+            transaccion: Transaccion::fromArray($row)
         );
     }
 

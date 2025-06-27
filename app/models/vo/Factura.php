@@ -17,23 +17,23 @@ class Factura
 
     public static function fromArray(array $row): Factura
     {
-        if(is_null($row['factura_id'])){
+        if (is_null($row['factura_id'])) {
             return new Factura(
                 0,
                 '',
                 '',
                 ''
             );
-        }else{
+        } else {
             return new Factura(
-            (int) $row['factura_id'],
-            $row['factura_documento'],
-            $row['factura_fecha'],
-            $row['factura_referencia'],
-        );
+                (int) $row['factura_id'],
+                $row['factura_documento'],
+                $row['factura_fecha'],
+                $row['factura_referencia'],
+            );
         }
 
-        
+
     }
 
     public function getFechaVisible()

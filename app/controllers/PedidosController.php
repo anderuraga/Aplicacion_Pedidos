@@ -218,6 +218,10 @@ class PedidosController extends Controller
         $usuariosDAO = $this->dao("Usuarios");
 
 
+        /**
+         * @var TransaccionesDAO
+         */
+        $transaccionesDAO = $this->dao("Transacciones");
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($_POST['action'] == "siguiente") {
@@ -239,7 +243,6 @@ class PedidosController extends Controller
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
                     case PEN_ARCH:
-                        $transaccionesDAO = $this->dao("Transacciones");
                         $this->archivar($pedidosDAO, $transaccionesDAO);
                         $pedidosDAO->rellenarEstado(6, $pedido->id, "Se ha confirmado el pago");
                         $pedido = $pedidosDAO->obtener($_GET['id']);
@@ -276,7 +279,7 @@ class PedidosController extends Controller
                  */
                 $areasGastosDAO = $this->dao("AreasGastos");
 
-                $_SESSION['alert'] = $this->editar($pedidosDAO, $areasGastosDAO, $proveedoresDAO);
+                $_SESSION['alert'] = $this->editar($pedidosDAO, $areasGastosDAO, $proveedoresDAO, $transaccionesDAO);
                 $pedido = $pedidosDAO->obtener($_POST['id']);
             } else if ($_POST['action'] == "documentos") {
                 $_SESSION['alert'] = $this->guardarDocumentos($pedidosDAO);
@@ -285,7 +288,7 @@ class PedidosController extends Controller
                 $_SESSION['alert'] = $this->subirFactura($pedidosDAO);
                 $pedido = $pedidosDAO->obtener($_POST['id']);
             } else if ($_POST['action'] == "borrar") {
-                $_SESSION['alert'] = $this->borrar($pedidosDAO);
+                $_SESSION['alert'] = $this->borrar($pedidosDAO, $transaccionesDAO);
                 if ($_SESSION['alert']['tipo'] == "success") {
                     session_write_close();
                     header("Location: " . BASE_URL . "Pedidos");
@@ -444,7 +447,7 @@ class PedidosController extends Controller
         }
     }
 
-    private function editar(PedidosDAO $pedidosDAO, AreasGastosDAO $areasGastosDAO, ProveedoresDAO $proveedoresDAO)
+    private function editar(PedidosDAO $pedidosDAO, AreasGastosDAO $areasGastosDAO, ProveedoresDAO $proveedoresDAO, TransaccionesDAO $transaccionesDAO)
     {
         global $usuario;
         $id = (int) $_POST['id'];
@@ -453,12 +456,12 @@ class PedidosController extends Controller
         $descripcion = trim($_POST['descripcion'] ?? '');
         $id_proveedor = $_POST['proveedor'] ?? null;
 
-        if (!$id || $importe==0 || $descripcion === '' || !$id_proveedor) {
-        return [
-            'tipo' => 'danger',
-            'mensaje' => 'Hay campos sin valor, revise el importa, la descripción y el proveedor.'
-        ];
-    }
+        if (!$id || $importe == 0 || $descripcion === '' || !$id_proveedor) {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Hay campos sin valor, revise el importa, la descripción y el proveedor.'
+            ];
+        }
 
         $pedido = $pedidosDAO->obtener($id);
 
@@ -472,11 +475,20 @@ class PedidosController extends Controller
                     'mensaje' => 'No es posible cambiar el importe ya que superaria el saldo del area de gasto.'
                 ];
             } else {
-                if (!$pedidosDAO->cambiarImporte($id, getCantidadMysql($_POST['cantidad'] ?? 0))) {
+                if (!$pedidosDAO->cambiarImporte($id, $importe)) {
+
                     return [
                         'tipo' => 'danger',
                         'mensaje' => 'Error al cambiar el importe.'
                     ];
+                } else {
+                    if ($pedido->transaccion->id != 0) {
+                        /**
+                         * @var Transaccion
+                         */
+                        $tra = $pedido->transaccion;
+                        $transaccionesDAO->editar($tra->id, $tra->fecha, $tra->descripcion, $pedido->areaGastos->id, -$importe);
+                    }
                 }
             }
         }
@@ -517,16 +529,16 @@ class PedidosController extends Controller
             $departamento = $_POST['departamento'];
             $usuario_id = $_POST['usuario_id'];
 
-            if (
-                !$pedidosDAO->editar_admin(
-                    $id,
-                    $referencia,
-                    $fechaCreacion,
-                    $departamento,
-                    $usuario_id,
-                    $estado_id
-                )
-            ) {
+            $ok = $pedidosDAO->editar_admin(
+                $id,
+                $referencia,
+                $fechaCreacion,
+                $departamento,
+                $usuario_id,
+                $estado_id
+            );
+
+            if (!$ok) {
                 return [
                     'tipo' => 'danger',
                     'mensaje' => 'Error al cambiar los datos.'
@@ -551,7 +563,12 @@ class PedidosController extends Controller
                 }
             }
         }
-
+        
+        if ($pedido->transaccion->id != 0) {
+            $tra = $pedido->transaccion;
+            $tra_desc = str_replace($pedido->referencia, $referencia, $tra->descripcion);
+            $transaccionesDAO->editar($tra->id, $tra->fecha, $tra_desc, $areaGasto, -$importe);
+        }
 
         $pedidosDAO->rellenarEstado($pedido->estado->id, $pedido->id, "Se han editado los datos del pedido.");
 
@@ -714,7 +731,9 @@ class PedidosController extends Controller
             $descr = "Pedido <a target='_blank' href='" . BASE_URL . "Pedidos/vereditar?id=" . $pedido->id . "'>" . $pedido->referencia . "</a> archivado";
             //$ok = $transaccionesDAO->crear($fecha, $descr, $pedido->areaGastos->id, getCantidadMysql("-" . $pedido->importe));
             $ok = $transaccionesDAO->crear($fecha, $descr, $pedido->areaGastos->id, -$pedido->importe);
+
             if ($ok) {
+                $pedidosDAO->anadir_transaccion($pedidoId, $transaccionesDAO->last_insert);
                 return [
                     'tipo' => 'success',
                     'mensaje' => 'Pedido archivado correctamente.'
@@ -1050,7 +1069,7 @@ class PedidosController extends Controller
 
         foreach ($docs as $d) {
             $doc = $pedidosDAO->obtener_otro_doc($d);
-            @unlink(__DIR__ . '/../../public/uploads/otros/'.$pedido->id.'/'.$doc['documento']);
+            @unlink(__DIR__ . '/../../public/uploads/otros/' . $pedido->id . '/' . $doc['documento']);
             $pedidosDAO->borrar_otro_doc($d);
         }
 
@@ -1092,7 +1111,7 @@ class PedidosController extends Controller
         }
     }
 
-    private function borrar(PedidosDAO $pedidosDAO)
+    private function borrar(PedidosDAO $pedidosDAO, TransaccionesDAO $transaccionesDAO)
     {
         $id = $_POST['id'];
         $confirmacion = $_POST['confirmacion'];
@@ -1127,6 +1146,11 @@ class PedidosController extends Controller
 
         $random = random_int(1, 99999999);
         $ref = "Borrado$random";
+
+        if ($pedido->transaccion->id != 0) {
+            $transaccionesDAO->borrar($pedido->transaccion->id, $ref);
+        }
+
 
         if ($pedidosDAO->borrar($id, $ref)) {
             return [

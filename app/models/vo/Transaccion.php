@@ -44,14 +44,37 @@ class Transaccion
 
     public static function fromArray(array $row): Transaccion
     {
-        return new Transaccion(
-            id: (int) $row['transaccion_id'],
-            areaGastos: AreaGastos::fromArray($row),
-            fecha: $row['transaccion_fecha'],
-            descripcion: $row['transaccion_descripcion'],
-            cantidad: $row['transaccion_cantidad'],
-            total: $row['transaccion_total']
-        );
+        if (is_null($row['transaccion_id'])) {
+            return new Transaccion(
+                0,
+                new AreaGastos(
+                    0,
+                    '',
+                    new Departamento(
+                        0,
+                        ''
+                    ),
+                    '',
+                    '',
+                    '',
+                    ''
+                ),
+                '',
+                '',
+                '',
+                ''
+            );
+        } else {
+            return new Transaccion(
+                id: (int) $row['transaccion_id'],
+                areaGastos: AreaGastos::fromArray($row),
+                fecha: $row['transaccion_fecha'],
+                descripcion: $row['transaccion_descripcion'],
+                cantidad: $row['transaccion_cantidad'],
+                total: $row['transaccion_total']
+            );
+        }
+
     }
 
 }
