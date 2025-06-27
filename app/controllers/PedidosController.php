@@ -451,7 +451,14 @@ class PedidosController extends Controller
         $importe = (float) getCantidadMysql($_POST['cantidad'] ?? 0);
         $id_subconcepto = (int) ($_POST['subconcepto'] ?? 0);
         $descripcion = trim($_POST['descripcion'] ?? '');
-        $id_proveedor = trim($_POST['proveedor'] ?? '');
+        $id_proveedor = $_POST['proveedor'] ?? null;
+
+        if (!$id || $importe==0 || $descripcion === '' || !$id_proveedor) {
+        return [
+            'tipo' => 'danger',
+            'mensaje' => 'Hay campos sin valor, revise el importa, la descripción y el proveedor.'
+        ];
+    }
 
         $pedido = $pedidosDAO->obtener($id);
 
