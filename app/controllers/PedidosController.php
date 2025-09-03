@@ -823,16 +823,34 @@ class PedidosController extends Controller
         ]);
 
         $footerHtml = '
-  <div style="text-align: right; font-size: 10px;">
-    <img src="static/assets/img/Pedido_pie.png" height="50" alt="Pie de página">
-  </div>
-';
+                        <div style="text-align: right; font-size: 10px;">
+                            <img src="static/assets/img/Pedido_pie.png" height="50" alt="Pie de página">
+                        </div>
+                        ';
         $mpdf->SetHTMLFooter($footerHtml);
 
         $mpdf->WriteHTML($html);
         $mpdf->Output('pedido_' . $pedido->referencia . '.pdf', 'I');
         exit;
     }
+
+    public function anexo6($id)
+    {
+        /**
+         * @var PedidosDAO
+         */
+        $pedidosDAO = $this->dao("Pedidos");
+        $pedido = $pedidosDAO->obtener($id);
+
+        $data = [
+            'pedido' => $pedido
+        ];
+
+        
+        $this->view("pedidos/anexo6", $data);
+        
+    }
+
 
     private function guardarDocumentos(PedidosDAO $pedidosDAO)
     {
