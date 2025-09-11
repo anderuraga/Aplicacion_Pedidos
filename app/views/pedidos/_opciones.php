@@ -60,6 +60,8 @@
                                     class="btn btn-primary">Imprimir Hoja de Pedidos</a>
                                 <a target="_blank" href="<?= BASE_URL ?>Pedidos/anexo6/<?= $pedido->id ?>"
                                     class="btn btn-primary">Imprimir Anexo VI</a>
+                                <a target="_blank" href="<?= BASE_URL ?>Pedidos/anexo3/<?= $pedido->id ?>"
+                                    class="btn btn-primary">Imprimir Anexo III</a>    
                             <?php } ?>
                             <?php break;
                         default:

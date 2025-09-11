@@ -851,6 +851,23 @@ class PedidosController extends Controller
         
     }
 
+        public function anexo3($id)
+    {
+        /**
+         * @var PedidosDAO
+         */
+        $pedidosDAO = $this->dao("Pedidos");
+        $pedido = $pedidosDAO->obtener($id);
+
+        $data = [
+            'pedido' => $pedido
+        ];
+
+        
+        $this->view("pedidos/anexo3", $data);
+        
+    }
+
 
     private function guardarDocumentos(PedidosDAO $pedidosDAO)
     {
