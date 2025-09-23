@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../helpers/auth.php';
 require_once __DIR__ . '/../helpers/Mailer.php';
+require_once __DIR__ . '/../../core/ErrorHandler.php';
 
 class ProveedoresController extends Controller
 {
@@ -199,7 +200,7 @@ class ProveedoresController extends Controller
             }
 
             if ($proveedor->terceros != null) {
-                unlink($rutaBase . "/" . $proveedor->terceros);
+                safeUnlink($rutaBase . "/" . $proveedor->terceros);
             }
 
             $original = $_FILES["alta_terceros"]['name'];
@@ -279,7 +280,7 @@ class ProveedoresController extends Controller
         $proveedor = $proveedoresDAO->obtener($id);
 
         if (!is_null($proveedor->terceros)) {
-            @unlink(__DIR__ . "/../../public/uploads/proveedor/" . $id . "/terceros/" . $proveedor->terceros);
+            safeUnlink(__DIR__ . "/../../public/uploads/proveedor/" . $id . "/terceros/" . $proveedor->terceros);
         }
 
         $random = random_int(1, 99999999);

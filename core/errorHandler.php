@@ -37,4 +37,38 @@ register_shutdown_function(function () {
         customErrorHandler($error['type'], $error['message'], $error['file'], $error['line']);
     }
 });
+
+
+
+
+    /**
+     * Elimina un archivo de forma segura usando try/catch
+     *
+     * @param string $ruta Ruta del archivo
+     * @return bool true si se eliminó, false si no
+     */
+    function safeUnlink(string $ruta): bool
+    {
+        // Convierte warnings en excepciones temporalmente
+        set_error_handler(function ($errno, $errstr) {
+            throw new ErrorException($errstr, $errno);
+        });
+
+        try {
+            if (!is_file($ruta)) {
+                throw new Exception("El archivo no existe: $ruta");
+            }
+
+            unlink($ruta);
+            restore_error_handler(); // restaurar handler
+            return true;
+
+        } catch (Throwable $e) {
+            // Aquí puedes loguear el error o manejarlo como quieras
+            error_log("safeUnlink error: " . $e->getMessage());
+            restore_error_handler(); // restaurar handler
+            return false;
+        }
+    }
+
 ?>

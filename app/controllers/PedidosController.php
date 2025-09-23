@@ -1,8 +1,11 @@
 <?php
 require_once __DIR__ . '/../helpers/auth.php';
 require_once __DIR__ . '/../helpers/Mailer.php';
+require_once __DIR__ . '/../../core/ErrorHandler.php';
 
 use Mpdf\Mpdf;
+
+
 
 class PedidosController extends Controller
 {
@@ -563,7 +566,7 @@ class PedidosController extends Controller
                 }
             }
         }
-        
+
         if ($pedido->transaccion->id != 0) {
             $tra = $pedido->transaccion;
             $tra_desc = str_replace($pedido->referencia, $referencia, $tra->descripcion);
@@ -597,12 +600,15 @@ class PedidosController extends Controller
                     'mensaje' => 'Tiene que haber 3 presupuestos adjuntados a este pedido'
                 ];
             }
+
+            /* Ya no es necesario el Anexo III, se puede generar más adelante cuando tengamos la factura
             if (is_null($pedido->anexo)) {
                 return [
                     'tipo' => 'danger',
-                    'mensaje' => 'Es necesario adjuntar el anexo correspondiente'
+                    'mensaje' => 'Es necesario adjuntar el anexo III correspondiente'
                 ];
             }
+            */
         }
 
         $pedidosDAO->cambiarEstado($pedidoId, 2);
@@ -846,12 +852,12 @@ class PedidosController extends Controller
             'pedido' => $pedido
         ];
 
-        
+
         $this->view("pedidos/anexo6", $data);
-        
+
     }
 
-        public function anexo3($id)
+    public function anexo3($id)
     {
         /**
          * @var PedidosDAO
@@ -863,9 +869,9 @@ class PedidosController extends Controller
             'pedido' => $pedido
         ];
 
-        
+
         $this->view("pedidos/anexo3", $data);
-        
+
     }
 
 
@@ -897,7 +903,7 @@ class PedidosController extends Controller
             if (isset($_POST['borrar_presupuesto_' . $i])) {
                 $presupesto = $pedidosDAO->obtener_presupuesto($_POST['borrar_presupuesto_' . $i]);
                 if (file_exists("$path/{$presupesto->documento}")) {
-                    @unlink("$path/{$presupesto->documento}");
+                    safeUnlink("$path/{$presupesto->documento}");
                 }
                 $pedidosDAO->eliminar_presupuesto($presupesto->id);
             }
@@ -906,7 +912,7 @@ class PedidosController extends Controller
                 if (isset($_POST[$field . '_current'])) {
                     $presupesto = $pedidosDAO->obtener_presupuesto($_POST[$field . '_current']);
                     if (file_exists("$path/{$presupesto->documento}")) {
-                        @unlink("$path/{$presupesto->documento}");
+                        safeUnlink("$path/{$presupesto->documento}");
                     }
                     $pedidosDAO->eliminar_presupuesto($presupesto->id);
                 }
@@ -940,14 +946,14 @@ class PedidosController extends Controller
         if (isset($_POST['borrar_anexo'])) {
             $existingAnexo = $pedido->anexo;
             if ($existingAnexo && file_exists("$path/$existingAnexo")) {
-                @unlink("$path/$existingAnexo");
+                safeUnlink("$path/$existingAnexo");
             }
             $pedidosDAO->borrar_anexo($pedidoId);
         } else if ($importe >= 1000 && !empty($_FILES['anexo']['tmp_name'])) {
             // Eliminar físicamente anexo existente
             $existingAnexo = $pedido->anexo;
             if ($existingAnexo && file_exists("$path/$existingAnexo")) {
-                @unlink("$path/$existingAnexo");
+                safeUnlink("$path/$existingAnexo");
             }
             // Subir nuevo anexo
             $name = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $_FILES['anexo']['name']);
@@ -957,13 +963,13 @@ class PedidosController extends Controller
         if (isset($_POST['borrar_albaran'])) {
             $existingAlb = $pedido->albaran;
             if ($existingAlb && file_exists("$path/$existingAlb")) {
-                @unlink("$path/$existingAlb");
+                safeUnlink("$path/$existingAlb");
             }
             $pedidosDAO->borrar_albaran($pedidoId);
         } else if (!empty($_FILES['albaran']['tmp_name'])) {
             $existingAlb = $pedido->albaran;
             if ($existingAlb && file_exists("$path/$existingAlb")) {
-                @unlink("$path/$existingAlb");
+                safeUnlink("$path/$existingAlb");
             }
             // Subir nuevo albarán
             $name = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $_FILES['albaran']['name']);
@@ -1011,7 +1017,7 @@ class PedidosController extends Controller
         if (!empty($_FILES['factura']['tmp_name'])) {
             $existing = $pedido->factura;
             if ($existing && $pedido->factura->id != 0 && file_exists("$pathFact/{$existing->documento}")) {
-                @unlink("$pathFact/{$existing->documento}");
+                safeUnlink("$pathFact/{$existing->documento}");
             }
             // Subir archivo
             $name = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $_FILES['factura']['name']);
@@ -1104,7 +1110,7 @@ class PedidosController extends Controller
 
         foreach ($docs as $d) {
             $doc = $pedidosDAO->obtener_otro_doc($d);
-            @unlink(__DIR__ . '/../../public/uploads/otros/' . $pedido->id . '/' . $doc['documento']);
+            safeUnlink(__DIR__ . '/../../public/uploads/otros/' . $pedido->id . '/' . $doc['documento']);
             $pedidosDAO->borrar_otro_doc($d);
         }
 
@@ -1130,7 +1136,7 @@ class PedidosController extends Controller
         }
         $pathFact = __DIR__ . "/../../public/uploads/presupuestos/$pedidoId";
         if (file_exists("$pathFact/{$pedido->factura->documento}")) {
-            @unlink("$pathFact/{$pedido->factura->documento}");
+            safeUnlink("$pathFact/{$pedido->factura->documento}");
         }
         $pedidosDAO->rellenarEstado($pedido->estado->id, $pedido->id, "Se ha borrado la factura adjunta");
         if ($pedidosDAO->borrar_factura($pedido->factura->id)) {
@@ -1160,24 +1166,26 @@ class PedidosController extends Controller
 
         $pedido = $pedidosDAO->obtener($id);
 
+
         if (!is_null($pedido->anexo)) {
-            @unlink(__DIR__ . "/../../public/uploads/presupuestos/" . $pedido->id . "/" . $pedido->anexo);
+            safeUnlink(__DIR__ . "/../../public/uploads/presupuestos/" . $pedido->id . "/" . $pedido->anexo);
         }
 
         if (!is_null($pedido->albaran)) {
-            @unlink(__DIR__ . "/../../public/uploads/presupuestos/" . $pedido->id . "/" . $pedido->albaran);
+            safeUnlink(__DIR__ . "/../../public/uploads/presupuestos/" . $pedido->id . "/" . $pedido->albaran);
         }
 
         if ($pedido->factura->id != 0) {
-            @unlink(__DIR__ . "/../../public/uploads/presupuestos/" . $pedido->id . "/" . $pedido->factura->documento);
+            safeUnlink(__DIR__ . "/../../public/uploads/presupuestos/" . $pedido->id . "/" . $pedido->factura->documento);
             $pedidosDAO->borrar_factura($pedido->factura->id);
         }
 
         $presupuestos = $pedidosDAO->obtener_presupuestos($pedido->id);
         foreach ($presupuestos as $p) {
-            @unlink(__DIR__ . "/../../public/uploads/presupuestos/" . $pedido->id . "/" . $p->documento);
+            safeUnlink(__DIR__ . "/../../public/uploads/presupuestos/" . $pedido->id . "/" . $p->documento);
             $pedidosDAO->borrar_presupuesto($p->id);
         }
+
 
         $random = random_int(1, 99999999);
         $ref = "Borrado$random";
@@ -1188,10 +1196,14 @@ class PedidosController extends Controller
 
 
         if ($pedidosDAO->borrar($id, $ref)) {
+
             return [
                 'tipo' => 'success',
                 'mensaje' => 'Se ha borrado el pedido correctamente'
             ];
+
+
+
         } else {
             return [
                 'tipo' => 'danger',
@@ -1205,4 +1217,6 @@ class PedidosController extends Controller
     {
         return requireLogin();
     }
+
+
 }
