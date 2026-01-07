@@ -79,7 +79,7 @@
                                 </g>
                             </g>
                         </svg>Dudas Frecuentes</a></li>
-                <li class="list-group-item"><a href="#" target="_blank"><svg width="50px" height="50px"
+                <li class="list-group-item"><a href="https://www.loom.com/share/f81767386c78443aa8417f65d9782079" target="_blank"><svg width="50px" height="50px"
                             viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg"
                             fill="#000000">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -105,7 +105,7 @@
                                     fill="#333333"></path>
                             </g>
                         </svg>Gestionar Inventario</a></li>
-                <li class="list-group-item"><a href="#" target="_blank"><svg width="50px" height="50px"
+                <li class="list-group-item"><a href="https://www.loom.com/share/5eabfb3ce330420c99bdb966aefd40b1" target="_blank"><svg width="50px" height="50px"
                             viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg"
                             fill="#000000">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -131,7 +131,7 @@
                                     fill="#333333"></path>
                             </g>
                         </svg>Dar de alta un proveedor nuevo</a></li>
-                <li class="list-group-item"><a href="#" target="_blank"><svg width="50px" height="50px"
+                <li class="list-group-item"><a href="https://www.loom.com/share/c4c663a861884deda944a084fa47f658" target="_blank"><svg width="50px" height="50px"
                             viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg"
                             fill="#000000">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -158,7 +158,7 @@
                             </g>
                         </svg>Crear Hoja de Pedidos < 1.000€</a>
                 </li>
-                <li class="list-group-item"><a href="#" target="_blank"><svg width="50px" height="50px"
+                <li class="list-group-item"><a href="https://www.loom.com/share/a3934d8927594076a18dc874566a708b" target="_blank"><svg width="50px" height="50px"
                             viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg"
                             fill="#000000">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
