@@ -4,6 +4,12 @@ require_once __DIR__ . '/../vo/Pedido.php';
 require_once __DIR__ . '/../vo/Presupuesto.php';
 require_once __DIR__ . '/../vo/Historial.php';
 
+
+/*
+ 08/01/2026 script nuevo campo 
+  ALTER TABLE `pedidos` ADD COLUMN `importe_sin_iva` DECIMAL(15,2) NOT NULL AFTER `importe`;
+*/
+
 class PedidosDAO
 {
     private $db;
@@ -63,6 +69,7 @@ class PedidosDAO
                 p.fecha_enviada AS pedido_fecha_enviada,
                 p.descripcion AS pedido_descripcion,
                 p.importe AS pedido_importe,
+                p.importe_sin_iva AS pedido_importe_sin_iva,
                 p.id_factura AS pedido_factura_id,
                 p.anio_contable AS pedido_anio_contable,
                 p.anexo AS pedido_anexo,
@@ -157,6 +164,7 @@ LEFT JOIN transacciones tra ON
                 p.fecha_enviada AS pedido_fecha_enviada,
                 p.descripcion AS pedido_descripcion,
                 p.importe AS pedido_importe,
+                p.importe_sin_iva AS pedido_importe_sin_iva,
                 p.id_factura AS pedido_factura_id,
                 p.anio_contable AS pedido_anio_contable,
                 p.anexo AS pedido_anexo,
@@ -254,6 +262,7 @@ LEFT JOIN transacciones tra ON
                 p.fecha_enviada AS pedido_fecha_enviada,
                 p.descripcion AS pedido_descripcion,
                 p.importe AS pedido_importe,
+                p.importe_sin_iva AS pedido_importe_sin_iva,
                 p.id_factura AS pedido_factura_id,
                 p.anio_contable AS pedido_anio_contable,
                 p.anexo AS pedido_anexo,
@@ -311,29 +320,31 @@ LEFT JOIN transacciones tra ON
     public function crear(array $data): bool
     {
         $sql = "INSERT INTO pedidos(
-    referencia,
-    id_estado,
-    id_usuario,
-    id_departamento,
-    id_subconcepto,
-    id_area_gasto,
-    id_proveedor,
-    descripcion,
-    importe,
-    anio_contable
-)
-VALUES(
-    :referencia,
-    1,
-    :id_usuario,
-    :id_departamento,
-    :id_subconcepto,
-    :id_area_gasto,
-    :id_proveedor,
-    :descripcion,
-    :importe,
-    :anio_contable
-)";
+                        referencia,
+                        id_estado,
+                        id_usuario,
+                        id_departamento,
+                        id_subconcepto,
+                        id_area_gasto,
+                        id_proveedor,
+                        descripcion,
+                        importe,
+                        importe_sin_iva,
+                        anio_contable
+                    )
+                    VALUES(
+                        :referencia,
+                        1,
+                        :id_usuario,
+                        :id_departamento,
+                        :id_subconcepto,
+                        :id_area_gasto,
+                        :id_proveedor,
+                        :descripcion,
+                        :importe,
+                        :importe_sin_iva,
+                        :anio_contable
+                    )";
 
         $stmt = $this->db->prepare($sql);
 
@@ -347,6 +358,7 @@ VALUES(
             'id_proveedor' => $data['id_proveedor'],
             'descripcion' => $data['descripcion'],
             'importe' => $data['importe'],
+            'importe_sin_iva' => $data['importe_sin_iva'],
             'anio_contable' => $data['anio_contable']
         ]);
 
@@ -384,18 +396,20 @@ WHERE
         ]);
     }
 
-    public function cambiarImporte(int $id, string $importe)
+    public function cambiarImporte(int $id, string $importe, string $importe_sin_iva)
     {
         $sql = "UPDATE `pedidos` 
-SET
-    `importe` = :importe
-WHERE
-    `id` = :id";
+                SET
+                    `importe` = :importe,
+                    `importe_sin_iva` = :importe_sin_iva
+                WHERE
+                    `id` = :id";
 
         $stmt = $this->db->prepare($sql);
 
         return $stmt->execute([
             'importe' => $importe,
+            'importe_sin_iva' => $importe_sin_iva,
             'id' => $id
         ]);
     }
@@ -610,19 +624,19 @@ ORDER BY
     public function obtener_presupuesto_seleccionado($id): Presupuesto|null
     {
         $stmt = $this->db->prepare("SELECT
-    `id` as presupuesto_id,
-    `documento` as presupuesto_documento,
-    `fecha` as presupuesto_fecha,
-    `seleccionado` as presupuesto_seleccionado
-FROM
-    `presupuestos`
-WHERE
-    `id_pedido` = :id AND
-    `seleccionado` = 1
-ORDER BY
-    `seleccionado` DESC,
-    `id` DESC
-    ");
+                                        `id` as presupuesto_id,
+                                        `documento` as presupuesto_documento,
+                                        `fecha` as presupuesto_fecha,
+                                        `seleccionado` as presupuesto_seleccionado
+                                    FROM
+                                        `presupuestos`
+                                    WHERE
+                                        `id_pedido` = :id AND
+                                        `seleccionado` = 1
+                                    ORDER BY
+                                        `seleccionado` DESC,
+                                        `id` DESC
+                                        ");
 
         $stmt->execute(['id' => $id]);
         if ($stmt->rowCount() > 0) {

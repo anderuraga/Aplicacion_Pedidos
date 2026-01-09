@@ -44,15 +44,16 @@
                                             <th>Referencia</th>
                                             <?php if ($usuario->tipo == ADMIN && $e->id == PEN_ARCH) { ?>
                                                 <th></th>
-                                            <?php } ?>
+                                            <?php } ?>                                            
+                                            <th>Opciones</th>
+                                            <th>Incidencias</th>
                                             <th>Fecha</th>
-                                            <th>Importe</th>
+                                            <th>Importe(con IVA)</th>
                                             <th>Departamento</th>
                                             <th>Area Gastos</th>
                                             <th>Subconcepto</th>
                                             <th>Proveedor</th>
-                                            <th>Incidencias</th>
-                                            <th>Opciones</th>
+                                            
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -70,19 +71,21 @@
                                                         </div>
                                                     </td>
                                                 <?php } ?>
-                                                <td data-order="<?= $p->fecha_creada ?>"><?= $p->getFechaCreadaVisible() ?></td>
-                                                <td><?= $p->cantidad_formato() ?>€</td>
-                                                <td><?= $p->departamento->nombre ?></td>
-                                                <td><?= $p->areaGastos->nombre ?></td>
-                                                <td><?= $p->subconcepto->nombre ?></td>
-                                                <td><?= $p->proveedor->nombre ?></td>
-                                                <td><?= $incidencias[$p->id] ?></td>
                                                 <td>
                                                     <div class="btn-group" role="group" aria-label="Basic example">
                                                         <a href="<?= BASE_URL . "Pedidos/vereditar?id=" . $p->id ?>"
                                                             class="btn btn-primary">Ver</a>
                                                     </div>
                                                 </td>
+                                                <td><?= $incidencias[$p->id] ?></td>                                              
+                                                <td data-order="<?= $p->fecha_creada ?>"><?= $p->getFechaCreadaVisible() ?></td>
+                                                <td><?= $p->cantidad_formato() ?>€</td>
+                                                <td><?= $p->departamento->nombre ?></td>
+                                                <td><?= $p->areaGastos->nombre ?></td>
+                                                <td><?= $p->subconcepto->nombre ?></td>
+                                                <td><?= $p->proveedor->nombre ?></td>
+                                                
+                                                
                                             </tr>
                                         <?php } ?>
 

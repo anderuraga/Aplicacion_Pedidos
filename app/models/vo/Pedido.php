@@ -23,6 +23,7 @@ class Pedido
     public string|null $fecha_enviada;
     public string $descripcion;
     public string $importe;
+    public string $importe_sin_iva;
     public Factura $factura;
     public int $anio_contable;
     public string | null $anexo;
@@ -42,6 +43,7 @@ class Pedido
         string|null $fecha_enviada,
         string $descripcion,
         string $importe,
+        string $importe_sin_iva,
         Factura $factura,
         int $anio_contable,
         string | null $anexo,
@@ -60,6 +62,7 @@ class Pedido
         $this->fecha_enviada = $fecha_enviada;
         $this->descripcion = $descripcion;
         $this->importe = $importe;
+        $this->importe_sin_iva = $importe_sin_iva;
         $this->factura = $factura;
         $this->anio_contable = $anio_contable;
         $this->anexo = $anexo;
@@ -82,6 +85,7 @@ class Pedido
             fecha_enviada: $row['pedido_fecha_enviada'],
             descripcion: $row['pedido_descripcion'],
             importe: (float) $row['pedido_importe'],
+            importe_sin_iva: (float) $row['pedido_importe_sin_iva'],
             factura: Factura::fromArray($row),
             anio_contable: (int) $row['pedido_anio_contable'],
             anexo: $row['pedido_anexo'],
@@ -106,6 +110,10 @@ class Pedido
     {
         return getCantidadFormateada($this->importe);
     }
+    public function cantidad_sin_iva_formato()
+    {
+        return getCantidadFormateada($this->importe_sin_iva);
+    }
 
     public function cantidad_formato_iva()
     {
@@ -113,7 +121,7 @@ class Pedido
     }
 
     public function comprobacion_presupuestos(): bool{
-        return $this->importe>=1000;
+        return $this->importe_sin_iva >= 5000;
     }
 
 }

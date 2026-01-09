@@ -388,6 +388,7 @@ class PedidosController extends Controller
         $id_proveedor = trim($_POST['proveedor'] ?? '');
         $descripcion = trim($_POST['descripcion'] ?? '');
         $importe = (float) getCantidadMysql($_POST['cantidad'] ?? 0);
+        $importe_sin_iva = (float) getCantidadMysql($_POST['cantidad_sin_iva'] ?? 0);
         $anio_contable = date('Y');
 
         // Validación de campos obligatorios
@@ -431,6 +432,7 @@ class PedidosController extends Controller
             'id_proveedor' => $id_proveedor,
             'descripcion' => $descripcion,
             'importe' => $importe,
+            'importe_sin_iva' => $importe_sin_iva,
             'anio_contable' => $anio_contable
         ];
 
@@ -455,6 +457,7 @@ class PedidosController extends Controller
         global $usuario;
         $id = (int) $_POST['id'];
         $importe = (float) getCantidadMysql($_POST['cantidad'] ?? 0);
+        $importe_sin_iva = (float) getCantidadMysql($_POST['cantidad_sin_iva'] ?? 0);
         $id_subconcepto = (int) ($_POST['subconcepto'] ?? 0);
         $descripcion = trim($_POST['descripcion'] ?? '');
         $id_proveedor = $_POST['proveedor'] ?? null;
@@ -462,7 +465,7 @@ class PedidosController extends Controller
         if (!$id || $importe == 0 || $descripcion === '' || !$id_proveedor) {
             return [
                 'tipo' => 'danger',
-                'mensaje' => 'Hay campos sin valor, revise el importa, la descripción y el proveedor.'
+                'mensaje' => 'Hay campos sin valor, revise el importe, la descripción y el proveedor.'
             ];
         }
 
@@ -471,14 +474,14 @@ class PedidosController extends Controller
         $areaGastos = $areasGastosDAO->obtener($pedido->areaGastos->id);
         $total = floatval($areaGastos->diferencia);
 
-        if ($importe != $pedido->importe) {
+        if ($importe != $pedido->importe || $importe_sin_iva != $pedido->importe_sin_iva) {
             if ($importe > $total) {
                 return [
                     'tipo' => 'danger',
                     'mensaje' => 'No es posible cambiar el importe ya que superaria el saldo del area de gasto.'
                 ];
             } else {
-                if (!$pedidosDAO->cambiarImporte($id, $importe)) {
+                if (!$pedidosDAO->cambiarImporte($id, $importe, $importe_sin_iva)) {
 
                     return [
                         'tipo' => 'danger',
