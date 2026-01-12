@@ -80,7 +80,10 @@ class TransaccionesDAO
                                             JOIN vista_resumen_areas ag ON
                                                 t.id_area = ag.id_area
                                             WHERE
-                                                t.cantidad > 0 AND baja IS NULL
+                                                -- OLD
+                                                -- t.cantidad > 0 AND baja IS NULL
+                                                -- mostrar Gastos, son valores negativos
+                                                baja IS NULL
                                             ORDER BY
                                                 t.fecha
                                             DESC

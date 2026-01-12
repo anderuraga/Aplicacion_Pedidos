@@ -15,7 +15,7 @@
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area p-3">
             <a href="<?= BASE_URL ?>Ingresos" class="btn btn-volver mt-2 mb-3">Volver</a>
-            <h1>Ingresos: <?= $ingreso->id == 0 ? 'Nuevo' : 'Editar' ?></h1>
+            <h1>Ingreso / Gasto <?= $ingreso->id == 0 ? 'Nuevo' : 'Editar' ?></h1>
             <form id="editarIngreso" class="mt-0 formulario"
                 action="<?= BASE_URL ?>Ingresos/vereditar?id=<?= $ingreso->id ?>" method="post">
                 <input type="hidden" id="idedit" name="id" value="<?= $ingreso->id ?>">

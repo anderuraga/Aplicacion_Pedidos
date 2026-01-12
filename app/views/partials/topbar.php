@@ -164,10 +164,10 @@
                             <a href="<?= BASE_URL ?>AreasGastos/vereditar?id=0"> Alta </a>
                         </li>
                         <li>
-                            <a href="<?= BASE_URL ?>Ingresos"> Ingresos </a>
+                            <a href="<?= BASE_URL ?>Ingresos"> Ingreso / Gasto </a>
                         </li>
                         <li>
-                            <a href="<?= BASE_URL ?>Ingresos/vereditar?id=0"> Nuevo Ingreso </a>
+                            <a href="<?= BASE_URL ?>Ingresos/vereditar?id=0"> Nuevo Ingreso / Gasto</a>
                         </li>
                     </ul>
                 </li>
