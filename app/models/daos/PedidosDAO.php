@@ -875,23 +875,26 @@ ORDER BY
 
     public function borrar($id, $referencia)
     {
-        $sql = "UPDATE
-    `pedidos`
-SET
-    `referencia` = :referencia,
-    `fecha_creada` = NOW(),
-    `fecha_enviada` = NOW(),
-    `descripcion` = :referencia,
-    `importe` = 0,
-    `id_factura` = null,
-    `anio_contable` = 0,
-    `anexo` = null,
-    `albaran` = null,
-    `factura` = null,
-    `baja` = NOW(),
-    `id_transaccion` = null
-WHERE
-    `id` = :id";
+        $sql = "UPDATE `pedidos`
+                SET
+                    `referencia` = :referencia,
+                    `fecha_creada` = NOW(),
+                    `fecha_enviada` = NOW(),
+                    `descripcion` = :referencia,
+                    `importe` = 0,
+                    `id_factura` = null,
+
+                    -- `anio_contable` = 0, 
+                    --  no cambiamos el año contable a 0, si el Borrar no sale el proveedor en  vista_proveedores_gastos
+
+                    `anexo` = null,
+                    `albaran` = null,
+                    `factura` = null,
+                    `baja` = NOW(),
+                    `id_transaccion` = null
+                WHERE
+                    `id` = :id";
+
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([
             'id' => $id,
