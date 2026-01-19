@@ -50,6 +50,12 @@
                                     <input type="hidden" name="id" value="<?= $pedido->id ?>">
                                     <a target="_blank" href="<?= BASE_URL ?>Pedidos/pdf/<?= $pedido->id ?>"
                                         class="btn btn-primary">Imprimir</a>
+                                    <a target="_blank" href="<?= BASE_URL ?>Pedidos/pdf/<?= $pedido->id ?>"
+                                        class="btn btn-primary">Imprimir Hoja de Pedidos</a>
+                                    <a target="_blank" href="<?= BASE_URL ?>Pedidos/anexo6/<?= $pedido->id ?>"
+                                        class="btn btn-primary">Imprimir Anexo VI</a>
+                                    <a target="_blank" href="<?= BASE_URL ?>Pedidos/anexo3/<?= $pedido->id ?>"
+                                        class="btn btn-primary">Imprimir Anexo III</a>    
                                     <button class="btn btn-success float-end">Archivar</button><br>
                                 </form>
                             <?php } ?>

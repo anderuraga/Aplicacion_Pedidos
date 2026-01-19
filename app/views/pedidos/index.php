@@ -43,7 +43,7 @@
                                             <th>id</th>
                                             <th>Referencia</th>
                                             <?php if ($usuario->tipo == ADMIN && $e->id == PEN_ARCH) { ?>
-                                                <th></th>
+                                                <th>Archivar</th>
                                             <?php } ?>                                            
                                             <th>Opciones</th>
                                             <th>Incidencias</th>
@@ -63,16 +63,18 @@
                                             <tr>
                                                 <td><?= $p->id ?></td>
                                                 <td><?= $p->referencia ?></td>
+
                                                 <?php if ($usuario->tipo == ADMIN && $e->id == PEN_ARCH) { ?>
                                                     <td>
                                                         <div class="form-check form-check-primary form-check-inline">
                                                             <input class="form-check-input proveedorRadio" type="checkbox"
                                                                 name="pedidos[]" value="<?= $p->id ?>">
-                                                        </div>
+                                                        </div>                                                  
                                                     </td>
                                                 <?php } ?>
+
                                                 <td>
-                                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                                    <div class="btn-group" role="group" aria-label="Basic example">                                                        
                                                         <a href="<?= BASE_URL . "Pedidos/vereditar?id=" . $p->id ?>"
                                                             class="btn btn-primary">Ver</a>
                                                     </div>

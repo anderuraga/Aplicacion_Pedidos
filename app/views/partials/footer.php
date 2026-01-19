@@ -51,7 +51,7 @@
         order: [[<?= $target ?? '1' ?>, '<?= $order ?? "asc" ?>']],
         columnDefs: [
                 {
-                targets: [1,-1,2], // no hacer elipsis
+                targets: [1,-1,2,3,4], // no hacer elipsis
                 render: $.fn.dataTable.render.ellipsis(10000, true)
                 },
                 {

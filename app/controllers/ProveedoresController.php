@@ -27,6 +27,7 @@ class ProveedoresController extends Controller
          * @var ProveedoresDAO
          */
         $proveedoresDAO = $this->dao("Proveedores");
+        $otrosdocs = $proveedoresDAO->obtener_otros_docs($id);
         /**
          * @var UsuariosDAO
          */
@@ -39,6 +40,15 @@ class ProveedoresController extends Controller
                     header("Location: " . BASE_URL . "Proveedores");
                     exit;
                 }
+
+            } else if ($_POST['action'] == "subir_otro_doc") {
+                $_SESSION['alert'] = $this->subirOtroDoc($proveedoresDAO);              
+                $otrosdocs = $proveedoresDAO->obtener_otros_docs($id);
+                
+            } else if ($_POST['action'] == "borrar_otros_doc") {
+                $_SESSION['alert'] = $this->borrarOtrosDoc($proveedoresDAO);
+                $otrosdocs = $proveedoresDAO->obtener_otros_docs($id);               
+            
             } else {
                 global $usuario;
                 if ($usuario->tipo == ADMIN && isset($_POST['action']) && $_POST['action'] == "estado") {
@@ -92,7 +102,7 @@ class ProveedoresController extends Controller
         $tiposServicioDAO = $this->dao("TiposServicio");
         $tiposservicio = $tiposServicioDAO->listar();
 
-        $this->view("proveedores/formulario", ['proveedor' => $proveedor, 'tiposservicio' => $tiposservicio]);
+        $this->view("proveedores/formulario", ['proveedor' => $proveedor, 'tiposservicio' => $tiposservicio, 'otrosdocs' => $otrosdocs]);
 
     }
 
@@ -299,9 +309,83 @@ class ProveedoresController extends Controller
         }
     }
 
+    
+  private function subirOtroDoc( ProveedoresDAO $proveedorDAO)
+    {
+        $proveedorId = $_POST['id'] ?? null;
+        if (!$proveedorId) {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Falta la id del proveedor para la factura.'
+            ];
+        }
+       // $proveedor = $proveedorDAO->obtener($proveedorId);
+
+        $tipo = $_POST['tipo'] ?? null;
+        if (!$tipo && !empty($tipo)) {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Falta añadir el tipo de documento'
+            ];
+        }
+
+        $path = __DIR__ . "/../../public/uploads/otros_proveedor/$proveedorId";
+        if (!is_dir($path)) {
+            mkdir($path, 0777, true);
+        }
+
+        if (!empty($_FILES['archivo']['tmp_name'])) {
+            // Subir archivo
+            $name = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $_FILES['archivo']['name']);
+            move_uploaded_file($_FILES['archivo']['tmp_name'], "$path/$name");
+            $proveedorDAO->subir_otro_doc($proveedorId, $tipo, $name);
+           // $proveedorDAO->rellenarEstado($pedido->estado->id, $pedido->id, "Se ha adjuntado un documentto");
+        } else {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'No se ha añadido ningún documento'
+            ];
+        }
+
+        return ['tipo' => 'success', 'mensaje' => 'Documento subido correctamente.'];
+    }
+
+    private function borrarOtrosDoc(ProveedoresDAO $proveedorDAO)
+    {
+        $proveedorId = $_POST['id'] ?? null;
+        if (!$proveedorId) {
+            return [
+                'tipo' => 'danger',
+                'mensaje' => 'Falta la id del proveedor para la factura.'
+            ];
+        }
+       // $proveedor = $proveedorDAO->obtener(id: $proveedorId);
+
+        $docs = $_POST['docs'] ?? null;
+        if (!$docs || count($docs) == 0) {
+            return [
+                'tipo' => 'warning',
+                'mensaje' => 'No se ha seleccionado ningún archivo.'
+            ];
+        }
+
+        foreach ($docs as $d) {
+            $doc = $proveedorDAO->obtener_otro_doc($d);
+            safeUnlink(__DIR__ . '/../../public/uploads/otros_proveedor/' . $proveedorId . '/' . $doc['documento']);
+            $proveedorDAO->borrar_otro_doc($d);
+        }
+
+        //$proveedorDAO->rellenarEstado($pedido->estado->id, $pedido->id, "Se han borrado documentos");
+        return ['tipo' => 'success', 'mensaje' => 'Se han borrado los documentos correctamente'];
+    }
+
+
+
     #[\Override]
     public function tiene_permiso(): bool
     {
         return requireLogin();
     }
+
+
 }

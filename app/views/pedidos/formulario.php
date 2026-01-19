@@ -38,6 +38,7 @@ if ($usuario->tipo == ADMIN || $pedido->estado->id == BORRADOR || $pedido->estad
         margin-right: 10px !important;
     }
 </style>
+
 <div id="tableSimple" class="col-lg-8 col-12 layout-spacing formulario_pedidos">
     <div class="statbox widget box box-shadow">
         <form id="editarForm" method="post" class="formulario" enctype="multipart/form-data">
@@ -250,8 +251,10 @@ if ($usuario->tipo == ADMIN || $pedido->estado->id == BORRADOR || $pedido->estad
         </form>
         <?php require_once __DIR__ . '/_incidenciasAbiertas.php' ?>
         <?php require_once __DIR__ . '/_incidenciasSolucionadas.php' ?>
+
     </div><!-- Cierra statbox widget box box-shadow -->
 </div> <!-- Cierra tableSimple -->
+
 <div id="sideDiv" class="col-lg-4 col-12 layout-spacing">
 
 

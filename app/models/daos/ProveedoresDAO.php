@@ -403,4 +403,77 @@ VALUES(
         ]);
     }
 
+    
+    /*
+
+    Nueva tabla para poder subir documentos en los proveedores
+
+            CREATE TABLE `otros_documentos_proveedor` (
+            `id` INT NOT NULL AUTO_INCREMENT,
+            `id_proveedor` INT(11) NOT NULL DEFAULT '0',
+            `tipo` VARCHAR(255) NOT NULL DEFAULT '0',
+            `documento` VARCHAR(255) NOT NULL DEFAULT '0',
+            PRIMARY KEY (`id`)
+            )
+            COLLATE='utf8mb4_general_ci'
+            ;
+
+    */
+
+      public function subir_otro_doc($proveedor, $tipo, $documento)
+    {
+        $sql = "INSERT INTO `otros_documentos_proveedor`(`id_proveedor`, `tipo`, `documento`)
+                VALUES(:proveedor, :tipo, :documento)";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'proveedor' => $proveedor,
+            'tipo' => $tipo,
+            'documento' => $documento
+        ]);
+    }
+
+
+
+    public function obtener_otros_docs($proveedor)
+    {
+        $sql = "SELECT
+                    `id`,
+                    `tipo`,
+                    `documento`
+                FROM
+                    `otros_documentos_proveedor`
+                WHERE
+                    `id_proveedor` = :proveedor
+                ORDER BY
+                    `id` ASC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'proveedor' => $proveedor
+        ]);
+        $result = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $result[] = $row;
+        }
+        return $result;
+    }
+
+    public function obtener_otro_doc($id)
+    {
+        $sql = "SELECT `id`, `id_proveedor`, `tipo`, `documento` FROM `otros_documentos_proveedor` WHERE `id`=:id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'id' => $id
+        ]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function borrar_otro_doc($id)
+    {
+        $sql = "DELETE FROM `otros_documentos_proveedor` WHERE `id`=:id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            'id' => $id
+        ]);
+    }
+
 }

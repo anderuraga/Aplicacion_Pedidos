@@ -27,8 +27,13 @@ class MenuController extends Controller
             foreach ($pedidosincidencias as $pedIncid) {
                 $data["pedidosIncidencias"][] = [$pedidosDAO->obtener($pedIncid['id_pedido']),$pedIncid['num_incidencias_abiertas']];
             }
+
+            /* TODO salen la de todos los usuarios, hay que filtrar por $usuario->id
+            
             $data["pedidosProveedor"] = $pedidosDAO->listar_estado(PEN_PROV);
             $data["pedidosFactura"] = $pedidosDAO->listar_estado(PEN_FACT);
+
+            */
         }
 
 
