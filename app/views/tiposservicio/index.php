@@ -16,6 +16,8 @@
                         <th>id</th>
                         <th>Nombre</th>
                         <th>Opciones</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,6 +30,8 @@
                                     <a href="TiposServicio/vereditar?id=<?= $t->id ?>" class="btn btn-primary">Editar</a>
                                 </div>
                             </td>
+                            <td></td>
+                            <td></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
