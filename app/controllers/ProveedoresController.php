@@ -21,56 +21,69 @@ class ProveedoresController extends Controller
 
     public function vereditar()
     {
-        $id = $_GET['id'];
-
+        
         /**
          * @var ProveedoresDAO
          */
-        $proveedoresDAO = $this->dao("Proveedores");
-        $otrosdocs = $proveedoresDAO->obtener_otros_docs($id);
+        $proveedoresDAO = $this->dao("Proveedores");        
         /**
          * @var UsuariosDAO
          */
         $usuariosDAO = $this->dao("Usuarios");
+
+        global $usuario;
+        $id = $_GET['id'];        
+        $otrosdocs = $proveedoresDAO->obtener_otros_docs($id);
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (isset($_POST['action']) && $_POST['action'] == "borrar") {
-                $_SESSION['alert'] = $this->borrar($proveedoresDAO);
-                if ($_SESSION['alert']['tipo'] == "success") {
-                    session_write_close();
-                    header("Location: " . BASE_URL . "Proveedores");
-                    exit;
-                }
 
-            } else if ($_POST['action'] == "subir_otro_doc") {
-                $_SESSION['alert'] = $this->subirOtroDoc($proveedoresDAO);              
-                $otrosdocs = $proveedoresDAO->obtener_otros_docs($id);
+                $accion = $_POST['action'];            
+                switch ($accion) {
                 
-            } else if ($_POST['action'] == "borrar_otros_doc") {
-                $_SESSION['alert'] = $this->borrarOtrosDoc($proveedoresDAO);
-                $otrosdocs = $proveedoresDAO->obtener_otros_docs($id);               
-            
-            } else {
-                global $usuario;
-                if ($usuario->tipo == ADMIN && isset($_POST['action']) && $_POST['action'] == "estado") {
-                    $_SESSION['alert'] = $this->cambiarEstado($proveedoresDAO, $id);
-                    session_write_close();
-                    header("Location:" . BASE_URL . "Proveedores/vereditar?id=" . $id);
-                    exit;
-                }
+                    case "borrar" :
+                        $_SESSION['alert'] = $this->borrar($proveedoresDAO);
+                        if ($_SESSION['alert']['tipo'] == "success") {
+                            session_write_close();
+                            header("Location: " . BASE_URL . "Proveedores");
+                            exit;
+                        }
+                        break;
+                
+                    case "subir_otro_doc":
+                        $_SESSION['alert'] = $this->subirOtroDoc($proveedoresDAO);              
+                        $otrosdocs = $proveedoresDAO->obtener_otros_docs($id);
+                        break;
+                    
+                    case "borrar_otros_doc":
+                        $_SESSION['alert'] = $this->borrarOtrosDoc($proveedoresDAO);
+                        $otrosdocs = $proveedoresDAO->obtener_otros_docs($id);               
+                        break;
+                    
+                    case "estado":
 
-                $_SESSION['alert'] = $this->guardar($proveedoresDAO, $usuariosDAO);
-                if ($proveedoresDAO->last_insert !== null) {
-                    session_write_close();
-                    header("Location:" . BASE_URL . "Proveedores/vereditar?id=" . $proveedoresDAO->last_insert);
-                    exit;
-                }
-                session_write_close();
-                header("Location:" . BASE_URL . "Proveedores/vereditar?id=" . $id);
-                exit;
-            }
+                        if ($usuario->tipo == ADMIN ) {
+                            $_SESSION['alert'] = $this->cambiarEstado($proveedoresDAO, $id);
+                            session_write_close();
+                            header("Location:" . BASE_URL . "Proveedores/vereditar?id=" . $id);
+                            exit;
+                        }
+                        break;
 
-        }
+                    case "guardar":
+                        $_SESSION['alert'] = $this->guardar($proveedoresDAO, $usuariosDAO);
+                        // insert la 1º vez
+                        if ($proveedoresDAO->last_insert !== null) {
+                            $id= $proveedoresDAO->last_insert;                    
+                        }
+                        session_write_close();
+                        header("Location:" . BASE_URL . "Proveedores/vereditar?id=" . $id);
+                        exit;
+                    break;
 
+                 }//switch
+        } // method POST   
+
+        // Obtener el proveedor
         if ($id <> 0) {
             $proveedor = $proveedoresDAO->obtener($id);
         } else {
@@ -103,7 +116,7 @@ class ProveedoresController extends Controller
         $tiposservicio = $tiposServicioDAO->listar();
 
         $this->view("proveedores/formulario", ['proveedor' => $proveedor, 'tiposservicio' => $tiposservicio, 'otrosdocs' => $otrosdocs]);
-
+        
     }
 
     public function guardar(ProveedoresDAO $proveedoresDAO, UsuariosDAO $usuariosDAO)

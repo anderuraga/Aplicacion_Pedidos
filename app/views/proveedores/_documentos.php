@@ -34,12 +34,6 @@
 
                                 <button type="submit" form="borrarOtrosDocs" class="mt-2 mb-2 btn btn-danger">Borrar Seleccionados</button>
                                 
-                            <form method="post" id="borar_factura_form">
-                                <input type="hidden" name="action" value="borrar_otros_doc">
-                                <input type="hidden" name="id" value="<?= $proveedor->id ?>">
-                            </form>
-
-
                         </div>
                     </div>
                 </div>

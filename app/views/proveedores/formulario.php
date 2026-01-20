@@ -23,6 +23,7 @@
                 action="<?= BASE_URL ?>Proveedores/vereditar?id=<?= $proveedor->id ?>" method="post"
                 enctype="multipart/form-data">
                 <input type="hidden" name="id" value="<?= $proveedor->id ?>">
+                <input type="hidden" name="action" value="guardar">
                 <?php if ($proveedor->id != 0): ?>
                     <h5>Estado: <?= $proveedor->getEstado() ?></h5>
                     <div class="row">
@@ -130,12 +131,10 @@
                         Dispone de Factura Electrónica
                     </label>
                 </div>
+
                 <div class="separador mt-3 mb-3"></div>
                
-                
- 
-
-                <hr>
+                <!-- botones -->
                 <div class="d-flex justify-content-between mt-2">
                     <?php if ($usuario->tipo == ADMIN): ?>
                         <button type="submit" form="estadoForm"
@@ -144,23 +143,14 @@
                         </button>
                     <?php endif; ?>
                     <div>
-                        <?php if ($usuario->tipo == ADMIN && $proveedor->id != 0): ?>
-                            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                data-bs-target="#borrarModal">Borrar</button>
-                        <?php endif; ?>
                         <button type="submit" class="btn btn-primary">
                             Guardar
                         </button>
                     </div>
-
-
                 </div>
+                <!-- /botones -->
 
             </form>
-
-          
-
-          
 
             
             <?php if ($usuario->tipo == ADMIN): ?>
