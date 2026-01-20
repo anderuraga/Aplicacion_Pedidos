@@ -79,7 +79,7 @@
         </tr>
         <tr>
             <td>Importe (IVA incluido)</td>
-            <td><?= $pedido->cantidad_formato_iva() ?> €</td>
+            <td><?= $pedido->cantidad_formato() ?> €</td>
         </tr>
         <tr>
             <td>Subconcepto</td>
