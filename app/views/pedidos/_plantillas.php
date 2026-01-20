@@ -85,7 +85,7 @@
                                             </g>
                                         </svg>Alta terceros</a></li>
 
-                                  <li><a href="<?= BASE_URL ?>public/EF-10-Compromiso mediobiental .doc" download=""><svg
+                                  <li><a href="<?= BASE_URL ?>public/EF-10-Compromiso-mediobiental.doc" download=""><svg
                                             width="25px" height="25px" viewBox="0 0 32 32"
                                             xmlns="http://www.w3.org/2000/svg" fill="#000000">
                                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
