@@ -66,11 +66,11 @@ class AreasGastosController extends Controller
 
         $departamentos = $departamentosDAO->listar();
 
-        if ($id <> 0) {
+        if ($id <> -1) {
             $areaGasto = $areasGastoDAO->obtener($id);
         } else {
             require_once __DIR__ . "/../models/vo/AreaGastos.php";
-            $areaGasto = new AreaGastos(0, '', new Departamento(0, ''), '', 0, 0, 0);
+            $areaGasto = new AreaGastos(-1, '', new Departamento(0, ''), '', 0, 0, 0);
         }
 
         $this->view("areasgastos/formulario", ['areaGasto' => $areaGasto, 'departamentos' => $departamentos]);
@@ -106,7 +106,7 @@ class AreasGastosController extends Controller
             ];
         }
 
-        if ($id == 0) {
+        if ($id == "-1") {
             $ok = $areaGastosDAO->crear($idnuevo, $nombre, $id_departamento);
         } else {
             $ok = $areaGastosDAO->editar($id, $idnuevo, $nombre, $id_departamento);
@@ -115,12 +115,12 @@ class AreasGastosController extends Controller
         if ($ok) {
             return [
                 'tipo' => 'success',
-                'mensaje' => $id == 0 ? 'Se ha creado el area de gastos correctamente' : 'Se ha editado el area de gastos correctamente'
+                'mensaje' => $id < 0 ? 'Se ha creado el area de gastos correctamente' : 'Se ha editado el area de gastos correctamente'
             ];
         } else {
             return [
                 'tipo' => 'warning',
-                'mensaje' => $id == 0 ? 'No se ha podido crear el departamento' : 'No se ha podido editar el departamento'
+                'mensaje' => $id < 0 ? 'No se ha podido crear el departamento' : 'No se ha podido editar el departamento'
             ];
         }
     }

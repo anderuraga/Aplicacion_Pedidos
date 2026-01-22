@@ -161,7 +161,7 @@
                             <a href="<?= BASE_URL ?>AreasGastos">Listado</a>
                         </li>
                         <li>
-                            <a href="<?= BASE_URL ?>AreasGastos/vereditar?id=0"> Alta </a>
+                            <a href="<?= BASE_URL ?>AreasGastos/vereditar?id=-1"> Alta </a>
                         </li>
                         <li>
                             <a href="<?= BASE_URL ?>Ingresos"> Ingreso / Gasto </a>
