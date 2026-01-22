@@ -53,7 +53,7 @@
                 <div class="row">
                     <div class="col-4">
                         <h4>Departamento:</h4>
-                        <h5><?= $departamento->nombre ?></h5>
+                        <h5 class="text-primary"><?= $departamento->nombre ?></h5>
                     </div>
                     <div class="col-4">
 
@@ -62,15 +62,15 @@
                 <div class="row">
                     <div class="col-4">
                         <h4>Proveedor:</h4>
-                        <h5><?= $proveedor->nombre ?></h5>
+                        <h5 class="text-primary"><?= $proveedor->nombre ?></h5>
                         <h4>Gasto en año contable:</h4>
-                        <h5><?= $proveedor->cantidad_formato() ?>€ / <?= $proveedor->limite_formato() ?>€</h5>
+                        <h5 class="text-primary"><?= $proveedor->cantidad_formato() ?>€ / <?= $proveedor->limite_formato() ?>€</h5>
                     </div>
                     <div class="col-4">
                         <h4>Area gasto:</h4>
-                        <h5><?= $areaGastos->nombre ?></h5>
+                        <h5 class="text-primary"><?= $areaGastos->nombre ?></h5>
                         <h4>Saldo:</h4>
-                        <h5><?= $areaGastos->diferencia_formato() ?>€</h5>
+                        <h5 class="text-primary"><?= $areaGastos->diferencia_formato() ?>€</h5>
                     </div>
                 </div>
                 <h4 class="mt-2">Detalles:</h4>
