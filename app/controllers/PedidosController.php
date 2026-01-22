@@ -31,12 +31,14 @@ class PedidosController extends Controller
                  */
                 $transaccionesDAO = $this->dao("Transacciones");
                 foreach ($_POST['pedidos'] as $pedido) {
-                    $return = $this->archivar($pedidosDAO, $transaccionesDAO, $pedido);
+                    $return = $this->archivar($pedidosDAO, $transaccionesDAO, $pedido);                    
                     if ($return['tipo'] != "success") {
                         $_SESSION['alert'] = [
                             'tipo' => 'warning',
                             'mensaje' => 'Ha sucedido un error al archivar alguno de los pedidos.'
                         ];
+                    }else{
+                        $pedidosDAO->rellenarEstado(6, $pedido->id, "Pago realizado");
                     }
                 }
             }
@@ -247,7 +249,7 @@ class PedidosController extends Controller
                         break;
                     case PEN_ARCH:
                         $this->archivar($pedidosDAO, $transaccionesDAO);
-                        $pedidosDAO->rellenarEstado(6, $pedido->id, "Se ha confirmado el pago");
+                        $pedidosDAO->rellenarEstado(6, $pedido->id, "Pago realizado");
                         $pedido = $pedidosDAO->obtener($_GET['id']);
                         break;
                     default:
