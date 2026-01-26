@@ -114,7 +114,7 @@ class PedidosController extends Controller
             exit;
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (isset($_POST['areagasto']) && $_POST['areagasto'] != 0 && isset($_POST['proveedor'])) {
+            if (isset($_POST['areagasto']) && $_POST['areagasto'] != -1 && isset($_POST['proveedor'])) {
                 session_write_close();
                 header("Location:detalles?proveedor=$_POST[proveedor]&areaGasto=$_POST[areagasto]");
                 exit;
@@ -386,7 +386,7 @@ class PedidosController extends Controller
         $id_usuario = $usuario->id;
         $id_departamento = (int) ($_POST['departamento'] ?? 0);
         $id_subconcepto = (int) ($_POST['subconcepto'] ?? 0);
-        $id_area_gasto = (int) ($_POST['areaGasto'] ?? 0);
+        $id_area_gasto = (int) ($_POST['areaGasto'] ?? -1);
         $id_proveedor = trim($_POST['proveedor'] ?? '');
         $descripcion = trim($_POST['descripcion'] ?? '');
         $importe = (float) getCantidadMysql($_POST['cantidad'] ?? 0);
@@ -396,7 +396,7 @@ class PedidosController extends Controller
         // Validación de campos obligatorios
         if (
             $id_usuario <= 0 || $id_departamento <= 0 || $id_subconcepto <= 0 ||
-            $id_area_gasto <= 0 || $id_proveedor === '' || $descripcion === '' ||
+            $id_area_gasto <= -1 || $id_proveedor === '' || $descripcion === '' ||
             $importe <= 0 || $anio_contable <= 0
         ) {
             return [

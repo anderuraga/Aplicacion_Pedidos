@@ -95,19 +95,19 @@
         $('#areagasto option').prop("disabled", true);
         $('#areagasto option[ata-depart!=0]').prop("hidden", true);
         $('#areagasto option[data-depart=' + departamento + ']').prop("disabled", false).prop("hidden", false);
-        $("#areagasto").val(0);
+        $("#areagasto").val(-1);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
         $("#departamento").on("change", function () {
-            if ($("#departamento").val() == 0) {
+            if ($("#departamento").val() == -1) {
             } else {
                 filtrarAreasGastos($("#departamento").val())
             }
         });
 
         $("#areagasto").on("change", function () {
-            if ($("#areagasto").val() == 0) {
+            if ($("#areagasto").val() == -1) {
                 $(".disponibleDiv").hide();
             } else {
                 $('#cantidad').html($('#areagasto option:selected').data("disponible"));
