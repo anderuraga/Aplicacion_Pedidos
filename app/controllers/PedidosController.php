@@ -199,8 +199,8 @@ class PedidosController extends Controller
     public function vereditar()
     {
 
-
         global $usuario;
+        
         /**
          * @var PedidosDAO
          */
@@ -216,11 +216,13 @@ class PedidosController extends Controller
          * @var ProveedoresDAO
          */
         $proveedoresDAO = $this->dao("Proveedores");
+        $proveedores = $proveedoresDAO->listar(true);
 
         /**
          * @var UsuariosDAO
          */
         $usuariosDAO = $this->dao("Usuarios");
+        $usuarios = $usuariosDAO->listar();
 
 
         /**
@@ -228,95 +230,12 @@ class PedidosController extends Controller
          */
         $transaccionesDAO = $this->dao("Transacciones");
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if ($_POST['action'] == "siguiente") {
-                switch ($pedido->estado->id) {
-                    case BORRADOR:
-                        $_SESSION['alert'] = $this->guardarPresupuestos($pedidosDAO, $pedido, $usuariosDAO);
-                        $pedido = $pedidosDAO->obtener($_GET['id']);
-                        break;
-                    case PEN_VALI:
-                        $_SESSION['alert'] = $this->pendienteProveedor($pedidosDAO, $pedido, $usuariosDAO);
-                        $pedido = $pedidosDAO->obtener($_GET['id']);
-                        break;
-                    case PEN_PROV:
-                        $_SESSION['alert'] = $this->guardarAlbaran($pedidosDAO, $usuariosDAO);
-                        $pedido = $pedidosDAO->obtener($_GET['id']);
-                        break;
-                    case PEN_FACT:
-                        $_SESSION['alert'] = $this->guardarFactura($pedidosDAO, $usuariosDAO);
-                        $pedido = $pedidosDAO->obtener($_GET['id']);
-                        break;
-                    case PEN_ARCH:
-                        $this->archivar($pedidosDAO, $transaccionesDAO);
-                        $pedidosDAO->rellenarEstado(6, $pedido->id, "Pago realizado");
-                        $pedido = $pedidosDAO->obtener($_GET['id']);
-                        break;
-                    default:
-                        break;
-                }
-            } else if ($_POST['action'] == "incidencia") {
-                if ($incidenciasDAO->marcar_solucionada($_POST['id'])) {
-                    $pedidosDAO->rellenarEstado($pedido->estado->id, $pedido->id, "Incidencia marcada como solucionada");
-                    $_SESSION['alert'] = [
-                        'tipo' => 'success',
-                        'mensaje' => 'Incidencia marcada como resuelta correctamente.'
-                    ];
-                    $correos = $usuariosDAO->obtenerCorreosAdmin();
-                    $mailer = new Mailer();
-                    $mailer->enviarCorreo(
-                        $correos,
-                        "Incidencia Resuelta",
-                        "IncidenciaResuelta",
-                        [
-                            'referencia' => $pedido->referencia
-                        ]
-                    );
-                } else {
-                    $_SESSION['alert'] = [
-                        'tipo' => 'warning',
-                        'mensaje' => 'Error al marcar como resuelta la incidencia.'
-                    ];
-                }
-            } else if ($_POST['action'] == "editar") {
-                /**
-                 * @var AreasGastosDAO
-                 */
-                $areasGastosDAO = $this->dao("AreasGastos");
+        /**
+         * @var AreasGastosDAO
+         */
+        $areasGastosDAO = $this->dao("AreasGastos");
+        $areasGastos = $areasGastosDAO->listar();
 
-                $_SESSION['alert'] = $this->editar($pedidosDAO, $areasGastosDAO, $proveedoresDAO, $transaccionesDAO);
-                $pedido = $pedidosDAO->obtener($_POST['id']);
-            } else if ($_POST['action'] == "documentos") {
-                $_SESSION['alert'] = $this->guardarDocumentos($pedidosDAO);
-                $pedido = $pedidosDAO->obtener($_POST['id']);
-            } else if ($_POST['action'] == "subir_factura") {
-                $_SESSION['alert'] = $this->subirFactura($pedidosDAO);
-                $pedido = $pedidosDAO->obtener($_POST['id']);
-            } else if ($_POST['action'] == "borrar") {
-                $_SESSION['alert'] = $this->borrar($pedidosDAO, $transaccionesDAO);
-                if ($_SESSION['alert']['tipo'] == "success") {
-                    session_write_close();
-                    header("Location: " . BASE_URL . "Pedidos");
-                    exit;
-                }
-            } else if ($_POST['action'] == "borrar_factura") {
-                $_SESSION['alert'] = $this->borrarFactura($pedidosDAO);
-                $pedido = $pedidosDAO->obtener($_POST['id']);
-            } else if ($_POST['action'] == "subir_otro_doc") {
-                $_SESSION['alert'] = $this->subirOtroDoc($pedidosDAO);
-                $pedido = $pedidosDAO->obtener($_POST['id']);
-            } else if ($_POST['action'] == "borrar_otros_doc") {
-                $_SESSION['alert'] = $this->borrarOtrosDoc($pedidosDAO);
-                $pedido = $pedidosDAO->obtener($_POST['id']);
-            }
-        }
-
-        $historial = $pedidosDAO->obtener_historial($pedido->id);
-        $otrosdocs = $pedidosDAO->obtener_otros_docs($pedido->id);
-
-
-        $incidenciasActivas = $incidenciasDAO->listar_estado($pedido->id, 0);
-        $incidenciasResueltas = $incidenciasDAO->listar_estado($pedido->id, 1);
 
         /**
          * @var SubconceptosDAO
@@ -343,10 +262,91 @@ class PedidosController extends Controller
         $estados = $estadosDAO->listar();
 
 
-        $proveedores = $proveedoresDAO->listar(true);
+        // POST modificadmos algo del pedido
+        $accion = $_POST['action'];
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            switch ($accion) { 
+
+                case "siguiente":
+
+                    $_SESSION['alert'] = $this->siguiente( $pedido, $pedidosDAO, $usuariosDAO, $transaccionesDAO);
+                    $pedido = $pedidosDAO->obtener($_POST['id']);
+                    break;
+
+                    
+                case "incidencia":
+                    if ($incidenciasDAO->marcar_solucionada($_POST['id'])) {
+                        $pedidosDAO->rellenarEstado($pedido->estado->id, $pedido->id, "Incidencia marcada como solucionada");
+                        $_SESSION['alert'] = [
+                            'tipo' => 'success',
+                            'mensaje' => 'Incidencia marcada como resuelta correctamente.'
+                        ];
+                        $correos = $usuariosDAO->obtenerCorreosAdmin();
+                        $mailer = new Mailer();
+                        $mailer->enviarCorreo(
+                            $correos,
+                            "Incidencia Resuelta",
+                            "IncidenciaResuelta",
+                            [
+                                'referencia' => $pedido->referencia
+                            ]
+                        );
+                    } else {
+                        $_SESSION['alert'] = [
+                            'tipo' => 'warning',
+                            'mensaje' => 'Error al marcar como resuelta la incidencia.'
+                        ];
+                    }
+                break;    
+
+            case "editar":           
+                    $_SESSION['alert'] = $this->editar($pedidosDAO, $areasGastosDAO, $proveedoresDAO, $transaccionesDAO);
+                    $pedido = $pedidosDAO->obtener($_POST['id']);
+                    break;
+
+            case "documentos":
+                    $_SESSION['alert'] = $this->guardarDocumentos($pedidosDAO);
+                    $pedido = $pedidosDAO->obtener($_POST['id']);
+                    break;
+
+            case "subir_factura":
+                $_SESSION['alert'] = $this->subirFactura($pedidosDAO);
+                $pedido = $pedidosDAO->obtener($_POST['id']);
+                break;
+
+            case "borrar":
+                $_SESSION['alert'] = $this->borrar($pedidosDAO, $transaccionesDAO);
+                if ($_SESSION['alert']['tipo'] == "success") {
+                    session_write_close();
+                    header("Location: " . BASE_URL . "Pedidos");
+                    exit;
+                }
+                break;
+
+            case "borrar_factura":
+                $_SESSION['alert'] = $this->borrarFactura($pedidosDAO);
+                $pedido = $pedidosDAO->obtener($_POST['id']);
+                break;
+
+            case "subir_otro_doc":
+                $_SESSION['alert'] = $this->subirOtroDoc($pedidosDAO);
+                $pedido = $pedidosDAO->obtener($_POST['id']);
+                break;
+
+            case "borrar_otros_doc":
+                $_SESSION['alert'] = $this->borrarOtrosDoc($pedidosDAO);
+                $pedido = $pedidosDAO->obtener($_POST['id']);
+                break;
+            
+             }//switch
+        }//post     
 
 
-        $usuarios = $usuariosDAO->listar();
+        // Enviar datos a vista
+        $historial = $pedidosDAO->obtener_historial($pedido->id);
+        $otrosdocs = $pedidosDAO->obtener_otros_docs($pedido->id);
+        $incidenciasActivas = $incidenciasDAO->listar_estado($pedido->id, 0);
+        $incidenciasResueltas = $incidenciasDAO->listar_estado($pedido->id, 1);
 
         $data = [
             'pedido' => $pedido,
@@ -362,15 +362,9 @@ class PedidosController extends Controller
             'estados' => $estados
         ];
 
-        if ($usuario->tipo == ADMIN) {
-            /**
-             * @var AreasGastosDAO
-             */
-            $areasGastosDAO = $this->dao("AreasGastos");
-            $areasGastos = $areasGastosDAO->listar();
+        if ($usuario->tipo == ADMIN) {          
             $data['areasGastos'] = $areasGastos;
         }
-
 
         if ($pedido->estado->id > 0) {
             $presupuestos = $pedidosDAO->obtener_presupuestos($pedido->id);
@@ -378,6 +372,38 @@ class PedidosController extends Controller
         }
 
         $this->view("pedidos/formulario", $data);
+    }
+
+    private function siguiente ( Pedido $pedido, PedidosDAO $pedidosDAO, UsuariosDAO $usuariosDAO, TransaccionesDAO $transaccionesDAO ){
+
+        $alert = [];
+        switch ($pedido->estado->id) {
+            case BORRADOR:
+                $alert = $this->guardarPresupuestos($pedidosDAO, $pedido, $usuariosDAO);
+                $pedido = $pedidosDAO->obtener($_GET['id']);
+                break;
+            case PEN_VALI:
+                $alert = $this->pendienteProveedor($pedidosDAO, $pedido, $usuariosDAO);
+                $pedido = $pedidosDAO->obtener($_GET['id']);
+                break;
+            case PEN_PROV:
+                $alert = $this->guardarAlbaran($pedidosDAO, $usuariosDAO);
+                $pedido = $pedidosDAO->obtener($_GET['id']);
+                break;
+            case PEN_FACT:
+                $alert = $this->guardarFactura($pedidosDAO, $usuariosDAO);
+                $pedido = $pedidosDAO->obtener($_GET['id']);
+                break;
+            case PEN_ARCH:
+                $this->archivar($pedidosDAO, $transaccionesDAO);
+                $pedidosDAO->rellenarEstado(6, $pedido->id, "Pago realizado");
+                $pedido = $pedidosDAO->obtener($_GET['id']);
+                break;
+            default:
+                break;
+        }       
+
+        return $alert;
     }
 
     private function crear(PedidosDAO $pedidosDAO, AreasGastosDAO $areasGastosDAO, ProveedoresDAO $proveedoresDAO)
@@ -1027,6 +1053,7 @@ class PedidosController extends Controller
             // Subir archivo
             $name = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $_FILES['factura']['name']);
             move_uploaded_file($_FILES['factura']['tmp_name'], "$pathFact/$name");
+
         } else {
             // Si no se sube archivo nuevo, mantener nombre antiguo
             $existing = $pedido->factura;
