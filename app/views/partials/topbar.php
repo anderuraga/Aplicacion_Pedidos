@@ -114,6 +114,9 @@
                     </a>
                     <ul class="dropdown-menu submenu list-unstyled" id="dashboard" data-bs-parent="#accordionExample">
                         <li>
+                            <a href="<?= BASE_URL ?>PedidosPendientes">Pendidos Pendientes</a>
+                        </li>
+                        <li>
                             <a href="<?= BASE_URL ?>Proveedores">Listado</a>
                         </li>
                         <li>

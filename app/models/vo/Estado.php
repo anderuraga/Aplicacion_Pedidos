@@ -2,6 +2,9 @@
 
 class Estado
 {
+
+    public static $ESTADO_PENDIENTE = 1;
+
     public int $id;
     public string $nombre;
     public string $icono;
