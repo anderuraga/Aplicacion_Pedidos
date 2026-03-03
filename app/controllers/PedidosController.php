@@ -22,6 +22,7 @@ class PedidosController extends Controller
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_POST['pedidos'])) {
+                $pedidosIds = $_POST['pedidos'];
                 $_SESSION['alert'] = [
                     'tipo' => 'success',
                     'mensaje' => 'Se han archivado los pedidos correctamente.'
@@ -30,15 +31,15 @@ class PedidosController extends Controller
                  * @var TransaccionesDAO
                  */
                 $transaccionesDAO = $this->dao("Transacciones");
-                foreach ($_POST['pedidos'] as $pedido) {
-                    $return = $this->archivar($pedidosDAO, $transaccionesDAO, $pedido);                    
+                foreach ($pedidosIds as $idPedido) {
+                    $return = $this->archivar($pedidosDAO, $transaccionesDAO, $idPedido);                    
                     if ($return['tipo'] != "success") {
                         $_SESSION['alert'] = [
                             'tipo' => 'warning',
                             'mensaje' => 'Ha sucedido un error al archivar alguno de los pedidos.'
                         ];
                     }else{
-                        $pedidosDAO->rellenarEstado(6, $pedido->id, "Pago realizado");
+                        $pedidosDAO->rellenarEstado(6, $idPedido, "Pago realizado");
                     }
                 }
             }
