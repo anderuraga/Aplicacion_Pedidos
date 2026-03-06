@@ -22,6 +22,7 @@
                     <thead>
                         <tr>
                             <th>id</th>
+                            <th>Eliminar</th>
                             <th>Fecha</th>
                             <th>Descripción</th>
                             <th>Operación</th>
@@ -33,6 +34,14 @@
                         <?php foreach ($transacciones as $t): ?>
                             <tr>
                                 <td><?= $t->id ?></td>
+                                <td>
+                                    <button type="button" class="btn p-0 border-0 bg-transparent"
+                                            onclick="cambiarId(<?= $t->id ?>)"                                           
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#borrarModal">
+                                                <i class="bi bi-trash text-danger"></i>
+                                    </button>
+                                </td>
                                 <td data-sort="<?= $t->fecha ?>"><?= $t->getFechaVisible() ?></td>
                                 <td><?= $t->descripcion ?></td>
                                 <td><?= $t->getOperacion() ?></td>
@@ -47,6 +56,67 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        $('.formulario').find('input:required').on('blur', function () {
+            if ($.trim($(this).val()) === '') {
+                $(this).addClass('required-vacio');
+            } else {
+                $(this).removeClass('required-vacio');
+            }
+        });
+
+    });   
+    
+    
+        function cambiarId(id){
+            console.debug('transaccion a eliminar ' + id);
+            document.getElementById('delete_id').value = id;                           
+        };
+
+</script> 
+
+<!-- modal -->
+<div class="modal fade inputForm-modal" id="borrarModal" tabindex="-1" role="dialog"
+    aria-labelledby="borrarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header" id="borrarModalLabel">
+                <h5 class="modal-title">Borrar Transacción
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="borrarForm" class="mt-0" method="post" action="<?= BASE_URL ?>AreasGastos/borrarTransaccion">
+                    <input type="hidden" name="id" id="delete_id" value="-1">
+                    <input type="hidden" name="idArea" value="<?=$area->id?>">
+                    <input type="hidden" name="action" value="borrar">
+                    <h5>Una vez borrado los datos no se podrán recuperar.</h5>
+                    <h5>Para confirmar la acción, escribe el <b>"id"</b> de la transacción que quieres eliminar en el campo siguiente: </h5>
+                    <input type="text" name="confirmacion" class="form-control">
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-light-primary mt-2 mb-2 btn-no-effect"
+                    data-bs-dismiss="modal">Cancelar</button>
+                <button id="submitButton" type="submit" form="borrarForm"
+                    class="btn btn-danger mt-2 mb-2 btn-no-effect">Borrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
 <?php
 $order = 'desc'
 ?>

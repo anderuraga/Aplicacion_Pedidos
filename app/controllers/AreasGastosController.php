@@ -153,6 +153,51 @@ class AreasGastosController extends Controller
         }
     }
 
+
+     function borrarTransaccion(){
+        
+        $alert = "";
+        $idTrans = $_POST['id'];
+        $idArea  = $_POST['idArea'];
+        $confirmacion = $_POST['confirmacion'];
+
+        $transaccionesDAO = $this->dao("Transacciones");
+        $areasGastoDAO = $this->dao("AreasGastos");
+
+        if ($confirmacion != $idTrans ) {
+            $alert = [
+                'tipo' => 'warning',
+                'mensaje' => 'El campo de confirmación no coincide'
+            ];
+
+        }else  {         
+
+            if ( $transaccionesDAO->borrar($idTrans, "Elimada a mano")) {
+                $alert = [
+                    'tipo' => 'success',
+                    'mensaje' => 'Se ha borrado la transacción correctamente'
+                ];
+            } else {
+                $alert = [
+                    'tipo' => 'danger',
+                    'mensaje' => 'Ha sucedido un problema al borrar la transacción'
+                ];
+            }
+        }
+
+        $area = $areasGastoDAO->obtener($idArea);        
+        $transacciones = $transaccionesDAO->transaccionesArea($idArea);
+
+        $_SESSION['alert'] = $alert;
+
+        $this->view("areasgastos/historial", [
+            'area' => $area,
+            'transacciones' => $transacciones
+        ]);
+
+
+    }//borrarTransaccion
+
     #[\Override]
     public function tiene_permiso(): bool
     {

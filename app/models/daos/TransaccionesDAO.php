@@ -176,7 +176,6 @@ class TransaccionesDAO
                     `transacciones`
                 SET
                     `descripcion` = :descripcion,
-                    `cantidad` = 0,
                     `baja` = NOW()
                 WHERE
                     `id` = :id";

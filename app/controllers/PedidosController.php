@@ -264,7 +264,7 @@ class PedidosController extends Controller
 
 
         // POST modificadmos algo del pedido
-        $accion = $_POST['action'];
+        $accion = $_POST['action'] ?? '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             switch ($accion) { 
 

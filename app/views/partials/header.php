@@ -52,6 +52,8 @@
     <link href="<?= BASE_URL ?>static/assets/css/dark/components/accordions.css" rel="stylesheet" type="text/css" />
     <!-- END PAGE LEVEL PLUGINS/CUSTOM STYLES -->
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
     <link href="<?= BASE_URL ?>static/css/custom.css" rel="stylesheet" type="text/css" />
     <style>
         .separador{

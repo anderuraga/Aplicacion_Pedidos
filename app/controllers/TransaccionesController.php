@@ -20,4 +20,8 @@ class TransaccionesController extends Controller {
             'data' => $transacciones
         ]);
     }
+
+
+   
+
 }
