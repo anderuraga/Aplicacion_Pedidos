@@ -305,6 +305,24 @@ require __DIR__ . '/../partials/borrarmodal.php';
     }
 
     document.addEventListener('DOMContentLoaded', function () {
+
+
+        $("#cantidad").inputmask("currency", {
+            radixPoint: ",",
+            groupSeparator: ".",
+            digits: 2,
+            autoGroup: true,
+            prefix: ''
+        });
+
+         $("#cantidad_sin_iva").inputmask("currency", {
+            radixPoint: ",",
+            groupSeparator: ".",
+            digits: 2,
+            autoGroup: true,
+            prefix: ''
+        });
+
         $('#servicio').on('change', filtrarProveedores)
         filtrarProveedores();
         inicial = false;

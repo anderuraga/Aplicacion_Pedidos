@@ -89,7 +89,7 @@
                     <div class="col-4">
                         <h5>Importe: (con IVA) *</h5>
                         <div class="input-group mb-2">
-                            <input class="form-control" placeholder="Cantidad con IVA" aria-label="cantidad"
+                            <input class="form-control" type="text" placeholder="Cantidad con IVA" aria-label="cantidad"
                                 aria-describedby="basic-addon2" name="cantidad" id="cantidad" required>
                             <span class="input-group-text" id="basic-addon2">€</span>
                         </div>
@@ -97,7 +97,7 @@
                      <div class="col-4">
                         <h5>Importe: (sin IVA)  *</h5>
                         <div class="input-group mb-2">
-                            <input class="form-control" placeholder="Cantidad sin IVA" aria-label="cantidad"
+                            <input class="form-control" type="text" placeholder="Cantidad sin IVA" aria-label="cantidad"
                                 aria-describedby="basic-addon2" name="cantidad_sin_iva" id="cantidad_sin_iva" required>
                             <span class="input-group-text" id="basic-addon2">€</span>
                         </div>
@@ -125,6 +125,14 @@
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         $("#cantidad").inputmask("currency", {
+            radixPoint: ",",
+            groupSeparator: ".",
+            digits: 2,
+            autoGroup: true,
+            prefix: ''
+        });
+
+         $("#cantidad_sin_iva").inputmask("currency", {
             radixPoint: ",",
             groupSeparator: ".",
             digits: 2,
