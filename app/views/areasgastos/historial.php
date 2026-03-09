@@ -22,7 +22,7 @@
                     <thead>
                         <tr>
                             <th>id</th>
-                            <th>Eliminar</th>
+                            <?php if ($usuario->tipo == ADMIN): ?> <th>Eliminar</th> <?php endif; ?>
                             <th>Fecha</th>
                             <th>Descripción</th>
                             <th>Operación</th>
@@ -34,6 +34,7 @@
                         <?php foreach ($transacciones as $t): ?>
                             <tr>
                                 <td><?= $t->id ?></td>
+                                <?php if ($usuario->tipo == ADMIN): ?>
                                 <td>
                                     <button type="button" class="btn p-0 border-0 bg-transparent"
                                             onclick="cambiarId(<?= $t->id ?>)"                                           
@@ -42,6 +43,7 @@
                                                 <i class="bi bi-trash text-danger"></i>
                                     </button>
                                 </td>
+                                <?php endif; ?>
                                 <td data-sort="<?= $t->fecha ?>"><?= $t->getFechaVisible() ?></td>
                                 <td><?= $t->descripcion ?></td>
                                 <td><?= $t->getOperacion() ?></td>

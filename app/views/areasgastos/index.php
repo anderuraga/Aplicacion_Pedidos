@@ -36,9 +36,11 @@
                             <td><?= $a->gastos_formato() ?>€</td>
                             <td><?= $a->diferencia_formato() ?>€</td>
                             <td>
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                    <a href="<?= BASE_URL ?>AreasGastos/vereditar?id=<?= $a->id ?>" class="btn btn-primary">Editar</a>
-                                </div>
+                                <?php if ($usuario->tipo == ADMIN): ?>
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <a href="<?= BASE_URL ?>AreasGastos/vereditar?id=<?= $a->id ?>" class="btn btn-primary">Editar</a>
+                                    </div>
+                                <?php endif; ?>
                                 <div class="btn-group" role="group" aria-label="Basic example">
                                     <a href="<?= BASE_URL ?>AreasGastos/historial?id=<?= $a->id ?>" class="btn btn-primary">Historial</a>
                                 </div>

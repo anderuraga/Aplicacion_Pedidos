@@ -62,6 +62,38 @@ class AreasGastosDAO
     return $result;
   }
 
+
+  /**
+   * Lista todas las Areas de gastos asociadas al departamento del usuario
+   * @param mixed $id_departamento
+   * @return AreaGastos[]
+   */
+  public function listarByDepartamento($id_departamento)
+  {
+      $stmt = $this->db->prepare("SELECT 
+                                      id_area as area_id, 
+                                      nombre_area as area_nombre, 
+                                      id_departamento as departamento_id, 
+                                      nombre_departamento as departamento_nombre, 
+                                      ingresos, 
+                                      gastos,
+                                      gasto_pendiente,
+                                      total as diferencia
+                                  FROM vista_resumen_areas 
+                                  WHERE id_departamento = :id_departamento
+                                  ORDER BY nombre_area ASC");
+
+      $stmt->bindParam(':id_departamento', $id_departamento, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $result = [];
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+          $result[] = AreaGastos::fromArray($row);
+      }
+
+      return $result;
+  }
+
   public function obtener($id)
   {
     $stmt = $this->db->prepare("SELECT 

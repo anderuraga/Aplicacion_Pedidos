@@ -6,30 +6,66 @@ class AreasGastosController extends Controller
 {
     public function index()
     {
-        $departamentosModelo = $this->dao("Departamentos");
-        $departamentos = $departamentosModelo->listar();
+       global $usuario;
+       $areasGastoModelo = $this->dao("AreasGastos");
+       $departamentosModelo = $this->dao("Departamentos");
 
-        $areasGastoModelo = $this->dao("AreasGastos");
-        $areasGastos = $areasGastoModelo->listar();
+       //ADMIN
+       if ( $usuario->tipo==ADMIN ) {
+            $areasGastos = $areasGastoModelo->listar();
 
-        $this->view("areasgastos/index", ['areasGastos' => $areasGastos, 'departamentos' => $departamentos]);
+       // JEFE DEPARTAMENTO     
+       }else{
+
+            $idDepart = $usuario->departamento->id;
+            $areasGastos = $areasGastoModelo->listarByDepartamento($idDepart);
+       }
+       
+       $departamentos = $departamentosModelo->listar();
+       $this->view("areasgastos/index", ['areasGastos' => $areasGastos, 'departamentos' => $departamentos]);
     }
 
     public function historial()
     {
-        $id = $_GET['id'];
-
+        global $usuario;
         $AreasGastosDAO = $this->dao("AreasGastos");
+        $id = $_GET['id'];
+        
+
         if (!$AreasGastosDAO->comprobarId($id)) {
             $_SESSION['alert'] = [
                 'tipo' => 'warning',
-                'mensaje' => "El are de gasto no existe."
+                'mensaje' => "El area de gastos no existe."
             ];
             session_write_close();
             header('Location: ' . BASE_URL . 'AreasGastos');
         }
 
-        $area = $AreasGastosDAO->obtener($id);
+        $area = $AreasGastosDAO->obtener($id);        
+        
+
+        // check que no cambien el id un JEFE_DEPT sin permiso
+        if ( $usuario->tipo!=ADMIN ) {
+            $idDepart = $usuario->departamento->id;
+            $areasGastos = $AreasGastosDAO->listarByDepartamento($idDepart);
+
+            $existe = false;
+            foreach ($areasGastos as $a) {
+                if ($a->id == $area->id) {
+                    $existe = true;
+                    break;
+                }
+            }
+            
+            if (!$existe){
+                 $_SESSION['alert'] = [
+                'tipo' => 'danger',
+                'mensaje' => "No seas listill@, no deberias intentar estas cosas XD"
+            ];
+            session_write_close();
+            header('Location: ' . BASE_URL . 'AreasGastos');
+            }
+        }    
 
         $transaccionesDAO = $this->dao("Transacciones");
         $transacciones = $transaccionesDAO->transaccionesArea($id);
@@ -198,9 +234,15 @@ class AreasGastosController extends Controller
 
     }//borrarTransaccion
 
+    
     #[\Override]
     public function tiene_permiso(): bool
     {
-        return requireAdmin();
+      // comentada linea, si no solo puede acceder ADMIN  
+      // return requireAdmin();
+      conseguirUsuario();
+      return true;
     }
+    
+
 }
