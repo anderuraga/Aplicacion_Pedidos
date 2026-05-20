@@ -5,8 +5,8 @@ use PHPMailer\PHPMailer\Exception;
 use League\OAuth2\Client\Provider\Google;
 
 require __DIR__ . "/../../static/vendor/autoload.php";
-require __DIR__ . '/../../autoload.php';
-require  __DIR__ . '/../../vendor/autoload.php';
+//require __DIR__ . '/../../autoload.php';
+//require  __DIR__ . '/../../vendor/autoload.php';
 
 require 'phpmailer/src/PHPMailer.php';
 require 'phpmailer/src/SMTP.php';

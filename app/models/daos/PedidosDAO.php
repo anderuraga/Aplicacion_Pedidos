@@ -117,7 +117,7 @@ LEFT JOIN transacciones tra ON
         return Pedido::fromArray($row);
     }
 
-    public function listar_estado($id_estado)
+    public function listar_estado($id_estado, $buscar = null)
     {
         $sql = "SELECT
                 p.id AS pedido_id,
@@ -174,40 +174,56 @@ LEFT JOIN transacciones tra ON
                 fs.identificador AS factura_referencia,
                 fs.fecha AS factura_fecha,
                 fs.documento AS factura_documento,
-    tra.id AS transaccion_id,
-    tra.fecha AS transaccion_fecha,
-    tra.descripcion AS transaccion_descripcion,
-    tra.cantidad AS transaccion_cantidad,
-    0 AS transaccion_total
-FROM
-    `pedidos` p
-JOIN estado e ON
-    e.id = p.id_estado
-JOIN usuarios u ON
-    u.id = p.id_usuario
-JOIN departamentos d ON
-    d.id = p.id_departamento
-JOIN subconceptos s ON
-    s.id = p.id_subconcepto
-JOIN vista_resumen_areas a ON
-    a.id_area = p.id_area_gasto
-JOIN vista_proveedores_gastos vpg ON
-    vpg.id = p.id_proveedor AND vpg.anio_contable = p.anio_contable
-JOIN tipos_servicio ts ON
-    ts.id = vpg.id_servicio
-LEFT JOIN facturas fs ON
-    fs.id = p.id_factura
-LEFT JOIN transacciones tra ON
-	tra.id=p.id_transaccion
-            WHERE
-                p.baja is NULL AND
-                p.id_estado = :id_estado
-            ORDER BY
-                p.referencia DESC
-                    ";
+                tra.id AS transaccion_id,
+                tra.fecha AS transaccion_fecha,
+                tra.descripcion AS transaccion_descripcion,
+                tra.cantidad AS transaccion_cantidad,
+                0 AS transaccion_total
+            FROM
+                `pedidos` p
+            JOIN estado e ON
+                e.id = p.id_estado
+            JOIN usuarios u ON
+                u.id = p.id_usuario
+            JOIN departamentos d ON
+                d.id = p.id_departamento
+            JOIN subconceptos s ON
+                s.id = p.id_subconcepto
+            JOIN vista_resumen_areas a ON
+                a.id_area = p.id_area_gasto
+            JOIN vista_proveedores_gastos vpg ON
+                vpg.id = p.id_proveedor AND vpg.anio_contable = p.anio_contable
+            JOIN tipos_servicio ts ON
+                ts.id = vpg.id_servicio
+            LEFT JOIN facturas fs ON
+                fs.id = p.id_factura
+            LEFT JOIN transacciones tra ON
+                tra.id=p.id_transaccion
+                        WHERE
+                            p.baja is NULL AND
+                            p.id_estado = :id_estado";
+
+            // Búsqueda opcional
+            if (!empty($buscar)) {
+                $sql .= " AND (
+                            p.importe LIKE :buscar
+                            OR vpg.nombre LIKE :buscar
+                            OR p.referencia LIKE :buscar
+                        )";
+            }
+
+        $sql .= " ORDER BY p.referencia DESC";
+
         $stmt = $this->db->prepare($sql);
 
-        $stmt->execute(['id_estado' => $id_estado]);
+        // parametros
+        $params = [ 'id_estado' => $id_estado ];
+        if (!empty($buscar)) {
+            $params['buscar'] = '%' . $buscar . '%';
+        }
+
+        $stmt->execute($params);
+
         $result = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $result[] = Pedido::fromArray($row);

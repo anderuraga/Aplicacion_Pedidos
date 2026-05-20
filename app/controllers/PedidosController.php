@@ -47,9 +47,19 @@ class PedidosController extends Controller
 
         $pedidos = [];
         $incidencias = [];
+
+       
+
         foreach ($estados as $e) {
             if ($usuario->tipo == ADMIN) {
-                $pedidos[$e->id] = $pedidosDAO->listar_estado($e->id);
+                
+                if (isset($_GET['buscar'])) {
+                    $buscar = $_GET['buscar'];
+                    $pedidos[$e->id] = $pedidosDAO->listar_estado($e->id, $buscar);
+                }else{
+                    // listar todos
+                    $pedidos[$e->id] = $pedidosDAO->listar_estado($e->id);
+                }   
             } else {
                 $pedidos[$e->id] = $pedidosDAO->listar_estado_departamento($e->id, $usuario->departamento->id);
             }
@@ -271,7 +281,7 @@ class PedidosController extends Controller
                 case "siguiente":
 
                     $_SESSION['alert'] = $this->siguiente( $pedido, $pedidosDAO, $usuariosDAO, $transaccionesDAO);
-                    $pedido = $pedidosDAO->obtener($_POST['id']);
+                    $pedido = $pedidosDAO->obtener($pedido->id);
                     break;
 
                     

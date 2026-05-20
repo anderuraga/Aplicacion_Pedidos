@@ -11,6 +11,16 @@
             <h1 class="mt-2 ms-2">Pedidos</h1>
             <a class="btn btn-primary mb-2 ms-2 me-4" href="<?= BASE_URL ?>Pedidos/proveedor">Nuevo Pedido</a>
 
+            <?php if ($usuario->tipo == ADMIN): ?>
+             <form action="Pedidos" method="GET">
+                <div class="input-group p-2">                 
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>                        
+                        <input type="text" class="form-control" name="buscar" placeholder="Busca por referencia, proveedor, importe, etc.." aria-label="Buscar">
+                        <button class="btn btn-primary" type="submit">Buscar</button>               
+                </div>
+             </form>
+            <?php endif; ?>  
+
             <div class="simple-pill mt-3">
                 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                     <?php foreach ($estados as $e) { ?>
