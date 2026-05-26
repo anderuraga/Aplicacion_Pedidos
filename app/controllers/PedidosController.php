@@ -698,8 +698,9 @@ class PedidosController extends Controller
 
         $correos = $usuariosDAO->obtenerCorreosAdmin();
         $correoJD = $pedido->usuario->correo;
+        $correoProveedor = $pedido->proveedor->correo;
         $cc = [
-            $correoJD
+            $correoJD, $correoProveedor
         ];
         $mailer = new Mailer();
         $mailer->enviarCorreo(
