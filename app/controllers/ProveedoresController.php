@@ -393,6 +393,82 @@ class ProveedoresController extends Controller
     }
 
 
+    public function solicitarDocumentos()
+    {
+
+         /**
+         * @var UsuariosDAO
+         */
+        $usuariosDAO = $this->dao("Usuarios");
+     
+
+        // Recoger datos POST
+        $email = $_POST['email'] ?? null;
+        $confirmar_email = $_POST['confirmar_email'] ?? null;
+
+        // Validación básica
+        if (empty($email) || empty($confirmar_email)) {
+            $_SESSION['alert'] = [
+                'tipo' => 'warning',
+                'mensaje' => 'Debes rellenar los campos'
+            ];
+        }
+
+        // Comprobar que son iguales
+        if ($email !== $confirmar_email) {
+
+            $_SESSION['alert'] = [
+                'tipo' => 'warning',
+                'mensaje' => 'Los emails no coinciden.'
+            ];           
+        }
+        // Validar formato de email
+        else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $_SESSION['alert'] = [
+                'tipo' => 'warning',
+                'mensaje' => 'El formato del email no es valido'
+            ];
+        }
+
+        // Enviamos email si todo OK
+        else {
+            
+            global $usuario;
+            $cc = [$usuario->correo];
+            $to = $email;
+
+            $attachments  = [
+                __DIR__ . "/../../public/ALTA_TERCEROS.pdf",
+                __DIR__ . "/../../public/EF-10-Compromiso-mediobiental.doc"
+
+            ];
+            $data = [];
+
+            $mailer = new Mailer();
+            $mailer->enviarCorreo(
+                $to,
+                "Alta como proveedor",
+                "AltaProveedor",  
+                $data,              
+                $cc,
+                $attachments,
+                null
+            );
+          
+
+            $_SESSION['alert'] = [
+                'tipo' => 'success',
+                'mensaje' => 'Email enviado con exito'
+            ];
+           
+        }
+
+        $this->view("proveedores/solicitar_documentos");
+
+
+    }
+        
+
 
     #[\Override]
     public function tiene_permiso(): bool

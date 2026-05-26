@@ -16,6 +16,14 @@
             <a href="<?= BASE_URL ?>Proveedores" class="btn btn-volver mr-2 mb-3">
                 Volver
             </a>
+            
+            <form action="<?= BASE_URL ?>Proveedores/solicitarDocumentos?id=0" method="GET" class="mb-3">
+                <button type="submit" class="btn btn-primary">
+                <i class="bi bi-envelope-fill me-2"></i>
+                Enviar email al proveedor, solicitanto los documentos
+                </button>
+            </form>
+
             <h1>Proveedor: <?= $proveedor->id == 0 ? 'Nuevo' : 'Editar' ?></h1>
 
 
