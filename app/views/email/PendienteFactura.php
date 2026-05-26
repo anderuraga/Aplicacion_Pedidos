@@ -41,6 +41,24 @@
             </td>
           </tr>
 
+        <tr>
+          <td style="padding:0 20px 30px; font-family:Helvetica, Arial, sans-serif; font-size:16px; line-height:1.5; color:#555555;">
+              <p>DATOS FISCALES CIFP ELORRIETA ERREKA MARI LHII</p>
+              <p>Razón Social: CIFP ELORRIETA ERREKA MARI LHII</p>
+              <p>Domicilio: Avda. Lehendakari Agirre, 184 - 48015 Bilbao - Bizkaia</p>
+              <p>CIF: S-4833001-C</p>
+              <p>DIR3: A16007681 (órgano gestor-unidad tramitadora-oficina contable)</p>
+              <p>Tfno: 94-402.8000</p>
+              <p>Email Facturas: admincentral@elorrieta-errekamari.com</p>
+              <p>Contacto en Administración: Itziar Arnaiz / Rakel López</p>
+          </td>
+        </tr>
+         
+
+
+
+
+
         </table>
       </td>
     </tr>
