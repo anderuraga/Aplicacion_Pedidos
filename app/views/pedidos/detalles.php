@@ -87,14 +87,6 @@
                         </select>
                     </div>
                     <div class="col-4">
-                        <h5>Importe: (con IVA) *</h5>
-                        <div class="input-group mb-2">
-                            <input class="form-control" type="text" placeholder="Cantidad con IVA" aria-label="cantidad"
-                                aria-describedby="basic-addon2" name="cantidad" id="cantidad" required>
-                            <span class="input-group-text" id="basic-addon2">€</span>
-                        </div>
-                    </div>
-                     <div class="col-4">
                         <h5>Importe: (sin IVA)  *</h5>
                         <div class="input-group mb-2">
                             <input class="form-control" type="text" placeholder="Cantidad sin IVA" aria-label="cantidad"
@@ -102,6 +94,14 @@
                             <span class="input-group-text" id="basic-addon2">€</span>
                         </div>
                     </div>
+                    <div class="col-4">
+                        <h5>Importe: (con IVA) *</h5>
+                        <div class="input-group mb-2">
+                            <input class="form-control" type="text" placeholder="Cantidad con IVA" aria-label="cantidad"
+                                aria-describedby="basic-addon2" name="cantidad" id="cantidad" required>
+                            <span class="input-group-text" id="basic-addon2">€</span>
+                        </div>
+                    </div>                  
                 </div>
                 <div class="row">
                     <div class="col-6">

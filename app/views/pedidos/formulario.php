@@ -71,6 +71,15 @@ if ($usuario->tipo == ADMIN || $pedido->estado->id == BORRADOR || $pedido->estad
                 </div>
                 <div class="row">
                     <div class="col-4">
+                        
+                        <h5>Importe: (sin  IVA)*</h5>
+                        <div class="input-group mb-2">
+                            <input class="form-control" placeholder="Cantidad sin IVA" aria-label="cantidad"
+                                aria-describedby="basic-addon2" name="cantidad_sin_iva" id="cantidad_sin_iva"
+                                value="<?= $pedido->cantidad_sin_iva_formato() ?>" <?= $editable ? '' : 'disabled' ?> required>
+                            <span class="input-group-text" id="basic-addon2">€</span>
+                        </div>
+
                         <h5>Importe: (con  IVA)*</h5>
                         <div class="input-group mb-2">
                             <input class="form-control" placeholder="Cantidad con IVA" aria-label="cantidad"
@@ -78,13 +87,7 @@ if ($usuario->tipo == ADMIN || $pedido->estado->id == BORRADOR || $pedido->estad
                                 value="<?= $pedido->cantidad_formato() ?>" <?= $editable ? '' : 'disabled' ?> required>
                             <span class="input-group-text" id="basic-addon2">€</span>
                         </div>
-                          <h5>Importe: (sin  IVA)*</h5>
-                        <div class="input-group mb-2">
-                            <input class="form-control" placeholder="Cantidad sin IVA" aria-label="cantidad"
-                                aria-describedby="basic-addon2" name="cantidad_sin_iva" id="cantidad_sin_iva"
-                                value="<?= $pedido->cantidad_sin_iva_formato() ?>" <?= $editable ? '' : 'disabled' ?> required>
-                            <span class="input-group-text" id="basic-addon2">€</span>
-                        </div>
+                        
                     </div>
                     <div class="col-4">
                         <h5>Referencia:</h5>
