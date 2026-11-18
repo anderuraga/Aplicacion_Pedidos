@@ -1,7 +1,7 @@
 <?php
 if (isset($_SESSION['alert'])) {
     ?>
-    <div class="alert alert-<?= $_SESSION['alert']['tipo'] ?> alert-dismissible fade show" role="alert">
+    <div class="alert alert-<?= $_SESSION['alert']['tipo'] ?? '' ?> alert-dismissible fade show" role="alert">
         <?= $_SESSION['alert']['mensaje'] ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><svg
                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
