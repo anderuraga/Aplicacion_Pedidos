@@ -55,7 +55,7 @@ class PedidosController extends Controller
                 
                 if (isset($_GET['buscar'])) {
                     $buscar = $_GET['buscar'];
-                    $pedidos[$e->id] = $pedidosDAO->listar($e->id, $anio, $buscar);
+                    $pedidos[$e->id] = $pedidosDAO->listar($e->id, $anio, null, $buscar);
                 }else{
                     // listar todos
                     $pedidos[$e->id] = $pedidosDAO->listar($e->id, $anio);

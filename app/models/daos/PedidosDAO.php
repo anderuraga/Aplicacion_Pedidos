@@ -123,15 +123,16 @@ LEFT JOIN transacciones tra ON
         return Pedido::fromArray($row);
     }
 
-    /**
+ /**
      * Obtiene el listado de pedidos filtrados por estado, año y término de búsqueda.
      *
-     * @param  int         $id_estado Identificador del estado para filtrar los registros.     
-     * @param  int         $anio Año del los pedidos.
-     * @param  int         $id_departamento Id del departamento (opcional)
-     * @param  string|null $buscar    Término o palabra clave de búsqueda (opcional).
-     * @return array                  Lista de pedidos
-     */    public function listar( $id_estado, $anio, $id_departamento = null, $buscar = null)
+     * @param  int         $id_estado       Identificador del estado para filtrar los registros.
+     * @param  int         $anio            Año de los pedidos.
+     * @param  int|null    $id_departamento Id del departamento (opcional).
+     * @param  string|null $buscar          Término o palabra clave de búsqueda (opcional).
+     * @return Pedido[]                     Lista de pedidos.
+     */
+    public function listar(int $id_estado, int $anio, ?int $id_departamento = null, ?string $buscar = null): array
     {
         $sql = "SELECT
                 p.id AS pedido_id,
@@ -172,8 +173,7 @@ LEFT JOIN transacciones tra ON
                 pro.limite AS proveedor_limite,
                 pro.fecha_creado AS proveedor_fecha_creado,
                 pro.fecha_editado AS proveedor_fecha_editado,
-               -- pro.gasto_anual AS gasto_anual,
-                ts.nombre AS tiposervicio_nombre,                
+                ts.nombre AS tiposervicio_nombre,
                 p.fecha_creada AS pedido_fecha_creada,
                 p.fecha_enviada AS pedido_fecha_enviada,
                 p.descripcion AS pedido_descripcion,
@@ -195,70 +195,56 @@ LEFT JOIN transacciones tra ON
                 0 AS transaccion_total
             FROM
                 `pedidos` p
-            JOIN estado e ON
-                e.id = p.id_estado
-            JOIN usuarios u ON
-                u.id = p.id_usuario
-            JOIN departamentos d ON
-                d.id = p.id_departamento
-            JOIN subconceptos s ON
-                s.id = p.id_subconcepto
-            JOIN vista_resumen_areas a ON
-                a.id_area = p.id_area_gasto
-            JOIN proveedores pro ON
-                pro.id = p.id_proveedor
-            JOIN tipos_servicio ts ON
-                ts.id = pro.id_servicio
-            LEFT JOIN facturas fs ON
-                fs.id = p.id_factura
-            LEFT JOIN transacciones tra ON
-                tra.id=p.id_transaccion
-                        WHERE
-                            p.id_estado = :id_estado AND
-                            p.anio_contable = :anio AND                            
-                            p.baja is NULL ";
+            LEFT JOIN estado e ON e.id = p.id_estado
+            LEFT JOIN usuarios u ON u.id = p.id_usuario
+            LEFT JOIN departamentos d ON d.id = p.id_departamento
+            LEFT JOIN subconceptos s ON s.id = p.id_subconcepto
+            LEFT JOIN vista_resumen_areas a ON a.id_area = p.id_area_gasto
+            LEFT JOIN proveedores pro ON pro.id = p.id_proveedor
+            LEFT JOIN tipos_servicio ts ON ts.id = pro.id_servicio
+            LEFT JOIN facturas fs ON fs.id = p.id_factura
+            LEFT JOIN transacciones tra ON tra.id = p.id_transaccion
+            WHERE
+                p.id_estado = :id_estado
+                AND p.anio_contable = :anio
+                AND p.baja IS NULL";
 
-            // Filtro por departamento
-            if (!empty($id_departamento)) {
-                $sql .= " AND p.id_departamento = :id_departamento";
-            }
+        $params = [
+            ':id_estado' => $id_estado,
+            ':anio'      => $anio,
+        ];
 
+        // Filtro por departamento
+        if ($id_departamento !== null && $id_departamento !== 0) {
+            $sql .= " AND p.id_departamento = :id_departamento";
+            $params[':id_departamento'] = $id_departamento;
+        }
 
-             // Búsqueda opcional
-            if (!empty($buscar)) {
-                $sql .= " AND (
-                            p.importe LIKE :buscar
-                            OR pro.nombre LIKE :buscar
-                            OR p.referencia LIKE :buscar
-                        )";
-            }
+        // Búsqueda opcional (placeholders únicos para evitar error HY093 en PDO)
+        if ($buscar !== null && trim($buscar) !== '') {
+            $sql .= " AND (
+                        CAST(p.importe AS CHAR) LIKE :buscar1
+                        OR pro.nombre LIKE :buscar2
+                        OR p.referencia LIKE :buscar3
+                    )";
+            $termino = '%' . trim($buscar) . '%';
+            $params[':buscar1'] = $termino;
+            $params[':buscar2'] = $termino;
+            $params[':buscar3'] = $termino;
+        }
 
         $sql .= " ORDER BY p.referencia DESC";
 
         $stmt = $this->db->prepare($sql);
-
-        // parametros
-        $params = [
-                'id_estado' => $id_estado,
-                'anio'      => $anio
-            ];
-
-        if (!empty($id_departamento)) {
-            $params['id_departamento'] = $id_departamento;
-        }
-
-        if (!empty($buscar)) {
-            $params['buscar'] = '%' . $buscar . '%';
-        }
-
         $stmt->execute($params);
 
         $result = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $result[] = Pedido::fromArray($row);
         }
+
         return $result;
-    }
+    }    
 
     public function listar_estado($id_estado, $buscar = null)
     {
@@ -954,6 +940,7 @@ HAVING COUNT(i.id) > 0;
                     JOIN incidencias i
                         ON i.id_pedido = p.id
                     AND i.estado = 0
+                    AND p.baja IS NULL
                     GROUP BY p.id;
                     ";
         $stmt = $this->db->prepare($query);
