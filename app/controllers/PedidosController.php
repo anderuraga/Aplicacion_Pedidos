@@ -14,6 +14,7 @@ class PedidosController extends Controller
         global $usuario;
         $estadosDAO = $this->dao("Estados");
         $estados = $estadosDAO->listar();
+        $anio = $_GET['anio'] ?? date('Y');
 
         /**
          * @var PedidosDAO
@@ -47,21 +48,21 @@ class PedidosController extends Controller
 
         $pedidos = [];
         $incidencias = [];
-
        
-
+       
         foreach ($estados as $e) {
             if ($usuario->tipo == ADMIN) {
                 
                 if (isset($_GET['buscar'])) {
                     $buscar = $_GET['buscar'];
-                    $pedidos[$e->id] = $pedidosDAO->listar_estado($e->id, $buscar);
+                    $pedidos[$e->id] = $pedidosDAO->listar($e->id, $anio, $buscar);
                 }else{
                     // listar todos
-                    $pedidos[$e->id] = $pedidosDAO->listar_estado($e->id);
-                }   
+                    $pedidos[$e->id] = $pedidosDAO->listar($e->id, $anio);
+                }
+            // USUARIO NORMAL       
             } else {
-                $pedidos[$e->id] = $pedidosDAO->listar_estado_departamento($e->id, $usuario->departamento->id);
+                $pedidos[$e->id] = $pedidosDAO->listar($e->id, $anio, $usuario->departamento->id);
             }
 
             foreach ($pedidos[$e->id] as $p) {
@@ -69,7 +70,7 @@ class PedidosController extends Controller
             }
         }
 
-        $this->view("pedidos/index", ['estados' => $estados, 'pedidos' => $pedidos, 'incidencias' => $incidencias]);
+        $this->view("pedidos/index", ['estados' => $estados, 'pedidos' => $pedidos, 'incidencias' => $incidencias, 'anio' => $anio]);
     }
 
     public function proveedor()
@@ -348,6 +349,7 @@ class PedidosController extends Controller
                 $_SESSION['alert'] = $this->borrarOtrosDoc($pedidosDAO);
                 $pedido = $pedidosDAO->obtener($_POST['id']);
                 break;
+            
             
              }//switch
         }//post     
@@ -900,6 +902,7 @@ class PedidosController extends Controller
 
     }
 
+
     public function anexo3($id)
     {
         /**
@@ -916,6 +919,9 @@ class PedidosController extends Controller
         $this->view("pedidos/anexo3", $data);
 
     }
+
+    
+   
 
 
     private function guardarDocumentos(PedidosDAO $pedidosDAO)
@@ -1254,6 +1260,41 @@ class PedidosController extends Controller
                 'mensaje' => 'Ha sucedido un problema al borrar el pedido'
             ];
         }
+    }
+
+
+    /**
+     * Nos lleva  a la vista corresspondiente
+     */
+    public function cerrarAnioContable()
+    {
+
+      $this->view("pedidos/cerrar_anio");
+
+    }
+
+    /**
+     * Cierra el año contable actual.
+     * Pasa todos los expedientes que no esten archivados al proximo año contable
+     */
+    public function inciarAnioContable()
+    {
+        
+        /**
+         * @var PedidosDAO
+         */
+        $pedidosDAO = $this->dao("Pedidos");
+        $anio = date('Y');
+        $numPedidos = $pedidosDAO->cerrarAnio($anio);
+
+        $_SESSION['alert'] = [
+                'tipo' => 'success',
+                'mensaje' => 'Se han pasado ' . $numPedidos . ' al proximo año pedidos'
+            ];
+        
+
+        $this->index();
+
     }
 
     #[\Override]

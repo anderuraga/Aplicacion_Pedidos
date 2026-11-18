@@ -25,11 +25,30 @@
         <ul class="list-unstyled menu-categories ps" id="accordionExample">
 
             <li class="menu <?= $tab == 1 ? 'active' : '' ?>">
-                <a href="<?= BASE_URL ?>Pedidos" aria-expanded="false" class="dropdown-toggle">
+
+
+              <a href="<?= BASE_URL ?>Pedidos" data-bs-toggle="dropdown" aria-expanded="false"
+                    class="dropdown-toggle">
                     <div class="">
                         <i class="bi bi-box-seam fs-5"></i>
                         <span>Pedidos</span>
                     </div>
+                </a>
+                <ul class="dropdown-menu submenu list-unstyled" id="dashboard" data-bs-parent="#accordionExample">
+                    <li>
+                        <a href="<?= BASE_URL ?>Pedidos"> Listado </a>
+                    </li>
+                    <li>
+                        <a href="<?= BASE_URL ?>Pedidos/proveedor"> Nuevo </a>
+                    </li>
+                     <?php if ($usuario->tipo == ADMIN): ?>
+                        <li><hr class="dropdown-divider"></li>    
+                        <li>
+                            <a class="text-danger" href="<?= BASE_URL ?>Pedidos/cerrarAnioContable"> Cerrar Año contable </a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+
                 </a>
             </li>
             <li class="menu <?= $tab == 11 ? 'active' : '' ?>">

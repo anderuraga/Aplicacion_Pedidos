@@ -8,18 +8,26 @@
 <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area">
-            <h1 class="mt-2 ms-2">Pedidos</h1>
-            <a class="btn btn-primary mb-2 ms-2 me-4" href="<?= BASE_URL ?>Pedidos/proveedor">Nuevo Pedido</a>
+                      
+            <div class="row align-items-center">
+                <?php if ($usuario->tipo == ADMIN): ?>
+                <form action="Pedidos" method="GET" class="col-md-10 col-sm-8">
+                    <div class="input-group p-2">                 
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>                        
+                            <input type="text" class="form-control" name="buscar" placeholder="Busca por referencia, proveedor, importe, etc.." aria-label="Buscar">
+                            <button class="btn btn-outline-primary" type="submit">Buscar</button>               
+                    </div>
+                </form>
+                <?php endif; ?>  
 
-            <?php if ($usuario->tipo == ADMIN): ?>
-             <form action="Pedidos" method="GET">
-                <div class="input-group p-2">                 
-                        <span class="input-group-text"><i class="bi bi-search"></i></span>                        
-                        <input type="text" class="form-control" name="buscar" placeholder="Busca por referencia, proveedor, importe, etc.." aria-label="Buscar">
-                        <button class="btn btn-primary" type="submit">Buscar</button>               
-                </div>
-             </form>
-            <?php endif; ?>  
+                <form action="Pedidos" method="GET" class="col-md-2 col-sm-4">
+                    <div class="input-group p-2">                 
+                            <span class="input-group-text"><i class="bi bi-calendar"></i></span>                        
+                            <input type="number" step="1" min="2025" value="<?php echo htmlspecialchars($_GET['anio'] ?? date('Y')) ?>" max="2050" class="form-control" name="anio" placeholder="Busca por año contable" aria-label="Año">
+                            <button class="btn btn-outline-primary" type="submit">Año</button>               
+                    </div>
+                </form>
+            </div>        
 
             <div class="simple-pill mt-3">
                 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">

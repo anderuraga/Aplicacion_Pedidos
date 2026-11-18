@@ -88,7 +88,7 @@ class Proveedor
             $row['proveedor_cuenta_bancaria'],
             $row['proveedor_contacto'],
             TipoServicio::fromArray($row),
-            $row['gasto_anual'],
+            $row['gasto_anual'] ?? 0,
             $row['proveedor_terceros'],
             $row['proveedor_fecha_baja'],
             $row['proveedor_limite'],

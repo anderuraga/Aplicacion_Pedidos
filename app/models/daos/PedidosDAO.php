@@ -22,7 +22,7 @@ class PedidosDAO
         $this->db = Database::getInstance();
     }
 
-    public function obtener($id): Pedido
+    public function obtener($id): ?Pedido
     {
         $sql = "SELECT
                 p.id AS pedido_id,
@@ -114,7 +114,150 @@ LEFT JOIN transacciones tra ON
 
         $stmt->execute(['id' => $id]);
         $row = $stmt->fetch();
+
+        // Validar si no se encontró el registro
+        if ($row === false) {
+            return null;
+        }
+
         return Pedido::fromArray($row);
+    }
+
+    /**
+     * Obtiene el listado de pedidos filtrados por estado, año y término de búsqueda.
+     *
+     * @param  int         $id_estado Identificador del estado para filtrar los registros.     
+     * @param  int         $anio Año del los pedidos.
+     * @param  int         $id_departamento Id del departamento (opcional)
+     * @param  string|null $buscar    Término o palabra clave de búsqueda (opcional).
+     * @return array                  Lista de pedidos
+     */    public function listar( $id_estado, $anio, $id_departamento = null, $buscar = null)
+    {
+        $sql = "SELECT
+                p.id AS pedido_id,
+                p.referencia AS pedido_referencia,
+                e.id AS estado_id,
+                e.nombre AS estado_nombre,
+                e.icono,
+                u.id AS usuario_id,
+                u.tipo AS usuario_tipo,
+                u.nombre AS usuario_nombre,
+                u.correo AS usuario_correo,
+                d.id AS departamento_id,
+                d.nombre AS departamento_nombre,
+                s.id AS subconcepto_id,
+                s.nombre AS subconcepto_nombre,
+                a.id_area AS area_id,
+                a.nombre_area AS area_nombre,
+                a.ingresos AS ingresos,
+                a.gastos AS gastos,
+                a.gasto_pendiente AS gasto_pendiente,
+                a.total AS diferencia,
+                pro.id AS proveedor_id,
+                pro.cif AS proveedor_cif,
+                pro.nombre AS proveedor_nombre,
+                pro.direccion AS proveedor_direccion,
+                pro.cod_postal AS proveedor_cod_postal,
+                pro.poblacion AS proveedor_poblacion,
+                pro.provincia AS proveedor_provincia,
+                pro.pais AS proveedor_pais,
+                pro.telefono AS proveedor_telefono,
+                pro.correo AS proveedor_correo,
+                pro.factura_e AS proveedor_factura_e,
+                pro.cuanta_bancaria AS proveedor_cuenta_bancaria,
+                pro.contacto AS proveedor_contacto,
+                pro.id_servicio AS tiposervicio_id,
+                pro.terceros AS proveedor_terceros,
+                pro.fecha_baja AS proveedor_fecha_baja,
+                pro.limite AS proveedor_limite,
+                pro.fecha_creado AS proveedor_fecha_creado,
+                pro.fecha_editado AS proveedor_fecha_editado,
+               -- pro.gasto_anual AS gasto_anual,
+                ts.nombre AS tiposervicio_nombre,                
+                p.fecha_creada AS pedido_fecha_creada,
+                p.fecha_enviada AS pedido_fecha_enviada,
+                p.descripcion AS pedido_descripcion,
+                p.importe AS pedido_importe,
+                p.importe_sin_iva AS pedido_importe_sin_iva,
+                p.id_factura AS pedido_factura_id,
+                p.anio_contable AS pedido_anio_contable,
+                p.anexo AS pedido_anexo,
+                p.albaran AS pedido_albaran,
+                p.factura AS pedido_factura,
+                fs.id AS factura_id,
+                fs.identificador AS factura_referencia,
+                fs.fecha AS factura_fecha,
+                fs.documento AS factura_documento,
+                tra.id AS transaccion_id,
+                tra.fecha AS transaccion_fecha,
+                tra.descripcion AS transaccion_descripcion,
+                tra.cantidad AS transaccion_cantidad,
+                0 AS transaccion_total
+            FROM
+                `pedidos` p
+            JOIN estado e ON
+                e.id = p.id_estado
+            JOIN usuarios u ON
+                u.id = p.id_usuario
+            JOIN departamentos d ON
+                d.id = p.id_departamento
+            JOIN subconceptos s ON
+                s.id = p.id_subconcepto
+            JOIN vista_resumen_areas a ON
+                a.id_area = p.id_area_gasto
+            JOIN proveedores pro ON
+                pro.id = p.id_proveedor
+            JOIN tipos_servicio ts ON
+                ts.id = pro.id_servicio
+            LEFT JOIN facturas fs ON
+                fs.id = p.id_factura
+            LEFT JOIN transacciones tra ON
+                tra.id=p.id_transaccion
+                        WHERE
+                            p.id_estado = :id_estado AND
+                            p.anio_contable = :anio AND                            
+                            p.baja is NULL ";
+
+            // Filtro por departamento
+            if (!empty($id_departamento)) {
+                $sql .= " AND p.id_departamento = :id_departamento";
+            }
+
+
+             // Búsqueda opcional
+            if (!empty($buscar)) {
+                $sql .= " AND (
+                            p.importe LIKE :buscar
+                            OR pro.nombre LIKE :buscar
+                            OR p.referencia LIKE :buscar
+                        )";
+            }
+
+        $sql .= " ORDER BY p.referencia DESC";
+
+        $stmt = $this->db->prepare($sql);
+
+        // parametros
+        $params = [
+                'id_estado' => $id_estado,
+                'anio'      => $anio
+            ];
+
+        if (!empty($id_departamento)) {
+            $params['id_departamento'] = $id_departamento;
+        }
+
+        if (!empty($buscar)) {
+            $params['buscar'] = '%' . $buscar . '%';
+        }
+
+        $stmt->execute($params);
+
+        $result = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $result[] = Pedido::fromArray($row);
+        }
+        return $result;
     }
 
     public function listar_estado($id_estado, $buscar = null)
@@ -230,6 +373,8 @@ LEFT JOIN transacciones tra ON
         }
         return $result;
     }
+
+
 
     public function listar_estado_departamento($id_estado, $id_departamento)
     {
@@ -977,5 +1122,27 @@ WHERE
             'id' => $id,
             'id_transaccion' => $id_transaccion
         ]);
+    }
+
+    /**
+     * Incrementa en 1 el año contable de los pedidos dados de baja cuyo estado no sea 6.
+     *
+     * @param int $anio Año contable sobre el que se realiza el cierre (formato YYYY).
+     * @return int Número de pedidos actualizados.
+     */
+    public function cerrarAnio($anio)
+    {
+       
+       $sql = "UPDATE pedidos 
+            SET anio_contable = anio_contable + 1 
+            WHERE anio_contable = :anio 
+              AND baja IS NULL 
+              AND id_estado < 6";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':anio', $anio, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->rowCount();
     }
 }
